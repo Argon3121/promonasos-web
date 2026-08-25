@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li aria-current="page">База знаний</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-head">
+            <h1>База знаний</h1>
+            <p>
+                Разборы наших инженеров: как считать рабочую точку, какую пару трения выбрать,
+                почему течёт уплотнение и чем заменить импортное изделие.
+            </p>
+        </div>
+
+        <ul class="chips">
+            <li>
+                <a class="chip" th:classappend="${#strings.isEmpty(tekushchayaRubrika)} ? 'is-active' : ''" href="/blog">Все статьи</a>
+            </li>
+            <li th:each="r : ${rubriki}">
+                <a class="chip" th:classappend="${tekushchayaRubrika == r} ? 'is-active' : ''"
+                   th:href="@{/blog(rubrika=${r})}" th:text="${r}"></a>
+            </li>
+        </ul>
+
+        <div class="stati stati--list">
+            <a class="statya-card" th:each="s : ${stati}" th:href="@{'/blog/' + ${s.slug}}">
+                <span class="badge" th:text="${s.rubrika}"></span>
+                <h2 th:text="${s.zagolovok}"></h2>
+                <p th:text="${s.anons}"></p>
+                <span class="statya-card__meta" th:text="${#temporals.format(s.data, 'dd.MM.yyyy')} + ' · ' + ${s.vremyaChteniya} + ' мин чтения'"></span>
+            </a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Не нашли ответ в статьях? Спросите инженера напрямую.')}"></div>
+</div>
+</body>
+</html>

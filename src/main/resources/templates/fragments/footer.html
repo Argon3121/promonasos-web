@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<body>
+<footer class="footer" th:fragment="footer">
+    <div class="container">
+        <div class="footer__cols">
+            <div>
+                <!-- Категории, а не все 45 марок поимённо — иначе подвал стал бы длиннее всей страницы. -->
+                <h4>Насосы по категориям</h4>
+                <ul>
+                    <li th:each="gruppa : ${vseGruppy}"
+                        th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}">
+                        <a th:href="'/nasosy#' + ${gruppa.slug}" th:text="${gruppa.nazvanie}"></a>
+                    </li>
+                    <li><a href="/nasosy">Весь каталог марок</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Уплотнения по средам</h4>
+                <ul>
+                    <li th:each="s : ${vseSredy}">
+                        <a th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}" th:text="${s.nazvanie}"></a>
+                    </li>
+                    <li><a href="/tortsevye-uplotneniya/podbor">Подбор уплотнения</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Инжиниринг и сервис</h4>
+                <ul>
+                    <li th:each="u : ${vseUslugi}">
+                        <a th:href="'/uslugi#' + ${u.slug}" th:text="${u.nazvanie}"></a>
+                    </li>
+                    <li><a href="/blog">База знаний</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Контакты</h4>
+                <p class="footer__phone"><a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a></p>
+                <p><a th:href="'mailto:' + ${sait.pochta}" th:text="${sait.pochta}"></a></p>
+                <p class="footer__addr" th:text="${sait.adres}"></p>
+                <p th:text="${sait.grafikRaboty}"></p>
+                <a class="btn btn--outline-light btn--sm" href="#zayavka-forma">Запросить подбор</a>
+            </div>
+        </div>
+        <div class="footer__legal">
+            <p>ООО ТД «Промоборудование». Поставка промышленных насосов и производство торцовых уплотнений с 2001 года.</p>
+            <p>Информация на сайте не является публичной офертой. Технические характеристики уточняйте у менеджера.</p>
+            <p><a href="/istochniki-izobrazheniy">Источники изображений</a></p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

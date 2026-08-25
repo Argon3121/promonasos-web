@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<body>
+<!--
+    Параметр podpis необязателен — вызов без него: ~{fragments/cta-block :: cta}.
+    С подписью: ~{fragments/cta-block :: cta(${'Свой текст'})}.
+-->
+<section class="cta" id="zayavka-forma" th:fragment="cta(podpis)">
+    <div class="container cta__inner">
+        <div class="cta__text">
+            <h2>Нужен подбор или расчёт?</h2>
+            <p th:text="${podpis != null and !podpis.isEmpty()} ? ${podpis} : 'Опишите задачу своими словами — откуда, куда, сколько. Инженер посчитает и предложит решение.'"></p>
+            <ul class="cta__list">
+                <li>Ответ в течение одного рабочего дня</li>
+                <li>Подбор ведёт инженер, а не менеджер по продажам</li>
+                <li>Предложим альтернативы, если точного типоразмера нет</li>
+            </ul>
+            <p class="cta__phone">Или сразу позвоните: <a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a></p>
+        </div>
+
+        <form class="cta__form" method="post" th:action="@{/zayavka}" data-validate novalidate>
+            <div class="field">
+                <label for="cta-imya">Как к вам обращаться <span class="req">*</span></label>
+                <input class="input" id="cta-imya" name="imya" required autocomplete="name"/>
+                <div class="error">Напишите имя — так проще разговаривать</div>
+            </div>
+            <div class="field">
+                <label for="cta-kontakt">Телефон или почта <span class="req">*</span></label>
+                <input class="input" id="cta-kontakt" name="kontakt" required autocomplete="tel"/>
+                <div class="error">Нужен хотя бы один способ связи</div>
+            </div>
+            <div class="field">
+                <label for="cta-org">Организация</label>
+                <input class="input" id="cta-org" name="organizatsiya" autocomplete="organization"/>
+            </div>
+            <div class="field">
+                <label for="cta-zadacha">Что нужно</label>
+                <textarea class="textarea" id="cta-zadacha" name="zadacha"
+                          placeholder="Например: 80 м³/ч на 30 м, вода с песком, замена насоса К 90/35"></textarea>
+            </div>
+            <div class="field">
+                <label class="check">
+                    <input type="checkbox" name="soglasie" value="true" required/>
+                    <span>Согласен на обработку персональных данных <span class="req">*</span></span>
+                </label>
+                <div class="error">Без согласия мы не можем принять заявку</div>
+            </div>
+            <button class="btn btn--primary btn--block btn--lg" type="submit">Отправить заявку</button>
+        </form>
+    </div>
+</section>
+</body>
+</html>

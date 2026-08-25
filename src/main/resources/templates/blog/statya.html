@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/blog">База знаний</a></li>
+                <li aria-current="page" th:text="${statya.zagolovok}"></li>
+            </ol>
+        </div>
+    </nav>
+
+    <script type="application/ld+json" th:inline="text">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "[[${statya.zagolovok}]]",
+      "description": "[[${statya.anons}]]",
+      "datePublished": "[[${statya.data}]]",
+      "articleSection": "[[${statya.rubrika}]]",
+      "author": { "@type": "Organization", "name": "ТД «Промоборудование»" },
+      "publisher": { "@type": "Organization", "name": "ТД «Промоборудование»" }
+    }
+    </script>
+    <script type="application/ld+json" th:inline="text">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Главная", "item": "[[${sait.domen}]]/" },
+        { "@type": "ListItem", "position": 2, "name": "База знаний", "item": "[[${sait.domen}]]/blog" },
+        { "@type": "ListItem", "position": 3, "name": "[[${statya.zagolovok}]]", "item": "[[${sait.domen}]]/blog/[[${statya.slug}]]" }
+      ]
+    }
+    </script>
+
+    <div class="container">
+        <article class="statya">
+            <header class="statya__head">
+                <span class="badge" th:text="${statya.rubrika}"></span>
+                <h1 th:text="${statya.zagolovok}"></h1>
+                <p class="statya__anons" th:text="${statya.anons}"></p>
+                <p class="statya__meta" th:text="${#temporals.format(statya.data, 'dd.MM.yyyy')} + ' · ' + ${statya.vremyaChteniya} + ' мин чтения'"></p>
+            </header>
+
+            <div class="statya__body">
+                <th:block th:each="blok : ${statya.tekst}">
+                    <h2 th:if="${blok.startsWith('## ')}" th:text="${blok.substring(3)}"></h2>
+                    <p th:unless="${blok.startsWith('## ')}" th:text="${blok}"></p>
+                </th:block>
+            </div>
+
+            <aside class="statya__links" th:if="${not #lists.isEmpty(marki) or not #lists.isEmpty(sredy)}">
+                <h2>Что посмотреть по теме</h2>
+                <ul class="chips">
+                    <li th:each="m : ${marki}"><a class="chip" th:href="@{'/nasosy/' + ${m.slug}}" th:text="'Насосы ' + ${m.oboznachenie}"></a></li>
+                    <li th:each="sr : ${sredy}"><a class="chip" th:href="@{'/tortsevye-uplotneniya/' + ${sr.slug}}" th:text="'Уплотнения: ' + ${sr.nazvanie}"></a></li>
+                </ul>
+            </aside>
+        </article>
+
+        <section class="section" th:if="${not #lists.isEmpty(drugie)}">
+            <h2>Другие статьи</h2>
+            <div class="stati">
+                <a class="statya-card" th:each="d : ${drugie}" th:href="@{'/blog/' + ${d.slug}}">
+                    <span class="badge" th:text="${d.rubrika}"></span>
+                    <h3 th:text="${d.zagolovok}"></h3>
+                    <p th:text="${d.anons}"></p>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Нужен подбор под вашу задачу? Опишите условия — ответим за рабочий день.')}"></div>
+</div>
+</body>
+</html>

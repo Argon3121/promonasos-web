@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+    Общая разметка страницы. Каждая страница подключает её так:
+    <html th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+    и оборачивает свой контент в <div id="soderzhimoe">...</div> — это прямой
+    аналог _Layout.cshtml + RenderBody() из оригинала.
+-->
+<html lang="ru" th:fragment="oformlenie(soderzhimoe)">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${zagolovok}">ТД «Промоборудование»</title>
+    <meta name="description" th:attr="content=${opisanie}"/>
+    <meta name="robots" content="noindex, follow" th:if="${noindex != null and noindex}"/>
+    <link rel="canonical" th:if="${canonical != null}" th:href="${sait.domen + canonical}"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" th:content="${sait.nazvanie}"/>
+    <meta property="og:locale" content="ru_RU"/>
+    <meta property="og:title" th:content="${zagolovok}"/>
+    <meta property="og:description" th:content="${opisanie}"/>
+    <meta name="theme-color" content="#0B2C45"/>
+    <link rel="stylesheet" th:href="@{/css/site.css}"/>
+    <link rel="icon" th:href="@{/images/favicon.svg}" type="image/svg+xml"/>
+    <script type="application/ld+json" th:inline="text">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "ТД «Промоборудование»",
+      "url": "[[${sait.domen}]]",
+      "telephone": "[[${sait.telefon}]]",
+      "email": "[[${sait.pochta}]]",
+      "foundingDate": "2001",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Москва",
+        "addressCountry": "RU",
+        "streetAddress": "[[${sait.adres}]]"
+      }
+    }
+    </script>
+</head>
+<body>
+<a class="skip-link" href="#main">Перейти к содержимому</a>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main id="main">
+    <div class="container" th:if="${uspekh != null}"><div class="alert alert--ok" role="status" th:text="${uspekh}"></div></div>
+    <div class="container" th:if="${oshibka != null}"><div class="alert alert--err" role="alert" th:text="${oshibka}"></div></div>
+    <div th:replace="${soderzhimoe}"></div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<nav class="bottombar" aria-label="Быстрые действия">
+    <a class="bb" href="/">Главная</a>
+    <a class="bb" href="/nasosy/podbor">Подбор</a>
+    <a class="bb bb--accent" th:href="'tel:' + ${sait.telefonSsylka}">Позвонить</a>
+    <a class="bb" href="#zayavka-forma">Заявка</a>
+</nav>
+
+<script th:src="@{/js/site.js}"></script>
+</body>
+</html>

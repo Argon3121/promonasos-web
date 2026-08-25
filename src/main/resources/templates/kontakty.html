@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li aria-current="page">Контакты</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-head">
+            <h1>Контакты</h1>
+            <p>Отвечаем на заявки в течение одного рабочего дня. По срочным вопросам быстрее позвонить.</p>
+        </div>
+
+        <div class="two-col">
+            <div>
+                <h2>Как связаться</h2>
+                <dl class="kontakty">
+                    <div><dt>Телефон</dt><dd><a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a></dd></div>
+                    <div><dt>Почта</dt><dd><a th:href="'mailto:' + ${sait.pochta}" th:text="${sait.pochta}"></a></dd></div>
+                    <div><dt>Адрес</dt><dd th:text="${sait.adres}"></dd></div>
+                    <div><dt>График работы</dt><dd th:text="${sait.grafikRaboty}"></dd></div>
+                </dl>
+
+                <h2>Что прислать для быстрого ответа</h2>
+                <ul class="list-check">
+                    <li>Марку насоса или требуемую рабочую точку: подачу и напор</li>
+                    <li>Перекачиваемую среду, её температуру и наличие включений</li>
+                    <li>Для уплотнения — диаметр вала и рабочее давление</li>
+                    <li>Фото шильдика или узла, если параметры неизвестны</li>
+                </ul>
+            </div>
+            <aside class="panel">
+                <h3>Реквизиты</h3>
+                <p>ООО ТД «Промоборудование»</p>
+                <p>ИНН, ОГРН, банковские реквизиты и карточку предприятия высылаем по запросу вместе с коммерческим предложением.</p>
+                <a class="btn btn--secondary btn--block" href="#zayavka-forma">Запросить карточку предприятия</a>
+            </aside>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Напишите, что нужно — ответим в течение рабочего дня.')}"></div>
+</div>
+</body>
+</html>

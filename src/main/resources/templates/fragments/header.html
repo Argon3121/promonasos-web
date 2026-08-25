@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<body>
+<header class="header" th:fragment="header">
+    <div class="container header__top">
+        <a class="logo" href="/">
+            <span class="logo__mark" aria-hidden="true">ПО</span>
+            <span class="logo__text">
+                <span class="logo__name">ТД «Промоборудование»</span>
+                <span class="logo__desc">Насосы и торцовые уплотнения с 2001 года</span>
+            </span>
+        </a>
+
+        <div class="header__contacts">
+            <div class="header__phone">
+                <a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a>
+                <span>Москва · <span th:text="${sait.grafikRaboty}"></span></span>
+            </div>
+            <a class="btn btn--primary" href="#zayavka-forma">Запросить подбор</a>
+        </div>
+
+        <button class="burger" type="button" aria-label="Меню" aria-expanded="false" data-burger>
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+
+    <nav class="nav" aria-label="Основная навигация">
+        <div class="container">
+            <ul class="nav__list" data-menu>
+                <li class="nav__item nav__item--drop">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/nasosy')} ? 'is-active' : ''" href="/nasosy">Насосы</a>
+                    <div class="mega">
+                        <div class="mega__grid">
+                            <div class="mega__gruppa" th:each="gruppa : ${vseGruppy}"
+                                 th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}">
+                                <b class="mega__gruppa-name" th:text="${gruppa.nazvanie}"></b>
+                                <div class="mega__kody">
+                                    <a class="mega__kod" th:each="m : ${markiPoGruppam.get(gruppa.slug)}"
+                                       th:href="@{'/nasosy/' + ${m.slug}}" th:title="${m.rasshifrovka}" th:text="${m.oboznachenie}"></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mega__foot">
+                            <a class="btn btn--outline btn--sm" href="/nasosy">Весь каталог марок</a>
+                            <a class="btn btn--primary btn--sm" href="/nasosy/podbor">Подбор по подаче и напору</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav__item nav__item--drop">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/tortsevye-uplotneniya')} ? 'is-active' : ''" href="/tortsevye-uplotneniya">Торцовые уплотнения</a>
+                    <div class="mega mega--sm">
+                        <ul class="mega__spisok">
+                            <li th:each="s : ${vseSredy}">
+                                <a th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}" th:text="${s.nazvanie}"></a>
+                            </li>
+                        </ul>
+                        <div class="mega__foot">
+                            <a class="btn btn--outline btn--sm" href="/tortsevye-uplotneniya">Все среды</a>
+                            <a class="btn btn--primary btn--sm" href="/tortsevye-uplotneniya/podbor">Подбор уплотнения</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/uslugi')} ? 'is-active' : ''" href="/uslugi">Инжиниринг и сервис</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/blog')} ? 'is-active' : ''" href="/blog">База знаний</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/o-kompanii')} ? 'is-active' : ''" href="/o-kompanii">О компании</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" th:classappend="${tekushchiyPut.startsWith('/kontakty')} ? 'is-active' : ''" href="/kontakty">Контакты</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

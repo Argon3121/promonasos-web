@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <section class="hero">
+        <div class="container hero__inner">
+            <div class="hero__text">
+                <p class="eyebrow">Собственное производство · Москва · с 2001 года</p>
+                <h1>Промышленные насосы и торцовые уплотнения под вашу задачу</h1>
+                <p class="hero__lead">
+                    Поставляем насосы <span th:text="${#lists.size(marki)}"></span> основных марок и производим торцовые уплотнения,
+                    в том числе взамен импортных. Подбираем по рабочей точке и по перекачиваемой среде,
+                    а не по остаткам на складе.
+                </p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary btn--lg" href="/nasosy/podbor">Подобрать насос по подаче и напору</a>
+                    <a class="btn btn--outline btn--lg" href="/tortsevye-uplotneniya/podbor">Подобрать уплотнение по среде</a>
+                </div>
+                <p class="hero__hint">
+                    Знаете марку? Выберите её ниже — на странице марки весь модельный ряд с характеристиками.
+                </p>
+            </div>
+            <dl class="hero__stats">
+                <div><dt>лет на рынке</dt><dd>25</dd></div>
+                <div><dt>предприятий-заказчиков</dt><dd>250+</dd></div>
+                <div><dt>типоразмеров в каталоге</dt><dd th:text="${vsegoModeley}"></dd></div>
+                <div><dt>сред для подбора уплотнений</dt><dd th:text="${#lists.size(sredy)}"></dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <!--
+        Каталог — 45 марок в 11 категориях, поэтому на главной не полные карточки
+        (это уже задача страницы /nasosy), а компактный список кодов по категориям —
+        так посетитель, который уже знает обозначение, находит его за секунды,
+        не пролистывая длинное описание каждой марки.
+    -->
+    <section class="section" id="marki">
+        <div class="container">
+            <div class="section-head">
+                <h2>Насосы по маркам</h2>
+                <p>Знаете обозначение — найдите его ниже и сразу откройте характеристики. Нужен обзор — весь каталог с описаниями и модельными рядами.</p>
+            </div>
+
+            <div class="gruppa-kratko" th:each="gruppa : ${vseGruppy}"
+                 th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}">
+                <h3 class="gruppa-kratko__name" th:text="${gruppa.nazvanie}"></h3>
+                <ul class="chips">
+                    <li th:each="marka : ${markiPoGruppam.get(gruppa.slug)}">
+                        <a class="chip" th:href="@{'/nasosy/' + ${marka.slug}}"
+                           th:title="${marka.rasshifrovka}" th:text="${marka.oboznachenie}"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="section-foot"><a class="btn btn--primary" href="/nasosy">Весь каталог с характеристиками</a></p>
+        </div>
+    </section>
+
+    <section class="section section--alt" id="uplotneniya">
+        <div class="container">
+            <div class="section-head">
+                <h2>Торцовые уплотнения — подбор по среде</h2>
+                <p>
+                    Уплотнение подбирается не по марке насоса, а по тому, что через него идёт:
+                    агрессивности, температуре, абразивности и давлению среды.
+                </p>
+            </div>
+            <div class="sredy">
+                <a class="sreda-card" th:each="s : ${sredy}" th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}">
+                    <h3 th:text="${s.nazvanie}"></h3>
+                    <p th:text="${s.opisanie}"></p>
+                    <dl class="sreda-card__params">
+                        <div><dt>Агрессивность</dt><dd th:text="${s.agressivnost}"></dd></div>
+                        <div><dt>Абразивность</dt><dd th:text="${s.abrazivnost}"></dd></div>
+                        <div><dt>Температура</dt><dd th:text="${s.diapazonTemperatur}"></dd></div>
+                        <div><dt>Давление</dt><dd th:text="${s.diapazonDavleniy}"></dd></div>
+                    </dl>
+                    <span class="link-arrow">Уплотнения для этой среды</span>
+                </a>
+            </div>
+            <p class="section-foot">
+                <a class="btn btn--secondary" href="/tortsevye-uplotneniya/podbor">Подбор по валу, давлению и температуре</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="section" id="uslugi">
+        <div class="container">
+            <div class="section-head">
+                <h2>Инжиниринг и сервис</h2>
+                <p>Мы не просто отгружаем оборудование: считаем, разрабатываем, монтируем и учим ваш персонал.</p>
+            </div>
+            <div class="uslugi">
+                <a class="usluga-card" th:each="u : ${uslugi}" th:href="'/uslugi#' + ${u.slug}">
+                    <h3 th:text="${u.nazvanie}"></h3>
+                    <p th:text="${u.kratkoeOpisanie}"></p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section--alt" id="pochemu-my">
+        <div class="container">
+            <div class="section-head">
+                <h2>Почему к нам приходят повторно</h2>
+            </div>
+            <div class="dovie">
+                <div class="dovie__item">
+                    <h3>Подбор ведёт инженер</h3>
+                    <p>Мы спрашиваем про среду, температуру и режим работы не для галочки: от этого зависит, проработает насос год или пять.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Собственное производство уплотнений</h3>
+                    <p>Разрабатываем конструкцию под ваши условия и изготавливаем в Москве. Путь от техзадания до образца — короткий.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Импортозамещение без замены насоса</h3>
+                    <p>Подбираем отечественный аналог по маркировке John Crane, EagleBurgmann, Flowserve или по образцу узла.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Шефмонтаж и обучение</h3>
+                    <p>Выезжаем на площадку и монтируем первый узел вместе с вашей службой — дальше персонал справляется сам.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="baza-znaniy">
+        <div class="container">
+            <div class="section-head">
+                <h2>База знаний</h2>
+                <p>Разборы инженеров: как подбирать, почему течёт и что выбрать вместо импорта.</p>
+            </div>
+            <div class="stati">
+                <a class="statya-card" th:each="s : ${stati}" th:href="@{'/blog/' + ${s.slug}}">
+                    <span class="badge" th:text="${s.rubrika}"></span>
+                    <h3 th:text="${s.zagolovok}"></h3>
+                    <p th:text="${s.anons}"></p>
+                    <span class="statya-card__meta" th:text="${s.vremyaChteniya} + ' мин чтения'"></span>
+                </a>
+            </div>
+            <p class="section-foot"><a class="btn btn--outline" href="/blog">Все статьи</a></p>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/cta-block :: cta('Пришлите параметры или просто опишите задачу — подберём насос и уплотнение под неё.')}"></div>
+</div>
+</body>
+</html>

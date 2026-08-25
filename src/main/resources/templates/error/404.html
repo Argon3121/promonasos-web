@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Страница не найдена — ТД «Промоборудование»</title>
+    <meta name="robots" content="noindex, follow"/>
+    <link rel="stylesheet" th:href="@{/css/site.css}"/>
+    <link rel="icon" th:href="@{/images/favicon.svg}" type="image/svg+xml"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<main id="main">
+    <div class="container page-head">
+        <h1>Страница не найдена</h1>
+        <p>Такой страницы нет — возможно, ссылка устарела или в адресе опечатка.</p>
+        <div class="page-head__actions">
+            <a class="btn btn--primary" href="/">На главную</a>
+            <a class="btn btn--outline" href="/nasosy">Каталог насосов</a>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

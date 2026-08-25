@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li aria-current="page">Насосы</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-head">
+            <h1>Промышленные насосы</h1>
+            <p>
+                <span th:text="${#lists.size(marki)}"></span> марок и <span th:text="${vsegoModeley}"></span> типоразмеров. Выберите марку, если знаете её,
+                или подберите насос по рабочей точке.
+            </p>
+            <div class="page-head__actions">
+                <a class="btn btn--primary" href="/nasosy/podbor">Подбор по подаче и напору</a>
+                <a class="btn btn--outline" href="/tortsevye-uplotneniya">Торцовые уплотнения</a>
+            </div>
+        </div>
+
+        <!-- Быстрый переход по категориям — при 45 марках пролистывать до нужной группы вручную долго. -->
+        <ul class="chips">
+            <li th:each="gruppa : ${vseGruppy}"
+                th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}">
+                <a class="chip" th:href="'#' + ${gruppa.slug}" th:text="${gruppa.nazvanie}"></a>
+            </li>
+        </ul>
+
+        <!--
+            th:if выполняется раньше th:with на одном теге (порядок атрибутов
+            Thymeleaf), поэтому markiGruppy из th:with внутри th:if ещё не
+            существует — условие всегда ложно. Обращаемся к карте напрямую.
+        -->
+        <section class="gruppa" th:each="gruppa : ${vseGruppy}"
+                  th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}"
+                  th:id="${gruppa.slug}">
+            <h2 class="gruppa__name" th:text="${gruppa.nazvanie}"></h2>
+            <p class="gruppa__desc" th:text="${gruppa.opisanie}"></p>
+            <div class="marki">
+                <article class="marka-card" th:each="marka : ${markiPoGruppam.get(gruppa.slug)}">
+                    <img class="marka-card__image"
+                         th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
+                         alt="" loading="lazy"/>
+                    <a class="marka-card__head" th:href="@{'/nasosy/' + ${marka.slug}}">
+                        <span class="marka-card__code" th:text="${marka.oboznachenie}"></span>
+                        <span class="marka-card__name" th:text="${marka.nazvanie}"></span>
+                    </a>
+                    <p class="marka-card__rasshifrovka" th:text="${marka.rasshifrovka}"></p>
+                    <p class="marka-card__opisanie" th:text="${marka.kratkoeOpisanie}"></p>
+                    <div class="marka-card__foot">
+                        <a class="link-arrow" th:href="@{'/nasosy/' + ${marka.slug}}">Модельный ряд и характеристики</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Не нашли нужную марку? Пришлите обозначение — проверим наличие и подберём замену.')}"></div>
+</div>
+</body>
+</html>

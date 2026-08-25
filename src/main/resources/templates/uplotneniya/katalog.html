@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li aria-current="page">Торцовые уплотнения</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-head">
+            <h1>Торцовые уплотнения</h1>
+            <p>
+                Собственное производство с 2001 года. Уплотнение подбирается по перекачиваемой среде:
+                её агрессивность, температура, абразивность и давление определяют материалы пары трения,
+                вторичное уплотнение и саму конструкцию узла.
+            </p>
+            <div class="page-head__actions">
+                <a class="btn btn--primary" href="/tortsevye-uplotneniya/podbor">Подбор по параметрам</a>
+                <a class="btn btn--outline" href="/uslugi#importozameshchenie">Аналог импортному</a>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2>Выберите перекачиваемую среду</h2>
+            <div class="sredy">
+                <a class="sreda-card" th:each="s : ${sredy}" th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}">
+                    <h3 th:text="${s.nazvanie}"></h3>
+                    <p th:text="${s.opisanie}"></p>
+                    <dl class="sreda-card__params">
+                        <div><dt>Агрессивность</dt><dd th:text="${s.agressivnost}"></dd></div>
+                        <div><dt>Абразивность</dt><dd th:text="${s.abrazivnost}"></dd></div>
+                        <div><dt>Температура</dt><dd th:text="${s.diapazonTemperatur}"></dd></div>
+                        <div><dt>Давление</dt><dd th:text="${s.diapazonDavleniy}"></dd></div>
+                    </dl>
+                    <span class="link-arrow">Уплотнения для этой среды</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" th:with="chisla=${T(ru.promonasos.util.Chisla)}">
+            <h2>Все изделия</h2>
+            <p class="section-sub">Сводная таблица по рабочим параметрам — для быстрого сравнения.</p>
+            <div class="table-wrap">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Обозначение</th>
+                        <th scope="col">Тип</th>
+                        <th scope="col" class="num">Вал, мм</th>
+                        <th scope="col" class="num">Давление, кгс/см²</th>
+                        <th scope="col" class="num">Температура, °C</th>
+                        <th scope="col">Вторичное уплотнение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${uplotneniya}">
+                        <th scope="row"><a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}" th:text="${u.oboznachenie}"></a></th>
+                        <td th:text="${u.tip}"></td>
+                        <td class="num" th:text="${chisla.tekst(u.diametrValaOt)} + '–' + ${chisla.tekst(u.diametrValaDo)}"></td>
+                        <td class="num" th:text="'до ' + ${chisla.tekst(u.davlenieDo)}"></td>
+                        <td class="num" th:text="${chisla.tekst(u.temperaturaOt)} + '…' + ${chisla.tekst(u.temperaturaDo)}"></td>
+                        <td th:text="${u.vtorichnoeUplotnenie}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Пришлите марку насоса, среду и рабочие параметры — подберём уплотнение и назовём срок.')}"></div>
+</div>
+</body>
+</html>

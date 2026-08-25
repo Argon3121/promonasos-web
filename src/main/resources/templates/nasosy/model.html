@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe" th:with="chisla=${T(ru.promonasos.util.Chisla)}">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/nasosy">Насосы</a></li>
+                <li><a th:href="@{'/nasosy/' + ${marka.slug}}" th:text="${marka.nazvanie}"></a></li>
+                <li aria-current="page" th:text="${model.oboznachenie}"></li>
+            </ol>
+        </div>
+    </nav>
+
+    <script type="application/ld+json" th:inline="text">
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Насос [[${model.oboznachenie}]]",
+      "description": "[[${model.seoDescription}]]",
+      "sku": "[[${model.oboznachenie}]]",
+      "brand": { "@type": "Brand", "name": "ТД «Промоборудование»" },
+      "additionalProperty": [
+        { "@type": "PropertyValue", "name": "Подача", "value": "[[${chisla.tekst(model.podacha)}]] м³/ч" },
+        { "@type": "PropertyValue", "name": "Напор", "value": "[[${chisla.tekst(model.napor)}]] м" },
+        { "@type": "PropertyValue", "name": "Мощность", "value": "[[${chisla.tekst(model.moshchnost)}]] кВт" },
+        { "@type": "PropertyValue", "name": "Материал проточной части", "value": "[[${model.materialProtochnoyChasti}]]" }
+      ]
+    }
+    </script>
+    <script type="application/ld+json" th:inline="text">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Главная", "item": "[[${sait.domen}]]/" },
+        { "@type": "ListItem", "position": 2, "name": "Насосы", "item": "[[${sait.domen}]]/nasosy" },
+        { "@type": "ListItem", "position": 3, "name": "[[${marka.nazvanie}]]", "item": "[[${sait.domen}]]/nasosy/[[${marka.slug}]]" },
+        { "@type": "ListItem", "position": 4, "name": "[[${model.oboznachenie}]]", "item": "[[${sait.domen}]]/nasosy/[[${marka.slug}]]/[[${model.slug}]]" }
+      ]
+    }
+    </script>
+
+    <div class="container">
+        <div class="tovar">
+            <div class="tovar__main" th:with="gruppa=${gruppyPoSlug.get(marka.gruppaSlug)}">
+                <img class="tovar__foto" th:if="${gruppa != null}"
+                     th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
+                     th:alt="'Насос ' + ${model.oboznachenie}" loading="lazy"/>
+                <span class="foto-podpis" th:if="${gruppa != null}">Фото представляет тип конструкции этой серии, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
+
+                <p class="eyebrow" th:text="${marka.rasshifrovka} + ' · серия ' + ${marka.oboznachenie}"></p>
+                <h1 th:text="'Насос ' + ${model.oboznachenie}"></h1>
+
+                <dl class="tochka">
+                    <div><dt>Подача</dt><dd th:text="${chisla.tekst(model.podacha)} + ' м³/ч'"></dd></div>
+                    <div><dt>Напор</dt><dd th:text="${chisla.tekst(model.napor)} + ' м'"></dd></div>
+                    <div><dt>Мощность</dt><dd th:text="${chisla.tekst(model.moshchnost)} + ' кВт'"></dd></div>
+                </dl>
+
+                <h2>Технические характеристики</h2>
+                <div class="table-wrap">
+                    <table class="data">
+                        <tbody>
+                        <tr><th scope="row">Обозначение</th><td th:text="${model.oboznachenie}"></td></tr>
+                        <tr><th scope="row">Серия</th>
+                            <td><a th:href="@{'/nasosy/' + ${marka.slug}}" th:text="${marka.nazvanie}"></a> — <span th:text="${marka.rasshifrovka}"></span></td>
+                        </tr>
+                        <tr><th scope="row">Подача, м³/ч</th><td th:text="${chisla.tekst(model.podacha)}"></td></tr>
+                        <tr><th scope="row">Напор, м</th><td th:text="${chisla.tekst(model.napor)}"></td></tr>
+                        <tr><th scope="row">Мощность двигателя, кВт</th><td th:text="${chisla.tekst(model.moshchnost)}"></td></tr>
+                        <tr><th scope="row">Частота вращения, об/мин</th>
+                            <td th:text="${model.oboroty > 0} ? ${model.oboroty} : 'уточняется'"></td></tr>
+                        <tr><th scope="row">Диаметр вала под уплотнение, мм</th>
+                            <td th:text="${model.diametrVala > 0} ? ${chisla.tekst(model.diametrVala)} : 'уточняется'"></td></tr>
+                        <tr><th scope="row">Максимальная температура среды, °C</th><td th:text="${chisla.tekst(model.maxTemperatura)}"></td></tr>
+                        <tr><th scope="row">Материал проточной части</th><td th:text="${model.materialProtochnoyChasti}"></td></tr>
+                        <tr><th scope="row">Перекачиваемые среды</th>
+                            <td th:text="${#strings.listJoin(#lists.size(marka.primenenie) > 2 ? marka.primenenie.subList(0,2) : marka.primenenie, ', ')}"></td></tr>
+                        <tr><th scope="row">Габариты, мм</th>
+                            <td th:text="${#strings.isEmpty(model.gabarity)} ? 'уточняется' : ${model.gabarity}"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h2>Где применяется</h2>
+                <ul class="list-check">
+                    <li th:each="p : ${marka.primenenie}" th:text="${p}"></li>
+                </ul>
+
+                <div th:if="${not #lists.isEmpty(uplotneniya)}">
+                    <h2 th:text="'Торцовые уплотнения для этого насоса'"></h2>
+                    <p th:text="'Изделия собственного производства, применяемые на насосах ' + ${marka.oboznachenie} + '.'"></p>
+                    <div class="upl-list">
+                        <article class="upl-card" th:each="u : ${uplotneniya}">
+                            <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}"><h3 th:text="${u.oboznachenie}"></h3></a>
+                            <p th:text="${u.tip}"></p>
+                            <dl class="upl-card__params">
+                                <div><dt>Вал</dt><dd th:text="${chisla.tekst(u.diametrValaOt)} + '–' + ${chisla.tekst(u.diametrValaDo)} + ' мм'"></dd></div>
+                                <div><dt>Давление</dt><dd th:text="'до ' + ${chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
+                            </dl>
+                            <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Характеристики</a>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="tovar__buy">
+                <p class="tovar__price">Цена по запросу</p>
+                <p class="tovar__price-note">Зависит от исполнения, комплектации двигателя и объёма партии</p>
+                <ul class="tovar__meta">
+                    <li><span>Наличие</span><b th:text="${model.nalichie}"></b></li>
+                    <li><span>Срок изготовления</span><b>уточняется</b></li>
+                    <li><span>Ответ на запрос</span><b>1 рабочий день</b></li>
+                </ul>
+                <a class="btn btn--primary btn--block btn--lg" href="#zayavka-forma">Узнать цену и срок</a>
+                <a class="btn btn--outline btn--block"
+                   th:href="@{/nasosy/podbor(podacha=${model.podacha}, napor=${model.napor})}">Похожие по рабочей точке</a>
+            </aside>
+        </div>
+
+        <section class="section" th:if="${not #lists.isEmpty(drugieModeli)}">
+            <h2 th:text="'Другие типоразмеры серии ' + ${marka.oboznachenie}"></h2>
+            <div class="table-wrap">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Типоразмер</th>
+                        <th scope="col" class="num">Подача, м³/ч</th>
+                        <th scope="col" class="num">Напор, м</th>
+                        <th scope="col" class="num">Мощность, кВт</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="d : ${drugieModeli}">
+                        <th scope="row"><a th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${d.slug}}" th:text="${d.oboznachenie}"></a></th>
+                        <td class="num" th:text="${chisla.tekst(d.podacha)}"></td>
+                        <td class="num" th:text="${chisla.tekst(d.napor)}"></td>
+                        <td class="num" th:text="${chisla.tekst(d.moshchnost)}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="section-foot"><a class="btn btn--outline" th:href="@{'/nasosy/' + ${marka.slug}}" th:text="'Весь модельный ряд ' + ${marka.oboznachenie}"></a></p>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Уточним цену, срок изготовления и наличие насоса ' + ${model.oboznachenie} + '.')}"></div>
+</div>
+</body>
+</html>
