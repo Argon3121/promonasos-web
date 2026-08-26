@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import ru.promonasos.model.GruppaNasosov;
 import ru.promonasos.model.MarkaNasosa;
 import ru.promonasos.model.ModelNasosa;
 import ru.promonasos.model.ZaprosPodboraNasosa;
@@ -43,7 +44,7 @@ public class NasosyController {
         model.addAttribute("zagolovok", "Промышленные насосы — каталог марок и моделей | ТД «Промоборудование»");
         model.addAttribute("opisanie", "Каталог промышленных насосов: К, КМ, Д, ЦНС, Х, АХ, СМ, Ф, ТК, ВК, ПЭ, СЭ. Технические характеристики, модельные ряды, подбор по подаче и напору. Москва, с 2001 года.");
         model.addAttribute("canonical", "/nasosy");
-        return "nasosy/katalog";
+        return "nasosy-katalog/katalog";
     }
 
     /**
@@ -68,7 +69,7 @@ public class NasosyController {
         model.addAttribute("opisanie", "Подбор промышленного насоса по рабочей точке: укажите среду, подачу в м³/ч и напор в метрах. Показываем подходящие типоразмеры с обоснованием.");
         model.addAttribute("canonical", "/nasosy/podbor");
         model.addAttribute("noindex", estZapros); // страницы с параметрами в индекс не пускаем
-        return "nasosy/podbor";
+        return "nasosy-podbor/podbor";
     }
 
     /** Страница марки с модельным рядом. /nasosy/{marka} */
@@ -87,8 +88,11 @@ public class NasosyController {
         model.addAttribute("podachaDo", modeli.stream().mapToDouble(ModelNasosa::getPodacha).max().orElse(0));
         model.addAttribute("naporOt", modeli.stream().mapToDouble(ModelNasosa::getNapor).min().orElse(0));
         model.addAttribute("naporDo", modeli.stream().mapToDouble(ModelNasosa::getNapor).max().orElse(0));
-        model.addAttribute("gruppa", nasosyService.getGruppy().stream()
-                .filter(g -> g.getSlug().equals(markaObj.getGruppaSlug())).findFirst().orElse(null));
+        GruppaNasosov gruppa = nasosyService.getGruppy().stream()
+                .filter(g -> g.getSlug().equals(markaObj.getGruppaSlug())).findFirst().orElse(null);
+        model.addAttribute("gruppa", gruppa);
+        model.addAttribute("ogImage", markaObj.getIzobrazhenieOverride() != null
+                ? markaObj.getIzobrazhenieOverride() : (gruppa != null ? gruppa.getIzobrazhenie() : null));
         model.addAttribute("sosedniMarki", nasosyService.getMarkiPoGruppe(markaObj.getGruppaSlug()).stream()
                 .filter(m -> !m.getSlug().equals(marka)).toList());
         model.addAttribute("uplotneniya", uplotneniyaService.getUplotneniyaPoMarke(markaObj.getOboznachenie()));
@@ -97,7 +101,7 @@ public class NasosyController {
         model.addAttribute("zagolovok", markaObj.getSeoTitle());
         model.addAttribute("opisanie", markaObj.getSeoDescription());
         model.addAttribute("canonical", "/nasosy/" + markaObj.getSlug());
-        return "nasosy/marka";
+        return "nasosy-marka/marka";
     }
 
     /** Страница типоразмера. /nasosy/{marka}/{modelSlug} */
@@ -121,9 +125,13 @@ public class NasosyController {
                 .filter(m -> !m.getSlug().equals(modelSlug)).limit(8).toList());
         model.addAttribute("uplotneniya", uplotneniyaService.getUplotneniyaPoMarke(markaObj.getOboznachenie()));
 
+        GruppaNasosov gruppa = nasosyService.getGruppyPoSlug().get(markaObj.getGruppaSlug());
+        model.addAttribute("ogImage", markaObj.getIzobrazhenieOverride() != null
+                ? markaObj.getIzobrazhenieOverride() : (gruppa != null ? gruppa.getIzobrazhenie() : null));
+
         model.addAttribute("zagolovok", modelObj.getSeoTitle());
         model.addAttribute("opisanie", modelObj.getSeoDescription());
         model.addAttribute("canonical", "/nasosy/" + marka + "/" + modelSlug);
-        return "nasosy/model";
+        return "nasosy-model/model";
     }
 }

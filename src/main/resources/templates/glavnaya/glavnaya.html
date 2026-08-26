@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe">
+
+    <section class="hero">
+        <div class="container hero__inner">
+            <div class="hero__text">
+                <p class="eyebrow">Собственное производство · Москва · с 2001 года</p>
+                <h1>Промышленные насосы и торцовые уплотнения под вашу задачу</h1>
+                <p class="hero__lead">
+                    Поставляем насосы <span th:text="${#lists.size(marki)}"></span> основных марок и производим торцовые уплотнения,
+                    в том числе взамен импортных. Подбираем по рабочей точке и по перекачиваемой среде,
+                    а не по остаткам на складе.
+                </p>
+                <div class="hero__actions">
+                    <a class="btn btn--primary btn--lg" href="/nasosy/podbor">Подобрать насос по подаче и напору</a>
+                    <a class="btn btn--outline btn--lg" href="/tortsevye-uplotneniya/podbor">Подобрать уплотнение по среде</a>
+                </div>
+                <p class="hero__hint">
+                    Знаете марку? Выберите её ниже — на странице марки весь модельный ряд с характеристиками.
+                </p>
+            </div>
+            <dl class="hero__stats">
+                <div><dt>лет на рынке</dt><dd>25</dd></div>
+                <div><dt>предприятий-заказчиков</dt><dd>250+</dd></div>
+                <div><dt>типоразмеров в каталоге</dt><dd th:text="${vsegoModeley}"></dd></div>
+                <div><dt>сред для подбора уплотнений</dt><dd th:text="${#lists.size(sredy)}"></dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <!--
+        С кем мы работаем — два списка: заводы-производители (с логотипами,
+        подтверждено свидетельствами дилера — см. /sertifikaty) и предприятия-
+        заказчики (текстом, из документа "Опыт поставок 2020-2025"). Списки
+        статичные, без отдельной модели/репозитория — обычная разметка.
+        Логотипы — src/main/resources/static/images/partners/.
+    -->
+    <section class="section section--alt" id="partnery">
+        <div class="container">
+            <div class="section-head">
+                <h2>С кем мы работаем</h2>
+                <p>Поставляем оборудование ведущих производителей насосов и работаем с промышленными предприятиями по всей стране.</p>
+            </div>
+
+            <div class="partnery-group">
+                <h3>Производители, чьим официальным дилером мы являемся</h3>
+                <div class="partnery">
+                    <figure class="partner-card"><img src="/images/partners/soltek.png" alt="Солтек Новомосковский механический завод" loading="lazy"/><figcaption class="partner-card__name">Солтек НМЗ</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/adekta.png" alt="Адекта" loading="lazy"/><figcaption class="partner-card__name">Адекта</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/knz.png" alt="Катайский насосный завод" loading="lazy"/><figcaption class="partner-card__name">Катайский насосный завод</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/nornat.jpg" alt="Норнат" loading="lazy"/><figcaption class="partner-card__name">Норнат</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/smz.webp" alt="Средневолжский машиностроительный завод" loading="lazy"/><figcaption class="partner-card__name">Средневолжский машиностроительный завод</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/tmz.png" alt="Талнахский механический завод" loading="lazy"/><figcaption class="partner-card__name">Талнахский механический завод</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/tulagidromash.png" alt="Тулагидромаш" loading="lazy"/><figcaption class="partner-card__name">Тулагидромаш</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/uralgidroprom.jpeg" alt="УралГидроПром" loading="lazy"/><figcaption class="partner-card__name">УралГидроПром</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/energiya.jpg" alt="Энергия — насосное оборудование" loading="lazy"/><figcaption class="partner-card__name">Энергия</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/centrnasosservis.png" alt="Центрнасоссервис" loading="lazy"/><figcaption class="partner-card__name">Центрнасоссервис</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/nasoselektroprom.svg" alt="Электромотор (НасосЭлектроПром)" loading="lazy"/><figcaption class="partner-card__name">НасосЭлектроПром</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/nhn.png" alt="НХН — Невьянские химические насосы" loading="lazy"/><figcaption class="partner-card__name">Невьянские химические насосы</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/oem.png" alt="ОЕМ" loading="lazy"/><figcaption class="partner-card__name">ОЕМ</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/promenergomash-ek.png" alt="ПромЭнергомаш-ЕК" loading="lazy"/><figcaption class="partner-card__name">ПромЭнергомаш-ЕК</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/sverdmash.png" alt="Свердмаш" loading="lazy"/><figcaption class="partner-card__name">Свердмаш</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/partners/pinskiy-omz.png" alt="Пинский опытно-механический завод" loading="lazy"/><figcaption class="partner-card__name">Пинский ОМЗ</figcaption></figure>
+                </div>
+                <p class="section-foot"><a class="link-arrow" href="/sertifikaty">Свидетельства официального дилера</a></p>
+            </div>
+
+            <div class="partnery-group">
+                <h3>Предприятия, для которых мы поставляли оборудование</h3>
+                <div class="partnery">
+                    <figure class="partner-card"><img src="/images/potrebiteli/lukoil.png" alt="ЛУКОЙЛ" loading="lazy"/><figcaption class="partner-card__name">ЛУКОЙЛ</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/rosneft.png" alt="Роснефть" loading="lazy"/><figcaption class="partner-card__name">Роснефть</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/tatneft.png" alt="Татнефть" loading="lazy"/><figcaption class="partner-card__name">Татнефть</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/nlmk.png" alt="НЛМК" loading="lazy"/><figcaption class="partner-card__name">НЛМК</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/evraz.png" alt="ЕВРАЗ" loading="lazy"/><figcaption class="partner-card__name">ЕВРАЗ</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/transneft.png" alt="Транснефть" loading="lazy"/><figcaption class="partner-card__name">Транснефть</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/uralkaliy.svg" alt="Уралкалий" loading="lazy"/><figcaption class="partner-card__name">Уралкалий</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/bashneft.svg" alt="Башнефть" loading="lazy"/><figcaption class="partner-card__name">Башнефть</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/yunipro.jpg" alt="Юнипро" loading="lazy"/><figcaption class="partner-card__name">Юнипро</figcaption></figure>
+                    <figure class="partner-card"><img src="/images/potrebiteli/kuibyshevazot.svg" alt="КуйбышевАзот" loading="lazy"/><figcaption class="partner-card__name">КуйбышевАзот</figcaption></figure>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--
+        Каталог — 45 марок в 11 категориях, поэтому на главной не полные карточки
+        (это уже задача страницы /nasosy), а компактный список кодов по категориям —
+        так посетитель, который уже знает обозначение, находит его за секунды,
+        не пролистывая длинное описание каждой марки.
+    -->
+    <section class="section" id="marki">
+        <div class="container">
+            <div class="section-head">
+                <h2>Насосы по маркам</h2>
+                <p>Знаете обозначение — найдите его ниже и сразу откройте характеристики. Нужен обзор — весь каталог с описаниями и модельными рядами.</p>
+            </div>
+
+            <div class="gruppa-kratko" th:each="gruppa : ${vseGruppy}"
+                 th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}">
+                <h3 class="gruppa-kratko__name" th:text="${gruppa.nazvanie}"></h3>
+                <ul class="chips">
+                    <li th:each="marka : ${markiPoGruppam.get(gruppa.slug)}">
+                        <a class="chip" th:href="@{'/nasosy/' + ${marka.slug}}"
+                           th:title="${marka.rasshifrovka}" th:text="${marka.oboznachenie}"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <p class="section-foot"><a class="btn btn--primary" href="/nasosy">Весь каталог с характеристиками</a></p>
+        </div>
+    </section>
+
+    <section class="section section--alt" id="uplotneniya">
+        <div class="container">
+            <div class="section-head">
+                <h2>Торцовые уплотнения — подбор по среде</h2>
+                <p>
+                    Уплотнение подбирается не по марке насоса, а по тому, что через него идёт:
+                    агрессивности, температуре, абразивности и давлению среды.
+                </p>
+            </div>
+            <div class="sredy">
+                <a class="sreda-card" th:each="s : ${sredy}" th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}">
+                    <h3 th:text="${s.nazvanie}"></h3>
+                    <p th:text="${s.opisanie}"></p>
+                    <dl class="sreda-card__params">
+                        <div><dt>Агрессивность</dt><dd th:text="${s.agressivnost}"></dd></div>
+                        <div><dt>Абразивность</dt><dd th:text="${s.abrazivnost}"></dd></div>
+                        <div><dt>Температура</dt><dd th:text="${s.diapazonTemperatur}"></dd></div>
+                        <div><dt>Давление</dt><dd th:text="${s.diapazonDavleniy}"></dd></div>
+                    </dl>
+                    <span class="link-arrow">Уплотнения для этой среды</span>
+                </a>
+            </div>
+            <p class="section-foot">
+                <a class="btn btn--secondary" href="/tortsevye-uplotneniya/podbor">Подбор по валу, давлению и температуре</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="section" id="pochemu-my">
+        <div class="container">
+            <div class="section-head">
+                <h2>Почему к нам приходят повторно</h2>
+            </div>
+            <div class="dovie">
+                <div class="dovie__item">
+                    <h3>Подбор ведёт инженер</h3>
+                    <p>Мы спрашиваем про среду, температуру и режим работы не для галочки: от этого зависит, проработает насос год или пять.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Собственное производство уплотнений</h3>
+                    <p>Разрабатываем конструкцию под ваши условия и изготавливаем в Москве. Путь от техзадания до образца — короткий.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Импортозамещение без замены насоса</h3>
+                    <p>Подбираем отечественный аналог по маркировке John Crane, EagleBurgmann, Flowserve или по образцу узла.</p>
+                </div>
+                <div class="dovie__item">
+                    <h3>Официальный дилер производителей</h3>
+                    <p>Подтверждённый статус дилера у нескольких заводов сразу — не привязаны к одному производителю, поэтому подбираем то, что подходит задаче, а не то, что есть на одном складе.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section--alt" id="etapy">
+        <div class="container">
+            <div class="section-head">
+                <h2>Как проходит заказ</h2>
+            </div>
+            <div class="etapy">
+                <div class="etap">
+                    <h3>Заполнение опросного листа</h3>
+                    <p>Присылаете параметры среды и рабочей точки — по форме ниже или в свободном виде.</p>
+                </div>
+                <div class="etap">
+                    <h3>Согласование сроков и стоимости</h3>
+                    <p>Считаем подбор, присылаем спецификацию с ценой и сроком изготовления.</p>
+                </div>
+                <div class="etap">
+                    <h3>Заключение договора</h3>
+                    <p>Фиксируем исполнение, цену и срок — без изменений задним числом.</p>
+                </div>
+                <div class="etap">
+                    <h3>Выполнение и доставка</h3>
+                    <p>Изготавливаем или комплектуем заказ и доставляем его вам.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="o-kompanii">
+        <div class="container two-col">
+            <div>
+                <h2>О компании</h2>
+                <p>
+                    Работаем с 2001 года: поставляем промышленные насосы ведущих производителей
+                    и производим торцовые уплотнения собственными силами в Москве — если готового
+                    исполнения под вашу среду нет, разрабатываем конструкцию и изготавливаем её.
+                </p>
+                <p class="section-foot"><a class="link-arrow" href="/sertifikaty">Свидетельства официального дилера</a></p>
+            </div>
+            <aside class="panel">
+                <dl class="kontakty">
+                    <div><dt>На рынке</dt><dd>с 2001 года</dd></div>
+                    <div><dt>Заказчиков</dt><dd>более 250 предприятий</dd></div>
+                    <div><dt>Производство уплотнений</dt><dd>собственное, Москва</dd></div>
+                </dl>
+            </aside>
+        </div>
+    </section>
+
+    <section class="section section--alt" id="baza-znaniy">
+        <div class="container">
+            <div class="section-head">
+                <h2>База знаний</h2>
+                <p>Разборы инженеров: как подбирать, почему течёт и что выбрать вместо импорта.</p>
+            </div>
+            <div class="stati">
+                <a class="statya-card" th:each="s : ${stati}" th:href="@{'/blog/' + ${s.slug}}">
+                    <span class="badge" th:text="${s.rubrika}"></span>
+                    <h3 th:text="${s.zagolovok}"></h3>
+                    <p th:text="${s.anons}"></p>
+                    <span class="statya-card__meta" th:text="${s.vremyaChteniya} + ' мин чтения'"></span>
+                </a>
+            </div>
+            <p class="section-foot"><a class="btn btn--outline" href="/blog">Все статьи</a></p>
+        </div>
+    </section>
+
+    <div th:replace="~{fragments/cta-block :: cta('Пришлите параметры или просто опишите задачу — подберём насос и уплотнение под неё.')}"></div>
+</div>
+</body>
+</html>

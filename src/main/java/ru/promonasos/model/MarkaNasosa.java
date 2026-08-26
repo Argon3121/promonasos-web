@@ -17,7 +17,6 @@ public class MarkaNasosa {
     private final List<String> sredy;
     private final List<String> primenenie;
     private final List<String> preimushchestva;
-    private final List<String> sovmestimyeUplotneniya;
     private final String seoTitle;
     private final String seoDescription;
     // Не final: по умолчанию марка показывает общее фото группы (gruppa.izobrazhenie),
@@ -28,7 +27,7 @@ public class MarkaNasosa {
     public MarkaNasosa(String oboznachenie, String slug, String nazvanie, String rasshifrovka,
                         String kratkoeOpisanie, List<String> opisanie, String gruppaSlug,
                         List<String> sredy, List<String> primenenie, List<String> preimushchestva,
-                        List<String> sovmestimyeUplotneniya, String seoTitle, String seoDescription) {
+                        String seoTitle, String seoDescription) {
         this.oboznachenie = oboznachenie;
         this.slug = slug;
         this.nazvanie = nazvanie;
@@ -39,7 +38,6 @@ public class MarkaNasosa {
         this.sredy = sredy;
         this.primenenie = primenenie;
         this.preimushchestva = preimushchestva;
-        this.sovmestimyeUplotneniya = sovmestimyeUplotneniya;
         this.seoTitle = seoTitle;
         this.seoDescription = seoDescription;
     }
@@ -54,7 +52,6 @@ public class MarkaNasosa {
     public List<String> getSredy() { return sredy; }
     public List<String> getPrimenenie() { return primenenie; }
     public List<String> getPreimushchestva() { return preimushchestva; }
-    public List<String> getSovmestimyeUplotneniya() { return sovmestimyeUplotneniya; }
     public String getSeoTitle() { return seoTitle; }
     public String getSeoDescription() { return seoDescription; }
     public String getIzobrazhenieOverride() { return izobrazhenieOverride; }

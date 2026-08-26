@@ -37,7 +37,7 @@ public class UplotneniyaController {
         model.addAttribute("zagolovok", "Торцовые уплотнения — каталог по средам | ТД «Промоборудование»");
         model.addAttribute("opisanie", "Торцовые уплотнения собственного производства: подбор по перекачиваемой среде, давлению, температуре и диаметру вала. Вода, нефтепродукты, кислоты, пульпа, пищевые среды.");
         model.addAttribute("canonical", "/tortsevye-uplotneniya");
-        return "uplotneniya/katalog";
+        return "uplotneniya-katalog/katalog";
     }
 
     /** Подбор по параметрам среды. /tortsevye-uplotneniya/podbor */
@@ -60,7 +60,7 @@ public class UplotneniyaController {
         model.addAttribute("opisanie", "Подбор торцового уплотнения: перекачиваемая среда, диаметр вала, рабочее давление и температура. Показываем изделия, которые перекрывают ваши условия.");
         model.addAttribute("canonical", "/tortsevye-uplotneniya/podbor");
         model.addAttribute("noindex", estZapros);
-        return "uplotneniya/podbor";
+        return "uplotneniya-podbor/podbor";
     }
 
     /** Страница среды. /tortsevye-uplotneniya/{sreda} */
@@ -82,7 +82,8 @@ public class UplotneniyaController {
         model.addAttribute("zagolovok", sredaObj.getSeoTitle());
         model.addAttribute("opisanie", sredaObj.getSeoDescription());
         model.addAttribute("canonical", "/tortsevye-uplotneniya/" + sredaObj.getSlug());
-        return "uplotneniya/sreda";
+        model.addAttribute("ogImage", "/images/uplotnenie.jpg");
+        return "uplotneniya-sreda/sreda";
     }
 
     /**
@@ -110,6 +111,7 @@ public class UplotneniyaController {
         model.addAttribute("zagolovok", izdelie.getSeoTitle());
         model.addAttribute("opisanie", izdelie.getSeoDescription());
         model.addAttribute("canonical", "/tortsevye-uplotneniya/izdelie/" + izdelie.getSlug());
-        return "uplotneniya/izdelie";
+        model.addAttribute("ogImage", "/images/uplotnenie.jpg");
+        return "uplotneniya-izdelie/izdelie";
     }
 }

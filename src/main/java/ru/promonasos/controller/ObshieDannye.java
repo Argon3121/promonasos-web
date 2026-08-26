@@ -7,17 +7,15 @@ import ru.promonasos.config.SaitSvoystva;
 import ru.promonasos.model.GruppaNasosov;
 import ru.promonasos.model.MarkaNasosa;
 import ru.promonasos.model.SredaUplotneniya;
-import ru.promonasos.model.Usluga;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.UplotneniyaService;
-import ru.promonasos.service.UslugiService;
 
 import java.util.List;
 import java.util.Map;
 
 /**
  * Данные, нужные почти на каждой странице: реквизиты сайта и списки для
- * шапки/подвала (мега-меню марок, среды, услуги). В оригинале на Razor каждый
+ * шапки/подвала (мега-меню марок, среды). В оригинале на Razor каждый
  * _Header/_Footer сам делал @inject нужного репозитория — здесь то же самое
  * объявлено один раз для всех контроллеров.
  */
@@ -26,14 +24,11 @@ public class ObshieDannye {
 
     private final NasosyService nasosyService;
     private final UplotneniyaService uplotneniyaService;
-    private final UslugiService uslugiService;
     private final SaitSvoystva sait;
 
-    public ObshieDannye(NasosyService nasosyService, UplotneniyaService uplotneniyaService,
-                         UslugiService uslugiService, SaitSvoystva sait) {
+    public ObshieDannye(NasosyService nasosyService, UplotneniyaService uplotneniyaService, SaitSvoystva sait) {
         this.nasosyService = nasosyService;
         this.uplotneniyaService = uplotneniyaService;
-        this.uslugiService = uslugiService;
         this.sait = sait;
     }
 
@@ -67,11 +62,6 @@ public class ObshieDannye {
     @ModelAttribute("vseSredy")
     public List<SredaUplotneniya> vseSredy() {
         return uplotneniyaService.getSredyUplotneniy();
-    }
-
-    @ModelAttribute("vseUslugi")
-    public List<Usluga> vseUslugi() {
-        return uslugiService.getUslugi();
     }
 
     /**

@@ -12,7 +12,7 @@ import ru.promonasos.service.BlogService;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.UplotneniyaService;
 
-/** База знаний: информационный трафик и снятие возражений перед заявкой. */
+// База знаний
 @Controller
 public class BlogController {
 
@@ -27,7 +27,7 @@ public class BlogController {
         this.uplotneniyaService = uplotneniyaService;
     }
 
-    /** Список статей с фильтром по рубрике. /blog */
+    // Список статей с фильтром по рубрике
     @GetMapping("/blog")
     public String spisok(@RequestParam(required = false) String rubrika, Model model) {
         model.addAttribute("stati", blogService.getStatiPoRubrike(rubrika));
@@ -38,10 +38,10 @@ public class BlogController {
         model.addAttribute("opisanie", "Статьи инженеров о подборе насосов по рабочей точке, выборе торцовых уплотнений, парах трения, причинах отказов и импортозамещении.");
         model.addAttribute("canonical", "/blog");
         model.addAttribute("noindex", rubrika != null && !rubrika.isEmpty());
-        return "blog/spisok";
+        return "blog-spisok/spisok";
     }
 
-    /** Статья. /blog/{slug} */
+    // Статья
     @GetMapping("/blog/{slug}")
     public String statya(@PathVariable String slug, Model model) {
         StatyaBloga statya = blogService.getStatyu(slug);
@@ -60,6 +60,6 @@ public class BlogController {
         model.addAttribute("zagolovok", statya.getSeoTitle());
         model.addAttribute("opisanie", statya.getSeoDescription());
         model.addAttribute("canonical", "/blog/" + statya.getSlug());
-        return "blog/statya";
+        return "blog-statya/statya";
     }
 }

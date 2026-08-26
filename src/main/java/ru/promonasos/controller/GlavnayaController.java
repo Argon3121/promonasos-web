@@ -2,6 +2,8 @@ package ru.promonasos.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,50 +13,51 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.promonasos.model.Zayavka;
 import ru.promonasos.service.BlogService;
 import ru.promonasos.service.NasosyService;
+import ru.promonasos.service.SertifikatyService;
 import ru.promonasos.service.UplotneniyaService;
-import ru.promonasos.service.UslugiService;
 
 import java.net.URI;
 
-/** Главная страница, контакты, о компании, приём заявки, robots.txt и sitemap.xml. */
+// Главная страница
 @Controller
 public class GlavnayaController {
 
+    private static final Logger log = LoggerFactory.getLogger(GlavnayaController.class);
+
     private final NasosyService nasosyService;
     private final UplotneniyaService uplotneniyaService;
-    private final UslugiService uslugiService;
     private final BlogService blogService;
+    private final SertifikatyService sertifikatyService;
 
     public GlavnayaController(NasosyService nasosyService, UplotneniyaService uplotneniyaService,
-                               UslugiService uslugiService, BlogService blogService) {
+                               BlogService blogService, SertifikatyService sertifikatyService) {
         this.nasosyService = nasosyService;
         this.uplotneniyaService = uplotneniyaService;
-        this.uslugiService = uslugiService;
         this.blogService = blogService;
+        this.sertifikatyService = sertifikatyService;
     }
 
-    /** Главная. Ключевой блок — марки насосов с техническим описанием. */
+    // Марки насосов
     @GetMapping("/")
     public String glavnaya(Model model) {
         model.addAttribute("marki", nasosyService.getMarkiNasosov());
         model.addAttribute("sredy", uplotneniyaService.getSredyUplotneniy());
-        model.addAttribute("uslugi", uslugiService.getUslugi());
         model.addAttribute("stati", blogService.getStati().stream().limit(3).toList());
         model.addAttribute("vsegoModeley", nasosyService.vsegoModeley());
 
         model.addAttribute("zagolovok", "Промышленные насосы и торцовые уплотнения — ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Поставка промышленных насосов К, КМ, Д, ЦНС, Х, АХ, СМ, Ф, ТК, ВК и производство торцовых уплотнений с 2001 года. Подбор по рабочей точке, импортозамещение уплотнений, шефмонтаж. Москва.");
+        model.addAttribute("opisanie", "Поставка промышленных насосов К, КМ, Д, ЦНС, Х, АХ, СМ, Ф, ТК, ВК и производство торцовых уплотнений с 2001 года. Подбор по рабочей точке, импортозамещение уплотнений. Москва.");
         model.addAttribute("canonical", "/");
-        return "glavnaya";
+        return "glavnaya/glavnaya";
     }
 
-    /** Контакты и реквизиты. */
+    // Контакты
     @GetMapping("/kontakty")
     public String kontakty(Model model) {
         model.addAttribute("zagolovok", "Контакты — ТД «Промоборудование», Москва");
         model.addAttribute("opisanie", "Адрес, телефон и реквизиты ТД «Промоборудование»: 109544, Москва, ул. Рабочая, д. 93, стр. 2, офис 236. Телефон +7 (495) 925-05-03.");
         model.addAttribute("canonical", "/kontakty");
-        return "kontakty";
+        return "kontakty/kontakty";
     }
 
     /** Источники и лицензии фотографий — обязательное условие CC BY-SA/CC BY. */
@@ -64,16 +67,19 @@ public class GlavnayaController {
         model.addAttribute("opisanie", "Авторы и лицензии фотографий, использованных на сайте.");
         model.addAttribute("canonical", "/istochniki-izobrazheniy");
         model.addAttribute("noindex", true);
-        return "istochniki-izobrazheniy";
+        return "istochniki-izobrazheniy/istochniki-izobrazheniy";
     }
 
-    /** О компании: опыт, производство, сертификаты. */
-    @GetMapping("/o-kompanii")
-    public String oKompanii(Model model) {
-        model.addAttribute("zagolovok", "О компании — ТД «Промоборудование», с 2001 года");
-        model.addAttribute("opisanie", "ТД «Промоборудование»: поставка промышленных насосов и собственное производство торцовых уплотнений с 2001 года. Более 250 предприятий-заказчиков.");
-        model.addAttribute("canonical", "/o-kompanii");
-        return "o-kompanii";
+    // Сертификаты и свидетельства
+    @GetMapping("/sertifikaty")
+    public String sertifikaty(Model model) {
+        model.addAttribute("dilerskie", sertifikatyService.getDilerskie());
+        model.addAttribute("sootvetstviya", sertifikatyService.getSootvetstviya());
+
+        model.addAttribute("zagolovok", "Свидетельства официального дилера — ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Лицензии, разрешения и сертификаты официального дилера ТД «Промоборудование» на поставку промышленных насосов ведущих производителей.");
+        model.addAttribute("canonical", "/sertifikaty");
+        return "sertifikaty/sertifikaty";
     }
 
     /** Приём заявки. В прототипе только валидация и подтверждение. */
@@ -102,7 +108,11 @@ public class GlavnayaController {
             return "redirect:" + vernutsya;
         }
 
-        // TODO: отправка на почту и в CRM.
+        // TODO: отправка на почту и в CRM. Пока фиксируем в лог, чтобы заявка
+        // не терялась бесследно — без этого при падении почты/CRM данные из
+        // формы нигде не остались бы, даже для ручной обработки.
+        log.info("Новая заявка: имя=\"{}\", контакт=\"{}\", организация=\"{}\", задача=\"{}\"",
+                zayavka.getImya(), zayavka.getKontakt(), zayavka.getOrganizatsiya(), zayavka.getZadacha());
         redirectAttributes.addFlashAttribute("uspekh", "Заявка принята. Инженер ответит в течение одного рабочего дня.");
         return "redirect:" + vernutsya;
     }
@@ -135,9 +145,8 @@ public class GlavnayaController {
         dobavitUrl(sb, domen, "/nasosy/podbor", "0.9", "monthly");
         dobavitUrl(sb, domen, "/tortsevye-uplotneniya", "0.9", "weekly");
         dobavitUrl(sb, domen, "/tortsevye-uplotneniya/podbor", "0.9", "monthly");
-        dobavitUrl(sb, domen, "/uslugi", "0.8", "monthly");
         dobavitUrl(sb, domen, "/blog", "0.7", "weekly");
-        dobavitUrl(sb, domen, "/o-kompanii", "0.5", "yearly");
+        dobavitUrl(sb, domen, "/sertifikaty", "0.5", "yearly");
         dobavitUrl(sb, domen, "/kontakty", "0.6", "yearly");
 
         nasosyService.getMarkiNasosov().forEach(marka -> {

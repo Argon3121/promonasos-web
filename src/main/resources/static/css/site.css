@@ -168,7 +168,14 @@ img, svg { max-width: 100%; height: auto; display: block; }
     font-weight: 600; color: var(--graphite); text-decoration: none;
     border-bottom: 3px solid transparent;
 }
-.nav__link:hover, .nav__link.is-active { color: var(--navy-800); border-bottom-color: var(--accent-600); }
+/*
+    Активная страница (снизу оранжевая черта, is-active) и наведение мышью
+    (:hover) намеренно оформлены по-разному, а не одной и той же чертой:
+    пункты меню стоят вплотную, и две одинаковые оранжевые черты на соседних
+    пунктах визуально сливались в одну сплошную линию.
+*/
+.nav__link.is-active { color: var(--navy-800); border-bottom-color: var(--accent-600); }
+.nav__link:hover { color: var(--navy-800); background: var(--navy-100); border-radius: var(--r-sm) var(--r-sm) 0 0; }
 
 .mega {
     position: absolute; left: 0; top: 100%; z-index: 90; display: none;
@@ -241,8 +248,26 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .two-col { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; align-items: start; }
 
 .panel { background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--r-lg); padding: 24px; }
+
+.karta-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 32px; }
+.karta-head h2 { margin-bottom: 0; }
+.karta { margin-top: 16px; border: 1px solid var(--slate-200); border-radius: var(--r-lg); overflow: hidden; }
+.karta iframe { display: block; width: 100%; aspect-ratio: 16 / 7; border: 0; }
 .panel h3 { margin-top: 20px; }
 .panel h3:first-child { margin-top: 0; }
+
+/* ---------- С кем мы работаем (главная) ---------- */
+.partnery-group h3 { font-size: 1.0625rem; margin-bottom: 14px; }
+.partnery-group + .partnery-group { margin-top: 32px; }
+.partnery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.partner-card {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    margin: 0; padding: 16px 12px 12px; background: #fff; border: 1px solid var(--slate-200); border-radius: var(--r-lg);
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.partner-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.partner-card img { max-height: 44px; max-width: 100%; width: auto; height: auto; object-fit: contain; }
+.partner-card__name { font-size: .8125rem; font-weight: 600; color: var(--slate-700); text-align: center; line-height: 1.25; }
 
 /* ---------- Марки насосов: компактный список по категориям (главная) ---------- */
 .gruppa-kratko { margin-bottom: 18px; }
@@ -332,7 +357,11 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 
 .upl-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
 .upl-list--wide { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
-.upl-card { border: 1px solid var(--slate-200); border-radius: var(--r-lg); padding: 20px; background: #fff; overflow: hidden; }
+.upl-card {
+    border: 1px solid var(--slate-200); border-radius: var(--r-lg); padding: 20px; background: #fff; overflow: hidden;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.upl-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .upl-card__tip { font-size: .875rem; color: var(--slate-500); }
 .upl-card p { font-size: .9375rem; color: var(--slate-700); }
 .upl-card__params { margin: 14px 0; }
@@ -340,17 +369,24 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .upl-card__params dt { color: var(--slate-700); }
 .upl-card__params dd { margin: 0; font-weight: 600; text-align: right; }
 .upl-card__nasosy { font-size: .875rem; color: var(--slate-700); }
-.upl-card__actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
 /* ---------- Подбор ---------- */
+.podbor-wrap {
+    background: #fff; border: 1px solid var(--slate-200); border-radius: var(--r-lg);
+    padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px;
+}
+.podbor-wrap .eyebrow { margin-bottom: 4px; }
+.podbor-wrap > p { color: var(--slate-700); font-size: .9375rem; margin: 0 0 18px; }
 .podbor-form {
     display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; gap: 16px; align-items: end;
-    background: var(--slate-50); border: 1px solid var(--slate-200);
-    border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px;
 }
 .podbor-form--4 { grid-template-columns: 1.4fr 1fr 1fr 1fr auto; }
-.podbor-note { font-size: .9375rem; color: var(--slate-700); background: var(--warn-bg); border-radius: var(--r-md); padding: 14px 18px; }
-.podbor-note b { color: var(--warn); }
+.podbor-form .field { margin-bottom: 0; }
+.podbor-note {
+    font-size: .9375rem; color: var(--navy-800); background: var(--navy-100);
+    border-radius: var(--r-md); padding: 14px 18px; margin-top: 16px;
+}
+.podbor-note b { color: var(--navy-800); }
 
 .field { margin-bottom: 16px; }
 .field > label, .label { display: block; font-size: .875rem; font-weight: 600; color: var(--graphite); margin-bottom: 6px; }
@@ -401,8 +437,6 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .list-check li, .list-warn li { position: relative; padding-left: 26px; margin-bottom: 10px; color: var(--slate-700); }
 .list-check li::before { content: "✓"; position: absolute; left: 0; color: var(--ok); font-weight: 700; }
 .list-warn li::before { content: "!"; position: absolute; left: 6px; color: var(--warn); font-weight: 700; }
-.list-steps { padding-left: 20px; margin: 0 0 20px; color: var(--slate-700); }
-.list-steps li { margin-bottom: 10px; }
 
 .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 24px; }
 .chip {
@@ -416,16 +450,34 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
 .kontakty dt { color: var(--slate-700); }
 .kontakty dd { margin: 0; font-weight: 600; text-align: right; }
 
-/* ---------- Услуги, доверие, статьи ---------- */
-.uslugi { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.usluga-card { display: block; border: 1px solid var(--slate-200); border-radius: var(--r-lg); padding: 22px; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
-.usluga-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); color: inherit; }
-.usluga-card p { color: var(--slate-700); font-size: .9375rem; margin: 0; }
-.usluga__lead { font-size: 1.0625rem; color: var(--graphite); font-weight: 600; }
+/* ---------- Сертификаты, доверие, статьи ---------- */
+.sertifikaty-group h2:not(:first-child) { margin-top: 40px; }
+.sertifikaty { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin: 0 0 20px; }
+.sertifikat-card {
+    position: relative; margin: 0; background: #fff; border: 1px solid var(--slate-200);
+    border-radius: var(--r-lg); overflow: hidden;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.sertifikat-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.sertifikat-card a { display: block; }
+.sertifikat-card img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; background: var(--slate-50); }
+.sertifikat-card .badge { position: absolute; top: 12px; left: 12px; background: #fff; }
+.sertifikat-card figcaption { display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; font-size: .875rem; color: var(--slate-700); }
 
 .dovie { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
 .dovie__item h3 { font-size: 1.0625rem; }
 .dovie__item p { color: var(--slate-700); font-size: .9375rem; margin: 0; }
+
+/* Реальная последовательность (шаг 2 невозможен без шага 1), поэтому нумерация
+   здесь оправдана — в отличие от карточек преимуществ выше, где порядок не важен. */
+.etapy { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; counter-reset: etap; }
+.etap { border-top: 2px solid var(--slate-200); padding-top: 16px; }
+.etap::before {
+    counter-increment: etap; content: counter(etap, decimal-leading-zero);
+    display: block; font-size: 1.5rem; font-weight: 800; color: var(--slate-300); margin-bottom: 8px;
+}
+.etap h3 { font-size: 1rem; margin-bottom: 4px; }
+.etap p { color: var(--slate-700); font-size: .875rem; margin: 0; }
 
 .stati { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
 .stati--list { grid-template-columns: 1fr; }
@@ -508,7 +560,7 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
     .hero__actions .btn { width: 100%; }
 
     .section { padding: 32px 0; }
-    .marki, .sredy, .uslugi, .stati, .upl-list, .upl-list--wide { grid-template-columns: 1fr; }
+    .marki, .sredy, .stati, .upl-list, .upl-list--wide, .sertifikaty { grid-template-columns: 1fr; }
     .podbor-form, .podbor-form--4 { grid-template-columns: 1fr; }
     .footer__cols { grid-template-columns: 1fr; gap: 24px; }
 

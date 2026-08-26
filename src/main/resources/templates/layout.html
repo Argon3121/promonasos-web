@@ -18,6 +18,11 @@
     <meta property="og:locale" content="ru_RU"/>
     <meta property="og:title" th:content="${zagolovok}"/>
     <meta property="og:description" th:content="${opisanie}"/>
+    <meta property="og:image" th:content="${sait.domen + (ogImage != null ? ogImage : '/images/gruppa-centrobezhnye-obshchepromyshlennye.jpg')}"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" th:content="${zagolovok}"/>
+    <meta name="twitter:description" th:content="${opisanie}"/>
+    <meta name="twitter:image" th:content="${sait.domen + (ogImage != null ? ogImage : '/images/gruppa-centrobezhnye-obshchepromyshlennye.jpg')}"/>
     <meta name="theme-color" content="#0B2C45"/>
     <link rel="stylesheet" th:href="@{/css/site.css}"/>
     <link rel="icon" th:href="@{/images/favicon.svg}" type="image/svg+xml"/>
