@@ -1,11 +1,11 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // статья блога — трафик из поиска + снимает возражения перед заявкой
 public class StatyaBloga {
     private final String slug;

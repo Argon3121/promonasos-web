@@ -1,8 +1,8 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor// конструктивная группа — 45 марок
+@RequiredArgsConstructor// конструктивная группа — 45 марок
 public class GruppaNasosov {
     private final String slug;
     private final String nazvanie;

@@ -1,11 +1,10 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // среда — с неё начинается подбор уплотнения, не с марки насоса
 public class SredaUplotneniya {
     private final String kod;

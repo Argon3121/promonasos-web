@@ -1,9 +1,9 @@
 package ru.promonasos.model;
 
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // параметры формы подбора уплотнения
 public class ZaprosPodboraUplotneniya {
     private final String sreda;

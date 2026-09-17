@@ -1,10 +1,10 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // торцовое уплотнение своего производства, данные с hermetica.su
 public class Uplotnenie {
     private final String oboznachenie;

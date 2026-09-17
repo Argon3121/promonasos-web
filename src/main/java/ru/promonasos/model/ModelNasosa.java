@@ -1,8 +1,8 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // типоразмер внутри марки, например К 20/30 — подача и напор тут главное
 public class ModelNasosa {
     private final String oboznachenie;

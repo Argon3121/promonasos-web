@@ -1,10 +1,10 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // марка насоса — сюда обычно и заходят из поиска, уже зная марку
 public class MarkaNasosa {
     private final String oboznachenie;

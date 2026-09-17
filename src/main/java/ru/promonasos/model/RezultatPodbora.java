@@ -1,8 +1,8 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // результат подбора: модель + почему её предложили
 public class RezultatPodbora {
     private final ModelNasosa model;

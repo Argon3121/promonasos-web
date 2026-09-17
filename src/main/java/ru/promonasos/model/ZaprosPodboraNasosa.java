@@ -1,8 +1,8 @@
 package ru.promonasos.model;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // параметры формы подбора насоса
 public class ZaprosPodboraNasosa {
     private final String sreda;

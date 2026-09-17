@@ -2,9 +2,9 @@ package ru.promonasos.model;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 // заявка с формы — единственная модель с сеттерами, Spring сам её заполняет
 public class Zayavka {
 
