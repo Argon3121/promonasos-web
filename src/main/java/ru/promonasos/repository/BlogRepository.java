@@ -7,10 +7,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * База знаний. Каждая статья закрывает конкретный поисковый запрос
- * и ведёт на страницу марки или среды.
- */
+// база знаний — каждая статья под конкретный запрос, ведёт на марку или среду
 @Repository
 public class BlogRepository {
 
@@ -434,7 +431,7 @@ public class BlogRepository {
         return stati.stream().filter(s -> s.getSlug().equals(slug)).findFirst().orElse(null);
     }
 
-    /** Статьи, связанные с маркой насоса, — блок перелинковки на странице марки. */
+    // статьи по марке — блок "по теме" на странице марки
     public List<StatyaBloga> getStatiPoMarke(String markaSlug) {
         return stati.stream()
                 .filter(s -> s.getSvyazannyeMarki().contains(markaSlug))

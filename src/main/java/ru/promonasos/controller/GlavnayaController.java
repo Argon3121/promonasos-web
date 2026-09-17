@@ -60,7 +60,7 @@ public class GlavnayaController {
         return "kontakty/kontakty";
     }
 
-    /** Источники и лицензии фотографий — обязательное условие CC BY-SA/CC BY. */
+    // источники и лицензии фото
     @GetMapping("/istochniki-izobrazheniy")
     public String istochnikiIzobrazheniy(Model model) {
         model.addAttribute("zagolovok", "Источники изображений — ТД «Промоборудование»");
@@ -82,7 +82,7 @@ public class GlavnayaController {
         return "sertifikaty/sertifikaty";
     }
 
-    /** Приём заявки. В прототипе только валидация и подтверждение. */
+    // приём заявки, пока только валидация и подтверждение
     @PostMapping("/zayavka")
     public String zayavka(@Valid Zayavka zayavka, BindingResult bindingResult,
                            HttpServletRequest request, RedirectAttributes redirectAttributes) {
@@ -117,7 +117,7 @@ public class GlavnayaController {
         return "redirect:" + vernutsya;
     }
 
-    /** robots.txt отдаётся кодом, чтобы домен не пришлось править в двух местах. */
+    // отдаём кодом, а не файлом — домен не хардкодить в двух местах
     @GetMapping(value = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
     @ResponseBody
     public String robots(HttpServletRequest request) {
@@ -131,7 +131,7 @@ public class GlavnayaController {
         return sb.toString();
     }
 
-    /** Карта сайта строится из каталога: новые марки попадают в неё автоматически. */
+    // собираем из каталога — новая марка попадёт сюда сама
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE + ";charset=UTF-8")
     @ResponseBody
     public String sitemap(HttpServletRequest request) {

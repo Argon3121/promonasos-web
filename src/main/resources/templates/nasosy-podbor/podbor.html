@@ -18,7 +18,8 @@
             <h1>Подбор насоса по подаче и напору</h1>
             <p>
                 Укажите рабочую точку — покажем типоразмеры, которые её перекрывают, и объясним,
-                чем они отличаются. Оставьте поля пустыми, чтобы увидеть весь каталог.
+                чем они отличаются. Нужен просто список всех марок —
+                <a href="/nasosy">откройте каталог</a>.
             </p>
         </div>
 
@@ -58,6 +59,12 @@
                     ? ('Подходит ' + #lists.size(rezultaty) + ' ' + T(ru.promonasos.util.Chisla).sklonenie(#lists.size(rezultaty), 'типоразмер', 'типоразмера', 'типоразмеров'))
                     : 'Точных совпадений нет'}"></h2>
 
+            <p class="section-sub" th:if="${#lists.size(rezultaty) > 0 and (zapros.sreda == null or zapros.sreda.isEmpty() or zapros.sreda == 'voda')}">
+                Среда не указана — сначала показаны общепромышленные центробежные, затем
+                специализированные (химические, песковые, грунтовые и т. д.). Выберите среду,
+                чтобы сузить подбор.
+            </p>
+
             <div class="noanswer" th:if="${#lists.isEmpty(rezultaty)}">
                 <h3>Готового типоразмера под эти параметры нет</h3>
                 <p>
@@ -90,7 +97,7 @@
                     <div class="rezultat__buy">
                         <img class="rezultat__foto" th:if="${gruppyPoSlug.get(r.marka.gruppaSlug) != null}"
                              th:src="@{${r.marka.izobrazhenieOverride != null ? r.marka.izobrazhenieOverride : gruppyPoSlug.get(r.marka.gruppaSlug).izobrazhenie}}"
-                             alt="" loading="lazy"/>
+                             th:alt="'Насос ' + ${r.marka.oboznachenie}" loading="lazy"/>
                         <a class="btn btn--primary" href="#zayavka-forma">Узнать цену и срок</a>
                         <a class="link-arrow" th:href="@{'/nasosy/' + ${r.marka.slug} + '/' + ${r.model.slug}}">Характеристики</a>
                     </div>

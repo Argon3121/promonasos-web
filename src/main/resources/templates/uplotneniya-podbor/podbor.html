@@ -83,7 +83,7 @@
                         <p class="rezultat__why"><b>Вторичное уплотнение:</b> <span th:text="${u.vtorichnoeUplotnenie}"></span></p>
                     </div>
                     <div class="rezultat__buy">
-                        <img class="rezultat__foto" src="/images/uplotnenie.jpg" alt="" loading="lazy"/>
+                        <img class="rezultat__foto" th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}" alt="" loading="lazy"/>
                         <a class="btn btn--primary" href="#zayavka-forma">Запросить</a>
                         <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Характеристики</a>
                     </div>

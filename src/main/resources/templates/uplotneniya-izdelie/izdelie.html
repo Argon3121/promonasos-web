@@ -48,8 +48,10 @@
     <div class="container">
         <div class="tovar">
             <div class="tovar__main">
-                <img class="tovar__foto" src="/images/uplotnenie.jpg" th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}" loading="lazy"/>
-                <span class="foto-podpis">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
+                <img class="tovar__foto" th:src="@{${izdelie.izobrazhenieOverride != null ? izdelie.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
+                     th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}" loading="lazy"/>
+                <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride != null}">Фото уплотнения <span th:text="${izdelie.oboznachenie}"></span>.</span>
+                <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride == null}">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
 
                 <p class="eyebrow" th:text="${izdelie.tip}"></p>
                 <h1 th:text="'Торцовое уплотнение ' + ${izdelie.oboznachenie}"></h1>
@@ -104,7 +106,7 @@
             <h2>Похожие изделия</h2>
             <div class="upl-list">
                 <article class="upl-card" th:each="u : ${pohozhie}">
-                    <img class="upl-card__image" src="/images/uplotnenie.jpg" alt="" loading="lazy"/>
+                    <img class="upl-card__image" th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}" alt="" loading="lazy"/>
                     <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">
                         <h3 th:text="${u.oboznachenie}"></h3>
                     </a>

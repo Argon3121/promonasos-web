@@ -16,6 +16,15 @@ public class NasosyService {
 
     private final NasosyRepository repository;
 
+    // Специализированные группы: их насосы физически способны качать чистую воду,
+    // но выбирать их для водяной задачи без нужды не стоит. Поэтому при подборе
+    // без указания среды (или по «воде») они идут после общепромышленных, а не
+    // вперемешку — иначе на запрос «60 м³/ч, 30 м» первым выпадает песковый насос
+    // просто потому, что его номинальная точка ближе.
+    private static final Set<String> SPETSIALIZIROVANNYE_GRUPPY = Set.of(
+            "khimicheskie", "neftyanye", "fekalnye-stochnye", "gruntovye", "peskovye",
+            "skvazhinnye", "vintovye", "dozirovochnye", "burovye", "plunzhernye", "vakuumnye");
+
     public NasosyService(NasosyRepository repository) {
         this.repository = repository;
     }
@@ -32,15 +41,12 @@ public class NasosyService {
         return repository.getMarkiPoGruppe(gruppaSlug);
     }
 
-    /** Группы по slug — быстрый доступ к картинке/названию группы там, где сама марка уже под рукой. */
+    // быстрый доступ к группе по slug, когда под рукой только марка
     public Map<String, GruppaNasosov> getGruppyPoSlug() {
         return repository.getGruppy().stream().collect(Collectors.toMap(GruppaNasosov::getSlug, g -> g));
     }
 
-    /**
-     * Марки, сгруппированные по gruppaSlug — готово для шаблонов Thymeleaf,
-     * которым, в отличие от Razor, неудобно фильтровать список прямо в разметке.
-     */
+    // сгруппировано заранее — в Thymeleaf список так просто не отфильтруешь, как в Razor
     public Map<String, List<MarkaNasosa>> getMarkiPoGruppam() {
         return repository.getMarkiNasosov().stream()
                 .collect(Collectors.groupingBy(MarkaNasosa::getGruppaSlug));
@@ -62,11 +68,7 @@ public class NasosyService {
         return repository.vsegoModeley();
     }
 
-    /**
-     * Подбор по рабочей точке. Насос описывается кривой Q-H, а в каталоге хранится
-     * одна номинальная точка, поэтому результат — это направление для расчёта,
-     * а не окончательное инженерное решение.
-     */
+    // у насоса кривая Q-H, а в каталоге одна точка — поэтому это направление для расчёта, не готовый ответ
     public List<RezultatPodbora> podobratNasos(ZaprosPodboraNasosa zapros) {
         if (zapros == null) {
             return List.of();
@@ -129,9 +131,19 @@ public class NasosyService {
             rezultat.add(new RezultatPodbora(model, marka, otklonenie, verdikt, String.join(", ", prichiny)));
         }
 
-        return rezultat.stream()
-                .sorted(Comparator.comparingDouble(RezultatPodbora::getOtklonenie)
-                        .thenComparingDouble(r -> r.getModel().getPodacha()))
-                .toList();
+        boolean sredaNeZadana = zapros.getSreda() == null || zapros.getSreda().isEmpty()
+                || zapros.getSreda().equals("voda");
+
+        Comparator<RezultatPodbora> poBlizosti = Comparator
+                .comparingDouble(RezultatPodbora::getOtklonenie)
+                .thenComparingDouble(r -> r.getModel().getPodacha());
+
+        Comparator<RezultatPodbora> poryadok = sredaNeZadana
+                ? Comparator.<RezultatPodbora>comparingInt(r ->
+                        SPETSIALIZIROVANNYE_GRUPPY.contains(r.getMarka().getGruppaSlug()) ? 1 : 0)
+                    .thenComparing(poBlizosti)
+                : poBlizosti;
+
+        return rezultat.stream().sorted(poryadok).toList();
     }
 }

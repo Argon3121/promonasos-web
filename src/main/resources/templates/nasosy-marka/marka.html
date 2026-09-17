@@ -26,26 +26,33 @@
     </script>
 
     <div class="container">
-        <img class="tovar__foto" th:if="${gruppa != null}"
-             th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
-             th:alt="'Насос ' + ${marka.oboznachenie} + ' — ' + ${gruppa.nazvanie}" loading="lazy"/>
-        <span class="foto-podpis" th:if="${gruppa != null}">Фото представляет тип конструкции этой группы, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
+        <div class="marka-hero">
+            <div class="page-head">
+                <p class="eyebrow" th:text="${marka.rasshifrovka + (gruppa != null ? ' · ' + gruppa.nazvanie : '')}"></p>
+                <h1 th:text="${marka.nazvanie}"></h1>
+                <p th:text="${marka.kratkoeOpisanie}"></p>
 
-        <div class="page-head">
-            <p class="eyebrow" th:text="${marka.rasshifrovka + (gruppa != null ? ' · ' + gruppa.nazvanie : '')}"></p>
-            <h1 th:text="${marka.nazvanie}"></h1>
-            <p th:text="${marka.kratkoeOpisanie}"></p>
+                <dl class="diapazon">
+                    <div><dt>Подача</dt><dd th:text="${chisla.tekst(podachaOt)} + '–' + ${chisla.tekst(podachaDo)} + ' м³/ч'"></dd></div>
+                    <div><dt>Напор</dt><dd th:text="${chisla.tekst(naporOt)} + '–' + ${chisla.tekst(naporDo)} + ' м'"></dd></div>
+                    <div th:if="${marka.kpd != null}"><dt>КПД</dt><dd th:text="${marka.kpd}"></dd></div>
+                    <div><dt>Типоразмеров</dt><dd th:text="${#lists.size(modeli)}"></dd></div>
+                </dl>
 
-            <dl class="diapazon">
-                <div><dt>Подача</dt><dd th:text="${chisla.tekst(podachaOt)} + '–' + ${chisla.tekst(podachaDo)} + ' м³/ч'"></dd></div>
-                <div><dt>Напор</dt><dd th:text="${chisla.tekst(naporOt)} + '–' + ${chisla.tekst(naporDo)} + ' м'"></dd></div>
-                <div><dt>Типоразмеров</dt><dd th:text="${#lists.size(modeli)}"></dd></div>
-            </dl>
-
-            <div class="page-head__actions">
-                <a class="btn btn--primary" href="#modelnyy-ryad">Модельный ряд</a>
-                <a class="btn btn--outline" href="/nasosy/podbor">Подобрать по рабочей точке</a>
+                <div class="page-head__actions">
+                    <a class="btn btn--primary" href="#modelnyy-ryad">Модельный ряд</a>
+                    <a class="btn btn--outline" href="/nasosy/podbor">Подобрать по рабочей точке</a>
+                </div>
             </div>
+
+            <figure class="marka-hero__foto" th:if="${gruppa != null}">
+                <img class="tovar__foto"
+                     th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
+                     th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
+                     th:alt="'Насос ' + ${marka.oboznachenie} + ' — ' + ${gruppa.nazvanie}" loading="lazy"/>
+                <figcaption class="foto-podpis" th:if="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')}">Фото насоса марки <span th:text="${marka.oboznachenie}"></span>.</figcaption>
+                <figcaption class="foto-podpis" th:if="${not (marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/'))}">Фото представляет тип конструкции этой группы, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></figcaption>
+            </figure>
         </div>
 
         <!-- Модельный ряд идёт до текстов: пользователь пришёл за таблицей, а не за описанием -->
@@ -97,6 +104,27 @@
                     <li th:each="p : ${marka.preimushchestva}" th:text="${p}"></li>
                 </ul>
             </aside>
+        </section>
+
+        <section class="section" th:if="${not #lists.isEmpty(marka.ispolneniya)}">
+            <h2 th:text="'Исполнения ' + ${marka.oboznachenie}"></h2>
+            <p class="section-sub">Буква или суффикс в обозначении задаёт материал проточной части либо конструктивное исполнение — выбирается под среду и условия.</p>
+            <div class="table-wrap">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Исполнение</th>
+                        <th scope="col">Что означает</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="i : ${marka.ispolneniya}">
+                        <th scope="row" th:text="${i.kod}"></th>
+                        <td th:text="${i.opisanie}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section class="section" th:if="${not #lists.isEmpty(uplotneniya)}">

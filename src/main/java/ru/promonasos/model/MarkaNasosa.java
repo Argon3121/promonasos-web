@@ -1,11 +1,11 @@
 package ru.promonasos.model;
 
+import lombok.AllArgsConstructor;
+
 import java.util.List;
 
-/**
- * Марка (серия) насоса — основная посадочная страница каталога:
- * пользователь чаще всего приходит из поиска, уже зная марку.
- */
+@AllArgsConstructor
+// марка насоса — сюда обычно и заходят из поиска, уже зная марку
 public class MarkaNasosa {
     private final String oboznachenie;
     private final String slug;
@@ -21,26 +21,11 @@ public class MarkaNasosa {
     private final String seoDescription;
     // Не final: по умолчанию марка показывает общее фото группы (gruppa.izobrazhenie),
     // это поле — точечное исключение для марок, у которых нашлось второе настоящее
-    // фото на Wikimedia Commons, чтобы внутри одной группы не все карточки были одинаковые.
     private String izobrazhenieOverride;
-
-    public MarkaNasosa(String oboznachenie, String slug, String nazvanie, String rasshifrovka,
-                        String kratkoeOpisanie, List<String> opisanie, String gruppaSlug,
-                        List<String> sredy, List<String> primenenie, List<String> preimushchestva,
-                        String seoTitle, String seoDescription) {
-        this.oboznachenie = oboznachenie;
-        this.slug = slug;
-        this.nazvanie = nazvanie;
-        this.rasshifrovka = rasshifrovka;
-        this.kratkoeOpisanie = kratkoeOpisanie;
-        this.opisanie = opisanie;
-        this.gruppaSlug = gruppaSlug;
-        this.sredy = sredy;
-        this.primenenie = primenenie;
-        this.preimushchestva = preimushchestva;
-        this.seoTitle = seoTitle;
-        this.seoDescription = seoDescription;
-    }
+    // КПД и буквенные исполнения проставляются постобработкой только там, где эти
+    // данные есть на hermetica.su (см. NasosyRepository.primenitDannyeIspolneniy).
+    private String kpd;
+    private List<Ispolnenie> ispolneniya = List.of();
 
     public String getOboznachenie() { return oboznachenie; }
     public String getSlug() { return slug; }
@@ -56,4 +41,11 @@ public class MarkaNasosa {
     public String getSeoDescription() { return seoDescription; }
     public String getIzobrazhenieOverride() { return izobrazhenieOverride; }
     public void setIzobrazhenieOverride(String izobrazhenieOverride) { this.izobrazhenieOverride = izobrazhenieOverride; }
+    public String getKpd() { return kpd; }
+    public void setKpd(String kpd) { this.kpd = kpd; }
+    public List<Ispolnenie> getIspolneniya() { return ispolneniya; }
+    public void setIspolneniya(List<Ispolnenie> ispolneniya) { this.ispolneniya = ispolneniya; }
+
+    // буквенное/типовое исполнение серии: код («К», «ЦМГ-Х», «0») и что оно значит
+    public record Ispolnenie(String kod, String opisanie) {}
 }

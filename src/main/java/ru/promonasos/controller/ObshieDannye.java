@@ -13,12 +13,7 @@ import ru.promonasos.service.UplotneniyaService;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Данные, нужные почти на каждой странице: реквизиты сайта и списки для
- * шапки/подвала (мега-меню марок, среды). В оригинале на Razor каждый
- * _Header/_Footer сам делал @inject нужного репозитория — здесь то же самое
- * объявлено один раз для всех контроллеров.
- */
+// общее для каждой страницы: реквизиты, меню, подвал — чтобы не тащить это в каждый контроллер
 @ControllerAdvice
 public class ObshieDannye {
 
@@ -47,13 +42,13 @@ public class ObshieDannye {
         return nasosyService.getGruppy();
     }
 
-    /** Марки по группам — и мега-меню, и подвал, и главная показывают каталог сгруппированным, а не плоским списком из 45 марок. */
+    // марки по группам — иначе меню и главная это 45 марок плоским списком
     @ModelAttribute("markiPoGruppam")
     public Map<String, List<MarkaNasosa>> markiPoGruppam() {
         return nasosyService.getMarkiPoGruppam();
     }
 
-    /** Группа по slug — картинка и название группы там, где под рукой только марка (карточки, результаты подбора). */
+    // группа по slug, когда под рукой только марка — карточки, подбор
     @ModelAttribute("gruppyPoSlug")
     public Map<String, GruppaNasosov> gruppyPoSlug() {
         return nasosyService.getGruppyPoSlug();
@@ -64,11 +59,7 @@ public class ObshieDannye {
         return uplotneniyaService.getSredyUplotneniy();
     }
 
-    /**
-     * Текущий путь запроса — для подсветки активного пункта меню в шапке.
-     * В Thymeleaf 3.1 (Spring Boot 4) объект #request в шаблонах больше не
-     * доступен по умолчанию, поэтому путь передаётся обычным атрибутом модели.
-     */
+    // текущий путь — подсветить пункт меню; #request в шаблоне больше не доступен, пришлось так
     @ModelAttribute("tekushchiyPut")
     public String tekushchiyPut(HttpServletRequest request) {
         return request.getRequestURI();

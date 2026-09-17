@@ -9,18 +9,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Каталог насосов на данных в памяти.
- *
- * ИСТОЧНИК ДАННЫХ: полностью — hermetica.su (реальный каталог поставщика).
- * Марки и описания перенесены с реальных страниц товаров сайта. Там, где на
- * сайте дана не таблица типоразмеров, а только диапазон параметров (буровые,
- * дозировочные, скважинные насосы), взята часть типоразмеров как представительная
- * выборка, а не полный список — у некоторых марок в оригинале десятки строк.
- * Числовые поля, которых сайт не даёт для конкретного типоразмера (например,
- * подача для насосов, которые по паспорту нормируются давлением, а не расходом),
- * оставлены 0 — это принятая в проекте отметка "данных нет", а не фиктивное значение.
- */
+// каталог насосов в памяти, без БД
+// данные все с hermetica.su; там, где дан не полный список типоразмеров, а
+// диапазон (буровые, дозировочные, скважинные), взял часть как пример
+// 0 в числовом поле значит "в источнике не было цифры", а не выдуманный ноль
 @Repository
 public class NasosyRepository {
 
@@ -43,35 +35,147 @@ public class NasosyRepository {
             new GruppaNasosov("fekalnye-stochnye", "Фекальные и для сточных вод",
                     "Хозяйственно-бытовые и производственные стоки.",
                     "/images/gruppa-fekalnye-stochnye.jpg"),
-            new GruppaNasosov("peskovye-gruntovye", "Песковые и грунтовые",
-                    "Абразивные гидросмеси с высоким содержанием твёрдых включений.",
-                    "/images/gruppa-peskovye-gruntovye.jpg"),
+            new GruppaNasosov("gruntovye", "Грунтовые",
+                    "Крупная фракция и высокая концентрация абразива: карьеры, ГТС, золоудаление.",
+                    "/images/gruppa-gruntovye.jpg"),
+            new GruppaNasosov("peskovye", "Песковые",
+                    "Продукты обогащения руд и гидросмеси с высоким содержанием песка.",
+                    "/images/gruppa-peskovye.jpg"),
             new GruppaNasosov("skvazhinnye", "Скважинные и погружные",
                     "Водоснабжение из скважин, погружное исполнение.",
                     "/images/gruppa-skvazhinnye.jpg"),
-            new GruppaNasosov("vintovye-i-dozirovochnye", "Винтовые и дозировочные",
-                    "Вязкие и абразивные среды, точное дозирование объёма.",
-                    "/images/gruppa-vintovye-i-dozirovochnye.jpg"),
-            new GruppaNasosov("burovye-i-plunzhernye", "Буровые и плунжерные",
-                    "Высокое давление нагнетания: бурение, ремонт скважин, поддержание пластового давления.",
-                    "/images/gruppa-burovye-i-plunzhernye.jpg"),
+            new GruppaNasosov("vintovye", "Винтовые",
+                    "Одновинтовые насосы для вязких и абразивных сред общего назначения.",
+                    "/images/gruppa-vintovye.jpg"),
+            new GruppaNasosov("dozirovochnye", "Дозировочные",
+                    "Точная подача заданного объёма: плунжерные, мембранные, винтовые.",
+                    "/images/gruppa-dozirovochnye.jpg"),
+            new GruppaNasosov("burovye", "Буровые",
+                    "Поршневые насосы буровых установок: бурение и капитальный ремонт скважин.",
+                    "/images/gruppa-burovye.jpg"),
+            new GruppaNasosov("plunzhernye", "Плунжерные",
+                    "Высокое давление нагнетания: поддержание пластового давления, гидроиспытания.",
+                    "/images/gruppa-plunzhernye.jpg"),
             new GruppaNasosov("vakuumnye", "Вакуумные",
                     "Водокольцевые агрегаты для создания вакуума низкого давления.",
                     "/images/gruppa-vakuumnye.jpg")
     );
 
-    private final List<MarkaNasosa> marki = primenitFotoOverridy(sozdatMarki());
-    private final List<ModelNasosa> modeli = sozdatModeli();
+    private final List<MarkaNasosa> marki = primenitDannyeIspolneniy(primenitFotoOverridy(sozdatMarki()));
+    private final List<ModelNasosa> modeli = primenitFotoOverridyModeley(sozdatModeli());
 
-    // Точечные фото по маркам вместо общего фото группы — только там, где нашлось
-    // настоящее второе фото на Wikimedia Commons (см. istochniki-izobrazheniy.html).
+    // КПД и буквенные исполнения — только там, где значение прямо указано на
+    // hermetica.su. Для большинства серий сайт-источник КПД не публикует, поэтому
+    // поле остаётся пустым, а не заполняется «типовым» числом.
+    private static List<MarkaNasosa> primenitDannyeIspolneniy(List<MarkaNasosa> spisok) {
+        Map<String, String> kpd = Map.of(
+                "d", "до 90 %",
+                "v", "не менее 88 %",
+                "dv-dpv", "не менее 88 %",
+                "grt-grk", "67 %"
+        );
+        Map<String, List<MarkaNasosa.Ispolnenie>> isp = Map.of(
+                "kh", List.of(
+                        new MarkaNasosa.Ispolnenie("А", "углеродистая сталь 25Л; −40…+90 °C"),
+                        new MarkaNasosa.Ispolnenie("К", "хромоникелевая сталь 12Х18Н9ТЛ; −40…+120 °C"),
+                        new MarkaNasosa.Ispolnenie("Е", "хромоникельмолибденовая сталь 12Х18Н12М3ТЛ; −40…+120 °C"),
+                        new MarkaNasosa.Ispolnenie("И", "хромоникельмолибденовая меднистая сталь 07ХН25МДТЛ; −40…+120 °C"),
+                        new MarkaNasosa.Ispolnenie("Н", "сплав на никелевой основе ХН65МВЛ / ХН54МСДЛ; −40…+120 °C")),
+                "akh", List.of(
+                        new MarkaNasosa.Ispolnenie("А", "углеродистая сталь 25Л"),
+                        new MarkaNasosa.Ispolnenie("К", "хромоникелевая сталь 12Х18Н9ТЛ"),
+                        new MarkaNasosa.Ispolnenie("К1", "хромоникелевая сталь 10Х18Н3Г3Д2Л"),
+                        new MarkaNasosa.Ispolnenie("Е", "хромоникельмолибденовая сталь 12Х18Н12М3ТЛ"),
+                        new MarkaNasosa.Ispolnenie("И", "хромоникельмолибденовая меднистая сталь 07ХН25МДТЛ"),
+                        new MarkaNasosa.Ispolnenie("Н", "сплав на никелевой основе (07ХН25МДТЛ)")),
+                "tsmg", List.of(
+                        new MarkaNasosa.Ispolnenie("ЦМГ-Х", "по API 610; вязкость до 150·10⁻⁶ м²/с, −60…+400 °C, плотность 450–1850 кг/м³, включения до 3,0 % (до 0,5 мм)"),
+                        new MarkaNasosa.Ispolnenie("ЦМГ-М", "вязкость до 30·10⁻⁶ м²/с, −60…+300 °C, плотность 500–1850 кг/м³, включения до 0,2 % (до 0,2 мм)"),
+                        new MarkaNasosa.Ispolnenie("ЦМГ-ВЛ", "для чистых жидкостей низкой вязкости: до 20·10⁻⁶ м²/с, −60…+150 °C, плотность 500–1600 кг/м³, включения до 0,2 % (до 0,2 мм)")),
+                "grat-grak", List.of(
+                        new MarkaNasosa.Ispolnenie("ГрАТ", "двухкорпусной: полиуретановый или прорезиненный внутренний корпус"),
+                        new MarkaNasosa.Ispolnenie("ГрАК", "однокорпусной: футеровка материалом на твёрдой органической связке")),
+                "khgn", List.of(
+                        new MarkaNasosa.Ispolnenie("0", "для кристаллизующихся и горячих сред — до +250 °C"),
+                        new MarkaNasosa.Ispolnenie("О", "с обогревом проточной части и охлаждением подшипников"),
+                        new MarkaNasosa.Ispolnenie("Е", "для пожаро- и взрывоопасных условий, электропривод взрывозащищённого исполнения"))
+        );
+        spisok.forEach(m -> {
+            if (kpd.containsKey(m.getSlug())) {
+                m.setKpd(kpd.get(m.getSlug()));
+            }
+            if (isp.containsKey(m.getSlug())) {
+                m.setIspolneniya(isp.get(m.getSlug()));
+            }
+        });
+        return spisok;
+    }
+
+    // У каждой марки есть собственная карточка: это позволяет не показывать
+    // один и тот же общий насос для конструктивно разных серий.
     private static List<MarkaNasosa> primenitFotoOverridy(List<MarkaNasosa> spisok) {
-        Map<String, String> overridy = Map.of(
-                "grt-grk", "/images/peskovye-pn-pnl.jpg",
-                "pr-pk-pb", "/images/peskovye-pn-pnl.jpg"
+        Map<String, String> overridy = Map.ofEntries(
+                Map.entry("d", "/images/marki/d.jpg"),
+                Map.entry("dv-dpv", "/images/marki/dv-dpv.png"),
+                Map.entry("k", "/images/marki/k-user.jpg"),
+                Map.entry("km", "/images/marki/km-user.jpg"),
+                Map.entry("v", "/images/marki/v-user.png"),
+                Map.entry("ov", "/images/marki/ov-user.png"),
+                Map.entry("opv", "/images/marki/opv-user.png"),
+                Map.entry("opg", "/images/marki/opg.jpg"),
+                Map.entry("tsn", "/images/marki/tsn.jpg"),
+                Map.entry("tsns", "/images/marki/tsns.jpg"),
+                Map.entry("ks-ksv", "/images/marki/ks-ksv-user.jpg"),
+                Map.entry("pe", "/images/marki/pe.png"),
+                Map.entry("se", "/images/marki/se.png"),
+                Map.entry("tsmg", "/images/marki/tsmg.png"),
+                Map.entry("kh", "/images/marki/kh-user.jpg"),
+                Map.entry("akh", "/images/marki/akh-user.jpg"),
+                Map.entry("khp", "/images/marki/akhp-khp-user.jpg"),
+                Map.entry("akhp", "/images/marki/akhp-khp-user.jpg"),
+                Map.entry("tkhi", "/images/marki/tkhi.png"),
+                Map.entry("khgn", "/images/marki/khgn.jpg"),
+                Map.entry("khvn", "/images/marki/khvn.jpg"),
+                Map.entry("okhg", "/images/marki/okhg.jpg"),
+                Map.entry("ppv", "/images/marki/ppv.jpg"),
+                Map.entry("nvn", "/images/marki/neft-vertical.png"),
+                Map.entry("nvd", "/images/marki/nvd.jpg"),
+                Map.entry("npv", "/images/marki/npv.jpg"),
+                Map.entry("sm", "/images/marki/sm-user.jpg"),
+                Map.entry("sdv", "/images/marki/sdv.jpg"),
+                Map.entry("grat-grak", "/images/marki/grat-grak-user.jpg"),
+                Map.entry("grt-grk", "/images/marki/grat-grak-user.jpg"),
+                Map.entry("pvp-prvp-pkvp", "/images/marki/pvp-prvp-pkvp.png"),
+                Map.entry("pr-pk-pb", "/images/peskovye-pn-pnl.jpg"),
+                Map.entry("etsv", "/images/marki/etsv.png"),
+                Map.entry("bv", "/images/marki/bv.jpg"),
+                Map.entry("onv", "/images/marki/screw.png"),
+                Map.entry("kmkh", "/images/marki/screw.png"),
+                Map.entry("bn", "/images/marki/screw.png"),
+                Map.entry("bm", "/images/marki/dosing.png"),
+                Map.entry("bt", "/images/marki/bt.png"),
+                Map.entry("ant", "/images/marki/plunger.png"),
+                Map.entry("pt", "/images/marki/plunger.png"),
+                Map.entry("nb", "/images/marki/nb.jpg"),
+                Map.entry("unbt", "/images/marki/unbt.jpg"),
+                Map.entry("nd", "/images/marki/dosing.png"),
+                Map.entry("vvn", "/images/marki/vvn.png")
         );
         spisok.forEach(m -> {
             String foto = overridy.get(m.getSlug());
+            if (foto != null) {
+                m.setIzobrazhenieOverride(foto);
+            }
+        });
+        return spisok;
+    }
+
+    // Фото конкретных типоразмеров — пока пусто, добавляем сюда по мере поступления
+    // реальных фото (ключ — "маркаSlug/модельSlug", он же кусок URL страницы модели)
+    private static List<ModelNasosa> primenitFotoOverridyModeley(List<ModelNasosa> spisok) {
+        Map<String, String> overridy = Map.of();
+        spisok.forEach(m -> {
+            String foto = overridy.get(m.getMarkaSlug() + "/" + m.getSlug());
             if (foto != null) {
                 m.setIzobrazhenieOverride(foto);
             }
@@ -197,7 +301,7 @@ public class NasosyRepository {
                         List.of("Ирригационные системы", "Водоснабжение населённых пунктов и предприятий"),
                         List.of(),
                         "Насосы В — вертикальные, характеристики | ТД «Промоборудование»",
-                        "Насосы В вертикальные для ирригации и водоснабжения: подача 4500–36000 м³/ч, напор 27–100 м."),
+                        "Насосы В вертикальные для ирригации и водоснабжения: подача 5500–36000 м³/ч, напор 40–100 м."),
 
                 marka("ОВ", "ov", "Насосы ОВ", "осевой вертикальный",
                         "centrobezhnye-obshchepromyshlennye",
@@ -504,7 +608,7 @@ public class NasosyRepository {
                         "Насосы СДВ фекальные низконапорные вертикальные: подача 2700–22 700 м³/ч, напор 26,5–80 м."),
 
                 marka("ГрАТ, ГрАК", "grat-grak", "Насосы грунтовые ГрАТ, ГрАК", "грунтовый одно- и двухкорпусный",
-                        "peskovye-gruntovye",
+                        "gruntovye",
                         "Для перекачки воды с высоким содержанием грунта: карьеры, котлованы, ГТС.",
                         List.of("pulpa"),
                         List.of(
@@ -517,7 +621,7 @@ public class NasosyRepository {
                         "Насосы ГрАТ и ГрАК грунтовые: подача 85–350 м³/ч, напор 17–67 м. Для абразивных гидросмесей."),
 
                 marka("ГрТ, ГрК", "grt-grk", "Насосы грунтовые ГрТ, ГрК", "грунтовый износостойкий",
-                        "peskovye-gruntovye",
+                        "gruntovye",
                         "Повышенная износоустойчивость к абразивным включениям до 40 % объёма.",
                         List.of("pulpa"),
                         List.of(
@@ -531,7 +635,7 @@ public class NasosyRepository {
 
                 marka("ПВП, ПРВП, ПКВП", "pvp-prvp-pkvp", "Насосы песковые вертикальные ПВП, ПРВП, ПКВП",
                         "вертикальный одноступенчатый песковый",
-                        "peskovye-gruntovye",
+                        "peskovye",
                         "Для продуктов обогащения руд и абразивных гидросмесей с высоким содержанием песка.",
                         List.of("pulpa"),
                         List.of(
@@ -545,7 +649,7 @@ public class NasosyRepository {
 
                 marka("ПР, ПК, ПБ", "pr-pk-pb", "Насосы песковые горизонтальные ПР, ПК, ПБ",
                         "горизонтальный консольный песковый",
-                        "peskovye-gruntovye",
+                        "peskovye",
                         "Для гидросмесей с высоким содержанием песка, гравия, глинозёма.",
                         List.of("pulpa"),
                         List.of(
@@ -571,7 +675,7 @@ public class NasosyRepository {
                         "Насосы ЭЦВ скважинные погружные: подача 3–200 м³/ч, напор до 400 м, диаметр скважины от 100 мм."),
 
                 marka("BV", "bv", "Одновинтовые насосы BV", "вертикальный одновинтовой",
-                        "vintovye-i-dozirovochnye",
+                        "vintovye",
                         "Вертикальные, для перекачки вязких жидкостей с абразивным осадком из заглублённых ёмкостей.",
                         List.of("kisloty", "nefteprodukty"),
                         List.of(
@@ -584,7 +688,7 @@ public class NasosyRepository {
                         "Одновинтовые насосы BV: подача 0,1–200 м³/ч, давление до 48 бар. Для вязких и абразивных сред."),
 
                 marka("ОНВ", "onv", "Одновинтовые насосы ОНВ", "пищевой одновинтовой",
-                        "vintovye-i-dozirovochnye",
+                        "vintovye",
                         "Пищевые, для вязких продуктов: молочные, кондитерские массы, соусы, мёд.",
                         List.of("pishchevye"),
                         List.of(
@@ -597,7 +701,7 @@ public class NasosyRepository {
                         "Одновинтовые насосы ОНВ для пищевых продуктов: подача до 25 м³/ч, вязкость до 1 000 000 сПз."),
 
                 marka("КМХ", "kmkh", "Винтовые насосы КМХ", "винтовой промышленный",
-                        "vintovye-i-dozirovochnye",
+                        "vintovye",
                         "Для вязких и абразивных сред: от пищевых паст до химических клеёв и красок.",
                         List.of("kisloty", "pishchevye"),
                         List.of(
@@ -610,7 +714,7 @@ public class NasosyRepository {
                         "Винтовые насосы КМХ: подача 0,01–400 м³/ч, давление до 48 атм. Для вязких и абразивных сред."),
 
                 marka("BN", "bn", "Одновинтовые насосы BN", "одновинтовой с вариантами компоновки",
-                        "vintovye-i-dozirovochnye",
+                        "vintovye",
                         "Водоснабжение, водоочистка, целлюлозно-бумажная и пищевая промышленность.",
                         List.of("voda", "pishchevye"),
                         List.of(
@@ -623,7 +727,7 @@ public class NasosyRepository {
                         "Одновинтовые насосы BN: подача 0,1–300 м³/ч, давление до 18 бар. Широкий выбор компоновок."),
 
                 marka("BM", "bm", "Дозировочные насосы BM", "точное дозирование",
-                        "vintovye-i-dozirovochnye",
+                        "dozirovochnye",
                         "Точное дозирование жидкостей: от воды до химически активных веществ.",
                         List.of("kisloty", "voda"),
                         List.of(
@@ -636,7 +740,7 @@ public class NasosyRepository {
                         "Дозировочные насосы BM: точность дозирования, давление до 20 бар и выше, автоматическое управление."),
 
                 marka("BT", "bt", "Бочковые насосы BT", "переносной бочковый",
-                        "vintovye-i-dozirovochnye",
+                        "vintovye",
                         "Для перекачивания жидкостей из бочек и ёмкостей: масла, кислоты, растворители.",
                         List.of("kisloty", "nefteprodukty"),
                         List.of(
@@ -649,7 +753,7 @@ public class NasosyRepository {
                         "Бочковые насосы BT: производительность 20–200 л/мин, материалы проточной части под кислоты, топливо, масла."),
 
                 marka("АНТ", "ant", "Насосы АНТ", "трёхплунжерный высокого давления",
-                        "burovye-i-plunzhernye",
+                        "plunzhernye",
                         "Для поддержания пластового давления и гидравлического транспорта нефти.",
                         List.of("nefteprodukty"),
                         List.of(
@@ -662,7 +766,7 @@ public class NasosyRepository {
                         "Насосы АНТ трёхплунжерные: подача 8,5–27 м³/ч, давление до 35 МПа. Для поддержания пластового давления."),
 
                 marka("ПТ", "pt", "Насосы ПТ", "трёхплунжерный кривошипный",
-                        "burovye-i-plunzhernye",
+                        "plunzhernye",
                         "Для перекачки под высоким давлением, в том числе во взрыво- и пожароопасных условиях.",
                         List.of("nefteprodukty"),
                         List.of(
@@ -675,7 +779,7 @@ public class NasosyRepository {
                         "Насосы ПТ трёхплунжерные: подача 0,41–1,65 м³/ч, давление 20–100 МПа."),
 
                 marka("НБ", "nb", "Насосы НБ", "буровой поршневой",
-                        "burovye-i-plunzhernye",
+                        "burovye",
                         "Буровые для гидропескоструйной перфорации и капитального ремонта скважин.",
                         List.of("nefteprodukty"),
                         List.of(
@@ -688,7 +792,7 @@ public class NasosyRepository {
                         "Насосы НБ буровые: серии 32, 50, 80, 125. Для гидропескоструйной перфорации и ремонта скважин."),
 
                 marka("УНБТ", "unbt", "Насосы УНБТ", "трёхпоршневой буровой",
-                        "burovye-i-plunzhernye",
+                        "burovye",
                         "Трёхпоршневые буровые мощностью от 600 до 1600 кВт.",
                         List.of("nefteprodukty"),
                         List.of(
@@ -701,7 +805,7 @@ public class NasosyRepository {
                         "Насосы УНБТ буровые: мощность 600–1600 кВт, давление на выходе до 52 МПа."),
 
                 marka("НД", "nd", "Дозировочные насосы НД", "плунжерный и мембранный дозировочный",
-                        "vintovye-i-dozirovochnye",
+                        "dozirovochnye",
                         "Для дозирования нейтральных и агрессивных жидкостей, эмульсий и суспензий под напором.",
                         List.of("kisloty", "voda"),
                         List.of(

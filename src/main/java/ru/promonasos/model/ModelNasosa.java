@@ -1,9 +1,9 @@
 package ru.promonasos.model;
 
-/**
- * Конкретный типоразмер насоса внутри марки: К 20/30, ЦНСг 60-132.
- * Рабочая точка (подача + напор) — главный параметр подбора.
- */
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+// типоразмер внутри марки, например К 20/30 — подача и напор тут главное
 public class ModelNasosa {
     private final String oboznachenie;
     private final String slug;
@@ -19,26 +19,10 @@ public class ModelNasosa {
     private final String gabarity;
     private final String seoTitle;
     private final String seoDescription;
+    // не final: по умолчанию типоразмер показывает фото марки/группы (см. marka.html),
+    // сюда позже проставится реальное фото конкретного типоразмера, когда оно появится
+    private String izobrazhenieOverride;
 
-    public ModelNasosa(String oboznachenie, String slug, String markaSlug, double podacha, double napor,
-                        double moshchnost, int oboroty, double diametrVala, double maxTemperatura,
-                        String materialProtochnoyChasti, String nalichie, String gabarity,
-                        String seoTitle, String seoDescription) {
-        this.oboznachenie = oboznachenie;
-        this.slug = slug;
-        this.markaSlug = markaSlug;
-        this.podacha = podacha;
-        this.napor = napor;
-        this.moshchnost = moshchnost;
-        this.oboroty = oboroty;
-        this.diametrVala = diametrVala;
-        this.maxTemperatura = maxTemperatura;
-        this.materialProtochnoyChasti = materialProtochnoyChasti;
-        this.nalichie = nalichie;
-        this.gabarity = gabarity;
-        this.seoTitle = seoTitle;
-        this.seoDescription = seoDescription;
-    }
 
     public String getOboznachenie() { return oboznachenie; }
     public String getSlug() { return slug; }
@@ -54,4 +38,6 @@ public class ModelNasosa {
     public String getGabarity() { return gabarity; }
     public String getSeoTitle() { return seoTitle; }
     public String getSeoDescription() { return seoDescription; }
+    public String getIzobrazhenieOverride() { return izobrazhenieOverride; }
+    public void setIzobrazhenieOverride(String izobrazhenieOverride) { this.izobrazhenieOverride = izobrazhenieOverride; }
 }

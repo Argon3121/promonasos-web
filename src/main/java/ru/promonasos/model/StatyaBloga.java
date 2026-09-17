@@ -1,12 +1,12 @@
 package ru.promonasos.model;
 
+import lombok.AllArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Статья блога (базы знаний). Блог решает две задачи:
- * собирает информационный трафик и снимает возражения перед заявкой.
- */
+@AllArgsConstructor
+// статья блога — трафик из поиска + снимает возражения перед заявкой
 public class StatyaBloga {
     private final String slug;
     private final String zagolovok;
@@ -20,21 +20,6 @@ public class StatyaBloga {
     private final String seoTitle;
     private final String seoDescription;
 
-    public StatyaBloga(String slug, String zagolovok, String anons, List<String> tekst, String rubrika,
-                        LocalDate data, int vremyaChteniya, List<String> svyazannyeMarki,
-                        List<String> svyazannyeSredy, String seoTitle, String seoDescription) {
-        this.slug = slug;
-        this.zagolovok = zagolovok;
-        this.anons = anons;
-        this.tekst = tekst;
-        this.rubrika = rubrika;
-        this.data = data;
-        this.vremyaChteniya = vremyaChteniya;
-        this.svyazannyeMarki = svyazannyeMarki;
-        this.svyazannyeSredy = svyazannyeSredy;
-        this.seoTitle = seoTitle;
-        this.seoDescription = seoDescription;
-    }
 
     public String getSlug() { return slug; }
     public String getZagolovok() { return zagolovok; }

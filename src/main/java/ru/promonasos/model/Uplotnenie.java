@@ -1,11 +1,11 @@
 package ru.promonasos.model;
 
+import lombok.AllArgsConstructor;
+
 import java.util.List;
 
-/**
- * Торцовое уплотнение собственного производства.
- * Характеристики взяты со страниц каталога hermetica.su.
- */
+@AllArgsConstructor
+// торцовое уплотнение своего производства, данные с hermetica.su
 public class Uplotnenie {
     private final String oboznachenie;
     private final String slug;
@@ -25,31 +25,10 @@ public class Uplotnenie {
     private final List<String> primenyaetsyaNaNasosakh;
     private final String seoTitle;
     private final String seoDescription;
+    // не final: по умолчанию изделие показывает общее фото уплотнения (uplotnenie.jpg),
+    // сюда позже проставится реальное фото конкретного изделия, когда оно появится
+    private String izobrazhenieOverride;
 
-    public Uplotnenie(String oboznachenie, String slug, String nazvanie, String tip, String opisanie,
-                       List<String> sredyKody, double diametrValaOt, double diametrValaDo, double davlenieDo,
-                       double temperaturaOt, double temperaturaDo, String vtorichnoeUplotnenie,
-                       List<String> paryTreniya, String metallicheskieDetali, String standarty,
-                       List<String> primenyaetsyaNaNasosakh, String seoTitle, String seoDescription) {
-        this.oboznachenie = oboznachenie;
-        this.slug = slug;
-        this.nazvanie = nazvanie;
-        this.tip = tip;
-        this.opisanie = opisanie;
-        this.sredyKody = sredyKody;
-        this.diametrValaOt = diametrValaOt;
-        this.diametrValaDo = diametrValaDo;
-        this.davlenieDo = davlenieDo;
-        this.temperaturaOt = temperaturaOt;
-        this.temperaturaDo = temperaturaDo;
-        this.vtorichnoeUplotnenie = vtorichnoeUplotnenie;
-        this.paryTreniya = paryTreniya;
-        this.metallicheskieDetali = metallicheskieDetali;
-        this.standarty = standarty;
-        this.primenyaetsyaNaNasosakh = primenyaetsyaNaNasosakh;
-        this.seoTitle = seoTitle;
-        this.seoDescription = seoDescription;
-    }
 
     public String getOboznachenie() { return oboznachenie; }
     public String getSlug() { return slug; }
@@ -69,4 +48,6 @@ public class Uplotnenie {
     public List<String> getPrimenyaetsyaNaNasosakh() { return primenyaetsyaNaNasosakh; }
     public String getSeoTitle() { return seoTitle; }
     public String getSeoDescription() { return seoDescription; }
+    public String getIzobrazhenieOverride() { return izobrazhenieOverride; }
+    public void setIzobrazhenieOverride(String izobrazhenieOverride) { this.izobrazhenieOverride = izobrazhenieOverride; }
 }

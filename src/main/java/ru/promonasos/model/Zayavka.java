@@ -2,11 +2,10 @@ package ru.promonasos.model;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 
-/**
- * Заявка с сайта. В отличие от остальных моделей — изменяемый JavaBean:
- * Spring биндит в него поля формы по именам сеттеров.
- */
+@AllArgsConstructor
+// заявка с формы — единственная модель с сеттерами, Spring сам её заполняет
 public class Zayavka {
 
     @NotBlank(message = "Укажите, как к вам обращаться")

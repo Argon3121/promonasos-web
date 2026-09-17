@@ -43,7 +43,7 @@
             <h2>Подходящие изделия</h2>
             <div class="upl-list upl-list--wide">
                 <article class="upl-card" th:each="u : ${uplotneniya}">
-                    <img class="upl-card__image" src="/images/uplotnenie.jpg" alt="" loading="lazy"/>
+                    <img class="upl-card__image" th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}" alt="" loading="lazy"/>
                     <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}"><h3 th:text="${u.nazvanie}"></h3></a>
                     <p class="upl-card__tip" th:text="${u.tip}"></p>
                     <p th:text="${u.opisanie}"></p>

@@ -2,10 +2,7 @@ package ru.promonasos.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/**
- * Реквизиты и контакты сайта из application.yml (секция "sait").
- * Аналог секции "Sait" в appsettings.json оригинала.
- */
+// реквизиты сайта из application.yml, секция sait
 @ConfigurationProperties(prefix = "sait")
 public record SaitSvoystva(
         String nazvanie,

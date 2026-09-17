@@ -13,10 +13,7 @@ import ru.promonasos.model.ZaprosPodboraUplotneniya;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.UplotneniyaService;
 
-/**
- * Каталог торцовых уплотнений. Точка входа — перекачиваемая среда,
- * а не марка насоса: именно среда определяет материалы и конструкцию.
- */
+// каталог уплотнений — заходят по среде, не по марке насоса
 @Controller
 public class UplotneniyaController {
 
@@ -28,7 +25,7 @@ public class UplotneniyaController {
         this.nasosyService = nasosyService;
     }
 
-    /** Список сред. /tortsevye-uplotneniya */
+    // /tortsevye-uplotneniya — список сред
     @GetMapping("/tortsevye-uplotneniya")
     public String katalog(Model model) {
         model.addAttribute("sredy", uplotneniyaService.getSredyUplotneniy());
@@ -40,7 +37,7 @@ public class UplotneniyaController {
         return "uplotneniya-katalog/katalog";
     }
 
-    /** Подбор по параметрам среды. /tortsevye-uplotneniya/podbor */
+    // /tortsevye-uplotneniya/podbor
     @GetMapping("/tortsevye-uplotneniya/podbor")
     public String podbor(@RequestParam(required = false) String sreda,
                           @RequestParam(required = false) Double diametrVala,
@@ -63,7 +60,7 @@ public class UplotneniyaController {
         return "uplotneniya-podbor/podbor";
     }
 
-    /** Страница среды. /tortsevye-uplotneniya/{sreda} */
+    // /tortsevye-uplotneniya/{sreda}
     @GetMapping("/tortsevye-uplotneniya/{sreda}")
     public String sreda(@PathVariable String sreda, Model model) {
         SredaUplotneniya sredaObj = uplotneniyaService.getSredu(sreda);
@@ -86,11 +83,7 @@ public class UplotneniyaController {
         return "uplotneniya-sreda/sreda";
     }
 
-    /**
-     * Страница конкретного изделия. /tortsevye-uplotneniya/izdelie/{slug}
-     * Отдельный URL под точное обозначение — люди ищут по номеру изделия
-     * ("уплотнение 338 характеристики"), а не только по среде.
-     */
+    // /tortsevye-uplotneniya/izdelie/{slug} — люди гуглят номер изделия, не только среду
     @GetMapping("/tortsevye-uplotneniya/izdelie/{slug}")
     public String izdelie(@PathVariable String slug, Model model) {
         Uplotnenie izdelie = uplotneniyaService.getUplotnenie(slug);

@@ -46,10 +46,17 @@
     <div class="container">
         <div class="tovar">
             <div class="tovar__main" th:with="gruppa=${gruppyPoSlug.get(marka.gruppaSlug)}">
-                <img class="tovar__foto" th:if="${gruppa != null}"
+                <img class="tovar__foto" th:if="${model.izobrazhenieOverride != null}"
+                     th:src="@{${model.izobrazhenieOverride}}"
+                     th:alt="'Насос ' + ${model.oboznachenie}" loading="lazy"/>
+                <span class="foto-podpis" th:if="${model.izobrazhenieOverride != null}">Фото насоса <span th:text="${model.oboznachenie}"></span>.</span>
+
+                <img class="tovar__foto" th:if="${model.izobrazhenieOverride == null and gruppa != null}"
+                     th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
                      th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
                      th:alt="'Насос ' + ${model.oboznachenie}" loading="lazy"/>
-                <span class="foto-podpis" th:if="${gruppa != null}">Фото представляет тип конструкции этой серии, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
+                <span class="foto-podpis" th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')}">Фото насоса марки <span th:text="${marka.oboznachenie}"></span>, не конкретного типоразмера.</span>
+                <span class="foto-podpis" th:if="${model.izobrazhenieOverride == null and gruppa != null and not (marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/'))}">Фото представляет тип конструкции этой серии, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
 
                 <p class="eyebrow" th:text="${marka.rasshifrovka} + ' · серия ' + ${marka.oboznachenie}"></p>
                 <h1 th:text="'Насос ' + ${model.oboznachenie}"></h1>

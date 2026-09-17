@@ -288,11 +288,11 @@ img, svg { max-width: 100%; height: auto; display: block; }
     transition: border-color .15s, box-shadow .15s, transform .15s;
 }
 .marka-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-/* Фото — общее на группу марок (родственные насосы физически выглядят одинаково),
-   поэтому "лечит" края карточки, а не претендует на уникальный снимок каждой марки. */
+/* Фото серии или типа уплотнения: сохраняем весь агрегат, в том числе
+   высокие вертикальные и длинные горизонтальные исполнения. */
 .marka-card__image, .upl-card__image {
     display: block; width: calc(100% + 40px); margin: -20px -20px 16px;
-    aspect-ratio: 16 / 10; object-fit: cover; background: var(--slate-100);
+    aspect-ratio: 16 / 10; object-fit: contain; background: #fff;
 }
 .marka-card__head { display: flex; align-items: baseline; gap: 12px; text-decoration: none; margin-bottom: 8px; }
 .marka-card__code {
@@ -323,10 +323,27 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .tovar { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; align-items: start; padding-top: 24px; }
 .tovar__main h2 { margin-top: 32px; }
 .tovar__foto {
-    width: 100%; max-height: 380px; object-fit: cover;
+    width: 100%; max-height: 460px; object-fit: cover;
     border-radius: var(--r-lg); margin-bottom: 24px; background: var(--slate-100);
 }
+/* Фото марки — в собственных пропорциях, без обрезки: высокие вертикальные
+   агрегаты показываем в полный рост, длинные горизонтальные — во всю ширину.
+   Рамка обжимает картинку, поэтому у высокого насоса не остаётся широких
+   белых полей по бокам. */
+.tovar__foto--maloe {
+    width: auto; max-width: 100%; max-height: 440px;
+    margin-left: auto; margin-right: auto;
+    object-fit: contain; background: #fff; border: 1px solid var(--slate-200);
+}
 .foto-podpis { display: block; margin: -18px 0 24px; font-size: .75rem; color: var(--slate-500); }
+
+/* Шапка страницы марки: интро-текст слева, фото насоса справа —
+   чтобы фото не висело во всю ширину над узкой колонкой текста. */
+.marka-hero { display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; }
+.marka-hero .page-head { flex: 1 1 380px; padding-top: 8px; max-width: none; }
+.marka-hero__foto { flex: 0 1 auto; max-width: 460px; margin: 4px 0 0; text-align: center; }
+.marka-hero__foto .tovar__foto { margin-bottom: 10px; }
+.marka-hero__foto .foto-podpis { margin: 0; }
 .tochka { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0 28px; }
 .tochka > div { flex: 1; min-width: 130px; display: flex; flex-direction: column-reverse; border: 1px solid var(--slate-200); border-radius: var(--r-md); padding: 14px 16px; }
 .tochka dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--slate-500); }
@@ -528,6 +545,8 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
 @media (max-width: 1023px) {
     .two-col, .tovar, .cta__inner { grid-template-columns: 1fr; gap: 28px; }
     .tovar__buy { position: static; }
+    .marka-hero { gap: 24px; }
+    .marka-hero__foto { max-width: 100%; flex-basis: 100%; }
     .hero__inner { grid-template-columns: 1fr; gap: 32px; padding: 40px 20px; }
     .podbor-form, .podbor-form--4 { grid-template-columns: 1fr 1fr; }
     .podbor-form .btn { grid-column: 1 / -1; }
@@ -561,6 +580,9 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
 
     .section { padding: 32px 0; }
     .marki, .sredy, .stati, .upl-list, .upl-list--wide, .sertifikaty { grid-template-columns: 1fr; }
+    /* .partnery (логотипы) намеренно НЕ в списке выше: логотипы маленькие и
+       текста в карточке немного, поэтому 2 колонки на телефоне читаются
+       нормально — растягивать их в один длинный столбец было бы лишним. */
     .podbor-form, .podbor-form--4 { grid-template-columns: 1fr; }
     .footer__cols { grid-template-columns: 1fr; gap: 24px; }
 

@@ -11,31 +11,41 @@ import ru.promonasos.model.GruppaNasosov;
 import ru.promonasos.model.MarkaNasosa;
 import ru.promonasos.model.ModelNasosa;
 import ru.promonasos.model.ZaprosPodboraNasosa;
+import ru.promonasos.repository.EmkostiRepository;
 import ru.promonasos.service.BlogService;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.UplotneniyaService;
 
 import java.util.List;
 
-/**
- * Каталог насосов: список марок, страница марки с модельным рядом,
- * страница типоразмера и подбор по рабочей точке.
- */
+// каталог насосов: марки, типоразмеры, подбор по рабочей точке
 @Controller
 public class NasosyController {
 
     private final NasosyService nasosyService;
     private final UplotneniyaService uplotneniyaService;
     private final BlogService blogService;
+    private final EmkostiRepository emkostiRepository;
 
     public NasosyController(NasosyService nasosyService, UplotneniyaService uplotneniyaService,
-                             BlogService blogService) {
+                             BlogService blogService, EmkostiRepository emkostiRepository) {
         this.nasosyService = nasosyService;
         this.uplotneniyaService = uplotneniyaService;
         this.blogService = blogService;
+        this.emkostiRepository = emkostiRepository;
     }
 
-    /** Все марки, сгруппированные по назначению. /nasosy */
+    // /emkosti-ep — подземные ёмкости ЕП (идут вместе с полупогружными насосами)
+    @GetMapping("/emkosti-ep")
+    public String emkostiEp(Model model) {
+        model.addAttribute("emkosti", emkostiRepository.getEmkosti());
+        model.addAttribute("zagolovok", "Подземные ёмкости ЕП — типоразмеры и характеристики | ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Подземные дренажные ёмкости ЕП объёмом 4–100 м³ для слива и хранения остатков нефти, масла, топлива и газового конденсата. Откачка полупогружным насосом. Типоразмеры, размеры, масса.");
+        model.addAttribute("canonical", "/emkosti-ep");
+        return "emkosti/emkosti";
+    }
+
+    // /nasosy — все марки по группам
     @GetMapping("/nasosy")
     public String katalog(Model model) {
         model.addAttribute("marki", nasosyService.getMarkiNasosov());
@@ -47,11 +57,7 @@ public class NasosyController {
         return "nasosy-katalog/katalog";
     }
 
-    /**
-     * Подбор по рабочей точке. /nasosy/podbor
-     * Литеральный путь "/nasosy/podbor" Spring всегда предпочитает шаблону
-     * "/nasosy/{marka}" независимо от порядка объявления методов — как и в ASP.NET Core.
-     */
+    // /nasosy/podbor — Spring сам разрулит с /nasosy/{marka}, порядок методов не важен
     @GetMapping("/nasosy/podbor")
     public String podbor(@RequestParam(required = false) String sreda,
                           @RequestParam(required = false) Double podacha,
@@ -72,7 +78,7 @@ public class NasosyController {
         return "nasosy-podbor/podbor";
     }
 
-    /** Страница марки с модельным рядом. /nasosy/{marka} */
+    // /nasosy/{marka} — страница марки, модельный ряд
     @GetMapping("/nasosy/{marka}")
     public String marka(@PathVariable String marka, Model model) {
         MarkaNasosa markaObj = nasosyService.getMarku(marka);
@@ -104,7 +110,7 @@ public class NasosyController {
         return "nasosy-marka/marka";
     }
 
-    /** Страница типоразмера. /nasosy/{marka}/{modelSlug} */
+    // /nasosy/{marka}/{modelSlug} — конкретный типоразмер
     @GetMapping("/nasosy/{marka}/{modelSlug}")
     public String model(@PathVariable String marka, @PathVariable String modelSlug, Model model) {
         MarkaNasosa markaObj = nasosyService.getMarku(marka);

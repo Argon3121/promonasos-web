@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
+<body>
+<div id="soderzhimoe" th:with="chisla=${T(ru.promonasos.util.Chisla)}">
+
+    <nav class="crumbs" aria-label="Хлебные крошки">
+        <div class="container">
+            <ol>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/nasosy">Насосы</a></li>
+                <li aria-current="page">Подземные ёмкости ЕП</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="marka-hero">
+            <div class="page-head">
+                <p class="eyebrow">Дренажные ёмкости · нефтегазовая и коксохимическая отрасль</p>
+                <h1>Подземные ёмкости ЕП</h1>
+                <p>Герметичные сварные резервуары для слива из технологических систем и хранения
+                    остатков нефти, масла, дизельного топлива, бензина и газового конденсата.
+                    Откачка — полупогружным насосом.</p>
+
+                <dl class="diapazon">
+                    <div><dt>Объём</dt><dd>4–100 м³</dd></div>
+                    <div><dt>Давление</dt><dd>до 0,07 МПа</dd></div>
+                    <div><dt>Типоразмеров</dt><dd th:text="${#lists.size(emkosti)}"></dd></div>
+                </dl>
+
+                <div class="page-head__actions">
+                    <a class="btn btn--primary" href="#tiporazmery">Типоразмеры</a>
+                    <a class="btn btn--outline" href="#zayavka-forma">Запросить ёмкость</a>
+                </div>
+            </div>
+
+            <figure class="marka-hero__foto">
+                <img class="tovar__foto tovar__foto--maloe" src="/images/emkost-ep.jpg"
+                     alt="Подземная дренажная ёмкость ЕП" loading="lazy"/>
+                <figcaption class="foto-podpis">Ёмкость ЕП с двумя люками: под насос и для обслуживания.</figcaption>
+            </figure>
+        </div>
+
+        <section class="section" id="tiporazmery">
+            <h2>Типоразмеры ЕП</h2>
+            <p class="section-sub">Данные завода-изготовителя. Комплектация штуцерами и высота патрубков
+                уточняются под проект.</p>
+            <div class="table-wrap">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Обозначение</th>
+                        <th scope="col" class="num">Объём, м³</th>
+                        <th scope="col" class="num">Диаметр, мм</th>
+                        <th scope="col" class="num">Длина, мм</th>
+                        <th scope="col" class="num">Масса, кг</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="e : ${emkosti}">
+                        <th scope="row" th:text="${e.oboznachenie}"></th>
+                        <td class="num" th:text="${chisla.tekst(e.obem)}"></td>
+                        <td class="num" th:text="${e.diametr}"></td>
+                        <td class="num" th:text="${e.dlina}"></td>
+                        <td class="num" th:text="${e.massa}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section two-col">
+            <div>
+                <h2>Конструкция</h2>
+                <p>Герметичный сварной сосуд с двумя коническими днищами, рассчитанный на давление
+                    до 0,07 МПа. В верхней части — два люка: один под установку полупогружного
+                    насоса, второй для доступа при обслуживании. Штуцеры для входа и выхода продукта,
+                    воздушника, парового ввода, уровнемера, термопреобразователя и теплоносителя.</p>
+                <p>Установка под землёй снижает риск загрязнения грунта и грунтовых вод и позволяет
+                    предприятию избежать штрафных санкций контролирующих органов.</p>
+            </div>
+            <aside class="panel">
+                <h3>Условия хранения</h3>
+                <ul class="list-check">
+                    <li>Температура среды: −15…+80 °C</li>
+                    <li>Вязкость: до 30·10⁻⁶ м²/с</li>
+                    <li>Плотность продукта: до 1000 кг/м³</li>
+                    <li>Сероводород: до 1,8 %</li>
+                    <li>Класс опасности жидкости: 2, 3, 4</li>
+                </ul>
+                <h3>Применение</h3>
+                <ul class="list-check">
+                    <li>Нефтегазовая отрасль</li>
+                    <li>Коксохимические производства</li>
+                    <li>Дренаж технологических систем</li>
+                </ul>
+            </aside>
+        </section>
+    </div>
+
+    <div th:replace="~{fragments/cta-block :: cta('Подберём ёмкость ЕП нужного объёма с полупогружным насосом и обвязкой под ваш проект.')}"></div>
+</div>
+</body>
+</html>

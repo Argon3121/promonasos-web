@@ -42,12 +42,7 @@ public class UplotneniyaService {
         return repository.getUplotneniyaPoMarke(markaOboznachenie);
     }
 
-    /**
-     * Подбор по среде, валу, давлению и температуре. В отличие от насоса, здесь
-     * параметры дискретные (диапазон вала, предельные давление и температура),
-     * поэтому фильтрация строгая: если изделие не покрывает условие — оно не
-     * показывается.
-     */
+    // у уплотнения диапазоны жёсткие — не подходит по одному пункту, значит не показываем вообще
     public List<Uplotnenie> podobratUplotnenie(ZaprosPodboraUplotneniya zapros) {
         if (zapros == null) {
             return repository.getUplotneniya();

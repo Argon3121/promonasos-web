@@ -1,11 +1,9 @@
 package ru.promonasos.model;
 
-/**
- * Сертификат, декларация соответствия или свидетельство дилера — скан
- * реального документа. {@code fayl} — полный PDF для просмотра/скачивания;
- * для двух документов, которые изначально были просто картинкой без PDF,
- * {@code fayl} совпадает с {@code miniatyura}.
- */
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+// скан документа; у двух штук PDF не было, только картинка — там fayl = miniatyura
 public class Sertifikat {
     private final String nazvanie;
     private final String badge;
@@ -13,13 +11,6 @@ public class Sertifikat {
     private final String miniatyura;
     private final String fayl;
 
-    public Sertifikat(String nazvanie, String badge, String kategoriya, String miniatyura, String fayl) {
-        this.nazvanie = nazvanie;
-        this.badge = badge;
-        this.kategoriya = kategoriya;
-        this.miniatyura = miniatyura;
-        this.fayl = fayl;
-    }
 
     public String getNazvanie() { return nazvanie; }
     public String getBadge() { return badge; }

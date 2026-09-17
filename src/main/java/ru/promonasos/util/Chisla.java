@@ -1,10 +1,6 @@
 package ru.promonasos.util;
 
-/**
- * Мелкие помощники форматирования для шаблонов.
- * В Java, в отличие от C#, Double.toString(20) даёт "20.0", а не "20" —
- * tekst() убирает лишний ".0", чтобы таблицы характеристик не портились.
- */
+// в Java Double.toString(20) даёт "20.0", а не "20" как в C# — tekst() убирает лишнее
 public final class Chisla {
 
     private Chisla() {
@@ -14,13 +10,11 @@ public final class Chisla {
         if (znachenie == Math.rint(znachenie) && !Double.isInfinite(znachenie)) {
             return String.valueOf((long) znachenie);
         }
-        return String.valueOf(znachenie);
+        // русская запись дробей — через запятую: 12,5 а не 12.5
+        return String.valueOf(znachenie).replace('.', ',');
     }
 
-    /**
-     * Русское склонение существительного после числа:
-     * sklonenie(1, "типоразмер", "типоразмера", "типоразмеров") → «типоразмер».
-     */
+    // склонение после числа: sklonenie(1, "типоразмер", "типоразмера", "типоразмеров") → "типоразмер"
     public static String sklonenie(int kolichestvo, String odin, String dva, String pyat) {
         int sotni = kolichestvo % 100;
         if (sotni >= 11 && sotni <= 14) {
