@@ -3,7 +3,7 @@ package ru.promonasos.model;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-// скан документа; у двух штук PDF не было, только картинка — там fayl = miniatyura
+// скан документа
 public class Sertifikat {
     private final String nazvanie;
     private final String badge;

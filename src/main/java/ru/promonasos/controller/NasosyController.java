@@ -34,7 +34,7 @@ public class NasosyController {
         this.emkostiRepository = emkostiRepository;
     }
 
-    // /emkosti-ep — подземные ёмкости ЕП (идут вместе с полупогружными насосами)
+    //  подземные ёмкости ЕП (идут вместе с полупогружными насосами)
     @GetMapping("/emkosti-ep")
     public String emkostiEp(Model model) {
         model.addAttribute("emkosti", emkostiRepository.getEmkosti());
@@ -44,7 +44,7 @@ public class NasosyController {
         return "emkosti/emkosti";
     }
 
-    // /nasosy — все марки по группам
+    // все марки по группам
     @GetMapping("/nasosy")
     public String katalog(Model model) {
         model.addAttribute("marki", nasosyService.getMarkiNasosov());
@@ -56,7 +56,6 @@ public class NasosyController {
         return "nasosy-katalog/katalog";
     }
 
-    // /nasosy/podbor — Spring сам разрулит с /nasosy/{marka}, порядок методов не важен
     @GetMapping("/nasosy/podbor")
     public String podbor(@RequestParam(required = false) String sreda,
                           @RequestParam(required = false) Double podacha,
@@ -77,7 +76,7 @@ public class NasosyController {
         return "nasosy-podbor/podbor";
     }
 
-    // /nasosy/{marka} — страница марки, модельный ряд
+    // страница марки, модельный ряд
     @GetMapping("/nasosy/{marka}")
     public String marka(@PathVariable String marka, Model model) {
         MarkaNasosa markaObj = nasosyService.getMarku(marka);
@@ -105,7 +104,7 @@ public class NasosyController {
         return "nasosy-marka/marka";
     }
 
-    // /nasosy/{marka}/{modelSlug} — конкретный типоразмер
+    // конкретный типоразмер
     @GetMapping("/nasosy/{marka}/{modelSlug}")
     public String model(@PathVariable String marka, @PathVariable String modelSlug, Model model) {
         MarkaNasosa markaObj = nasosyService.getMarku(marka);

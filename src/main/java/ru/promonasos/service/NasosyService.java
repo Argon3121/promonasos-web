@@ -16,11 +16,7 @@ public class NasosyService {
 
     private final NasosyRepository repository;
 
-    // Специализированные группы: их насосы физически способны качать чистую воду,
-    // но выбирать их для водяной задачи без нужды не стоит. Поэтому при подборе
-    // без указания среды (или по «воде») они идут после общепромышленных, а не
-    // вперемешку — иначе на запрос «60 м³/ч, 30 м» первым выпадает песковый насос
-    // просто потому, что его номинальная точка ближе.
+    // Специализированные группы
     private static final Set<String> SPETSIALIZIROVANNYE_GRUPPY = Set.of(
             "khimicheskie", "neftyanye", "fekalnye-stochnye", "gruntovye", "peskovye",
             "skvazhinnye", "vintovye", "dozirovochnye", "burovye", "plunzhernye", "vakuumnye");

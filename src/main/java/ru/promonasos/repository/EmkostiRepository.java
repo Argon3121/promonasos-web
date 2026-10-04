@@ -5,11 +5,10 @@ import ru.promonasos.model.EmkostEP;
 
 import java.util.List;
 
-// подземные ёмкости ЕП, данные с hermetica.su
+// подземные ёмкости ЕП
 @Repository
 public class EmkostiRepository {
 
-    // обозначение, объём (м³), диаметр (мм), длина (мм), масса (кг)
     private final List<EmkostEP> emkosti = List.of(
             new EmkostEP("ЕП-4", 4, 1600, 2250, 1400),
             new EmkostEP("ЕП-5", 5, 1600, 2755, 1430),

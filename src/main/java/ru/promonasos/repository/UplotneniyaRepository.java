@@ -7,7 +7,7 @@ import ru.promonasos.model.Uplotnenie;
 import java.util.List;
 import java.util.Map;
 
-// каталог уплотнений в памяти, данные с hermetica.su
+// каталог уплотнений в памяти
 @Repository
 public class UplotneniyaRepository {
 
@@ -249,7 +249,6 @@ public class UplotneniyaRepository {
     ));
 
     // Для каждого исполнения показываем отдельное фото соответствующего изделия
-    // с исходного сайта, чтобы разные уплотнения не выглядели одинаково.
     private static List<Uplotnenie> primenitFotoOverridy(List<Uplotnenie> spisok) {
         Map<String, String> overridy = Map.ofEntries(
                 Map.entry("251-211-311", "/images/uplotneniya/models/251-211-311.webp"),

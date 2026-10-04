@@ -19,8 +19,7 @@ public class ModelNasosa {
     private final String gabarity;
     private final String seoTitle;
     private final String seoDescription;
-    // не final: по умолчанию типоразмер показывает фото марки/группы (см. marka.html),
-    // сюда позже проставится реальное фото конкретного типоразмера, когда оно появится
+
     private String izobrazhenieOverride;
 
 

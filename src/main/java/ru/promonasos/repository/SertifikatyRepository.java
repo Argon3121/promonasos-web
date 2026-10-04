@@ -13,7 +13,7 @@ public class SertifikatyRepository {
     private static final String KAT_SOOTVETSTVIE = "sootvetstvie";
 
     private final List<Sertifikat> sertifikaty = List.of(
-            // --- Свидетельства дилера и партнёрства ---
+            //Свидетельства дилера и партнёрства
             diler("Официальный дилер — Адекта", "adekta"),
             diler("Официальный дилер — КНЗ", "knz"),
             diler("Официальный партнёр — Энергия", "energiya"),

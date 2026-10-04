@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-// торцовое уплотнение своего производства, данные с hermetica.su
+// торцовое уплотнение своего производства
 public class Uplotnenie {
     private final String oboznachenie;
     private final String slug;
@@ -25,8 +25,7 @@ public class Uplotnenie {
     private final List<String> primenyaetsyaNaNasosakh;
     private final String seoTitle;
     private final String seoDescription;
-    // не final: по умолчанию изделие показывает общее фото уплотнения (uplotnenie.jpg),
-    // сюда позже проставится реальное фото конкретного изделия, когда оно появится
+
     private String izobrazhenieOverride;
 
 

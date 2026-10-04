@@ -25,7 +25,7 @@ public class UplotneniyaController {
         this.nasosyService = nasosyService;
     }
 
-    // /tortsevye-uplotneniya — список сред
+    // список сред
     @GetMapping("/tortsevye-uplotneniya")
     public String katalog(Model model) {
         model.addAttribute("sredy", uplotneniyaService.getSredyUplotneniy());
@@ -37,7 +37,6 @@ public class UplotneniyaController {
         return "uplotneniya-katalog/katalog";
     }
 
-    // /tortsevye-uplotneniya/podbor
     @GetMapping("/tortsevye-uplotneniya/podbor")
     public String podbor(@RequestParam(required = false) String sreda,
                           @RequestParam(required = false) Double diametrVala,
@@ -60,7 +59,6 @@ public class UplotneniyaController {
         return "uplotneniya-podbor/podbor";
     }
 
-    // /tortsevye-uplotneniya/{sreda}
     @GetMapping("/tortsevye-uplotneniya/{sreda}")
     public String sreda(@PathVariable String sreda, Model model) {
         SredaUplotneniya sredaObj = uplotneniyaService.getSredu(sreda);
@@ -83,7 +81,7 @@ public class UplotneniyaController {
         return "uplotneniya-sreda/sreda";
     }
 
-    // /tortsevye-uplotneniya/izdelie/{slug} — люди гуглят номер изделия, не только среду
+    // люди гуглят номер изделия, не только среду
     @GetMapping("/tortsevye-uplotneniya/izdelie/{slug}")
     public String izdelie(@PathVariable String slug, Model model) {
         Uplotnenie izdelie = uplotneniyaService.getUplotnenie(slug);

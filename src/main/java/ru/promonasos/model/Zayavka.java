@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-// заявка с формы — единственная модель с сеттерами, Spring сам её заполняет
+// заявка с формы
 public class Zayavka {
 
     @NotBlank(message = "Укажите, как к вам обращаться")

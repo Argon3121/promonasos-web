@@ -42,7 +42,7 @@ public class ObshieDannye {
         return nasosyService.getGruppy();
     }
 
-    // марки по группам — иначе меню и главная это 45 марок плоским списком
+    // марки по группам
     @ModelAttribute("markiPoGruppam")
     public Map<String, List<MarkaNasosa>> markiPoGruppam() {
         return nasosyService.getMarkiPoGruppam();
@@ -59,7 +59,7 @@ public class ObshieDannye {
         return uplotneniyaService.getSredyUplotneniy();
     }
 
-    // текущий путь — подсветить пункт меню; #request в шаблоне больше не доступен, пришлось так
+    // текущий путь — подсветить пункт меню
     @ModelAttribute("tekushchiyPut")
     public String tekushchiyPut(HttpServletRequest request) {
         return request.getRequestURI();

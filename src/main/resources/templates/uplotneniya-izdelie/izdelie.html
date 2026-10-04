@@ -53,7 +53,7 @@
                      th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}"
                      th:aria-label="'Увеличить фото уплотнения ' + ${izdelie.oboznachenie}" loading="lazy"/>
                 <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride != null}">Фото уплотнения <span th:text="${izdelie.oboznachenie}"></span>.</span>
-                <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride == null}">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
+                <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride == null}">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие.</span>
 
                 <p class="eyebrow" th:text="${izdelie.tip}"></p>
                 <h1 th:text="'Торцовое уплотнение ' + ${izdelie.oboznachenie}"></h1>

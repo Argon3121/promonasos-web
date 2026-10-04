@@ -65,16 +65,6 @@ public class GlavnayaController {
         return "kontakty/kontakty";
     }
 
-    // источники и лицензии фото
-    @GetMapping("/istochniki-izobrazheniy")
-    public String istochnikiIzobrazheniy(Model model) {
-        model.addAttribute("zagolovok", "Источники изображений — ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Авторы и лицензии фотографий, использованных на сайте.");
-        model.addAttribute("canonical", "/istochniki-izobrazheniy");
-        model.addAttribute("noindex", true);
-        return "istochniki-izobrazheniy/istochniki-izobrazheniy";
-    }
-
     // условия использования информационного сайта
     @GetMapping("/polzovatelskoe-soglashenie")
     public String polzovatelskoeSoglashenie(Model model) {
@@ -117,8 +107,7 @@ public class GlavnayaController {
     @PostMapping("/zayavka")
     public String zayavka(@Valid Zayavka zayavka, BindingResult bindingResult,
                            HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        // Referer приходит абсолютным адресом (https://хост/nasosy/k), поэтому
-        // берём путь из Referer и только если хост совпадает с нашим.
+        // Referer приходит абсолютным адресом (https://хост/nasosy/k)
         String vernutsya = "/";
         String referer = request.getHeader("Referer");
         if (referer != null && !referer.isEmpty()) {
@@ -130,7 +119,6 @@ public class GlavnayaController {
                     vernutsya = refererUri.getRawPath() + (zapros != null ? "?" + zapros : "");
                 }
             } catch (IllegalArgumentException ignored) {
-                // некорректный Referer — остаёмся с "/"
             }
         }
 
@@ -143,7 +131,6 @@ public class GlavnayaController {
             zayavkaEmailService.otpravit(zayavka, request.getRequestURI());
             redirectAttributes.addFlashAttribute("uspekh", "Заявка отправлена. Мы свяжемся с вами по указанным контактам.");
         } catch (MailException e) {
-            // Не записываем имя, телефон, адрес почты или текст заявки в журнал приложения.
             log.warn("Не удалось отправить заявку: ошибка почтового сервера ({})", e.getClass().getSimpleName());
             redirectAttributes.addFlashAttribute("oshibka", "Не удалось отправить заявку. Позвоните нам по телефону +7 (495) 925-05-03 или напишите на info@hermetica.su.");
         }
