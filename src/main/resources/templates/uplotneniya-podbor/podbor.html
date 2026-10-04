@@ -86,7 +86,7 @@
                     <div class="rezultat__buy">
                         <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}"
                            th:aria-label="'Открыть уплотнение ' + ${u.oboznachenie}">
-                            <img class="rezultat__foto"
+                            <img class="rezultat__foto rezultat__foto--contain"
                                  th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
                                  alt="" loading="lazy"/>
                         </a>

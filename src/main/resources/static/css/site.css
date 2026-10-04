@@ -467,6 +467,7 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .rezultat__why { font-size: .875rem; color: var(--slate-700); background: var(--slate-50); border-radius: var(--r-md); padding: 10px 14px; margin: 0; }
 .rezultat__buy { display: flex; flex-direction: column; gap: 10px; justify-content: center; padding-left: 24px; border-left: 1px solid var(--slate-200); }
 .rezultat__foto { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-md); background: var(--slate-100); }
+.rezultat__foto--contain { object-fit: contain; object-position: center; background: #fff; }
 
 .verdikt { display: inline-block; padding: 4px 12px; border-radius: var(--r-full); font-size: .8125rem; font-weight: 700; margin-bottom: 10px; }
 .verdikt--best { background: var(--ok-bg); color: var(--ok); }
