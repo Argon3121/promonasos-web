@@ -18,13 +18,13 @@
     <meta property="og:locale" content="ru_RU"/>
     <meta property="og:title" th:content="${zagolovok}"/>
     <meta property="og:description" th:content="${opisanie}"/>
-    <meta property="og:image" th:content="${sait.domen + (ogImage != null ? ogImage : '/images/gruppa-centrobezhnye-obshchepromyshlennye.jpg')}"/>
+    <meta property="og:image" th:if="${ogImage != null}" th:content="${sait.domen + ogImage}"/>
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:title" th:content="${zagolovok}"/>
     <meta name="twitter:description" th:content="${opisanie}"/>
-    <meta name="twitter:image" th:content="${sait.domen + (ogImage != null ? ogImage : '/images/gruppa-centrobezhnye-obshchepromyshlennye.jpg')}"/>
+    <meta name="twitter:image" th:if="${ogImage != null}" th:content="${sait.domen + ogImage}"/>
     <meta name="theme-color" content="#0B2C45"/>
-    <link rel="stylesheet" th:href="@{/css/site.css}"/>
+    <link rel="stylesheet" th:href="@{/css/site.css(v=20261004-2)}"/>
     <link rel="icon" th:href="@{/images/favicon.svg}" type="image/svg+xml"/>
     <script type="application/ld+json" th:inline="text">
     {
@@ -63,6 +63,6 @@
     <a class="bb" href="#zayavka-forma">Заявка</a>
 </nav>
 
-<script th:src="@{/js/site.js}"></script>
+<script th:src="@{/js/site.js(v=20261004-2)}"></script>
 </body>
 </html>

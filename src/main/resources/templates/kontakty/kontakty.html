@@ -46,12 +46,12 @@
 
         <div class="karta-head">
             <h2>Как нас найти</h2>
-            <a class="link-arrow" th:href="@{https://yandex.ru/maps/(text=${sait.adres})}" target="_blank" rel="noopener">
+            <a class="link-arrow" href="https://yandex.ru/maps/?ll=37.693218998267064%2C55.74213131599045&amp;z=14&amp;pt=37.693218998267064%2C55.74213131599045,pm2rdm" target="_blank" rel="noopener">
                 Построить маршрут
             </a>
         </div>
         <div class="karta">
-            <iframe th:src="@{https://yandex.ru/map-widget/v1/(text=${sait.adres},z=16)}"
+            <iframe src="https://yandex.ru/map-widget/v1/?ll=37.693218998267064%2C55.74213131599045&amp;z=14&amp;pt=37.693218998267064%2C55.74213131599045,pm2rdm"
                     title="Карта: адрес компании" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     </div>

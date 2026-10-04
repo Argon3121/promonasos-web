@@ -26,8 +26,8 @@
       "additionalProperty": [
         { "@type": "PropertyValue", "name": "Тип", "value": "[[${izdelie.tip}]]" },
         { "@type": "PropertyValue", "name": "Диаметр вала", "value": "[[${chisla.tekst(izdelie.diametrValaOt)}]]–[[${chisla.tekst(izdelie.diametrValaDo)}]] мм" },
-        { "@type": "PropertyValue", "name": "Давление", "value": "до [[${chisla.tekst(izdelie.davlenieDo)}]] кгс/см²" },
-        { "@type": "PropertyValue", "name": "Температура", "value": "от [[${chisla.tekst(izdelie.temperaturaOt)}]] до [[${chisla.tekst(izdelie.temperaturaDo)}]] °C" },
+        { "@type": "PropertyValue", "name": "Давление", "value": "[[${izdelie.davlenieOpisanie != null ? izdelie.davlenieOpisanie : 'до ' + chisla.tekst(izdelie.davlenieDo)}]] кгс/см²" },
+        { "@type": "PropertyValue", "name": "Температура", "value": "[[${izdelie.temperaturaOpisanie != null ? izdelie.temperaturaOpisanie : chisla.tekst(izdelie.temperaturaOt) + '…' + chisla.tekst(izdelie.temperaturaDo)}]] °C" },
         { "@type": "PropertyValue", "name": "Вторичное уплотнение", "value": "[[${izdelie.vtorichnoeUplotnenie}]]" },
         { "@type": "PropertyValue", "name": "Пары трения", "value": "[[${#strings.listJoin(izdelie.paryTreniya, ', ')}]]" }
       ]
@@ -48,8 +48,10 @@
     <div class="container">
         <div class="tovar">
             <div class="tovar__main">
-                <img class="tovar__foto" th:src="@{${izdelie.izobrazhenieOverride != null ? izdelie.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
-                     th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}" loading="lazy"/>
+                <img class="tovar__foto tovar__foto--seal" data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
+                     th:src="@{${izdelie.izobrazhenieOverride != null ? izdelie.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
+                     th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}"
+                     th:aria-label="'Увеличить фото уплотнения ' + ${izdelie.oboznachenie}" loading="lazy"/>
                 <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride != null}">Фото уплотнения <span th:text="${izdelie.oboznachenie}"></span>.</span>
                 <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride == null}">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
 
@@ -65,9 +67,9 @@
                         <tr><th scope="row">Тип</th><td th:text="${izdelie.tip}"></td></tr>
                         <tr><th scope="row">Диаметр вала, мм</th>
                             <td th:text="${chisla.tekst(izdelie.diametrValaOt)} + '–' + ${chisla.tekst(izdelie.diametrValaDo)}"></td></tr>
-                        <tr><th scope="row">Давление, кгс/см²</th><td th:text="'до ' + ${chisla.tekst(izdelie.davlenieDo)}"></td></tr>
+                        <tr><th scope="row">Давление, кгс/см²</th><td th:text="${izdelie.davlenieOpisanie != null ? izdelie.davlenieOpisanie : 'до ' + chisla.tekst(izdelie.davlenieDo)}"></td></tr>
                         <tr><th scope="row">Температура, °C</th>
-                            <td th:text="${chisla.tekst(izdelie.temperaturaOt)} + '…' + ${chisla.tekst(izdelie.temperaturaDo)}"></td></tr>
+                            <td th:text="${izdelie.temperaturaOpisanie != null ? izdelie.temperaturaOpisanie : chisla.tekst(izdelie.temperaturaOt) + '…' + chisla.tekst(izdelie.temperaturaDo)}"></td></tr>
                         <tr><th scope="row">Вторичное уплотнение</th><td th:text="${izdelie.vtorichnoeUplotnenie}"></td></tr>
                         <tr><th scope="row">Пары трения</th><td th:text="${#strings.listJoin(izdelie.paryTreniya, ', ')}"></td></tr>
                         <tr><th scope="row">Металлические детали</th><td th:text="${izdelie.metallicheskieDetali}"></td></tr>
@@ -105,15 +107,21 @@
         <section class="section" th:if="${not #lists.isEmpty(pohozhie)}">
             <h2>Похожие изделия</h2>
             <div class="upl-list">
-                <article class="upl-card" th:each="u : ${pohozhie}">
-                    <img class="upl-card__image" th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}" alt="" loading="lazy"/>
+                <article class="upl-card" th:each="u : ${pohozhie}"
+                         th:attr="data-card-link=@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">
+                    <a class="upl-card__photo-link" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}"
+                       th:aria-label="'Открыть уплотнение ' + ${u.oboznachenie}">
+                        <img class="upl-card__image"
+                             th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
+                             alt="" loading="lazy"/>
+                    </a>
                     <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">
                         <h3 th:text="${u.oboznachenie}"></h3>
                     </a>
                     <p th:text="${u.tip}"></p>
                     <dl class="upl-card__params">
                         <div><dt>Вал</dt><dd th:text="${chisla.tekst(u.diametrValaOt)} + '–' + ${chisla.tekst(u.diametrValaDo)} + ' мм'"></dd></div>
-                        <div><dt>Давление</dt><dd th:text="'до ' + ${chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
+                        <div><dt>Давление</dt><dd th:text="${u.davlenieOpisanie != null ? u.davlenieOpisanie : 'до ' + chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
                     </dl>
                     <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Характеристики</a>
                 </article>

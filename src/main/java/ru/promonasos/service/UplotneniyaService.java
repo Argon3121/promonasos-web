@@ -62,7 +62,7 @@ public class UplotneniyaService {
         }
 
         if (zapros.getDavlenie() != null && zapros.getDavlenie() > 0) {
-            vyborka = vyborka.stream().filter(u -> u.getDavlenieDo() >= zapros.getDavlenie()).toList();
+            vyborka = vyborka.stream().filter(u -> u.podkhoditPoDavleniyu(zapros.getDavlenie())).toList();
         }
 
         if (zapros.getTemperatura() != null) {

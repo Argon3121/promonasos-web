@@ -155,7 +155,7 @@ public class UplotneniyaRepository {
                     "Торцовое уплотнение — фторопласт 153/Д",
                     "Двойное, компоновка «спина к спине»",
                     "Двойное торцовое уплотнение с компоновкой «спина к спине» для токсичных и агрессивных химических жидкостей. Уплотняет агрессивные растворы с низкой вязкостью и минимальным содержанием твёрдых включений.",
-                    List.of("kisloty"), 20, 130, 16, -50, 220,
+                    List.of("kisloty"), 20, 130, 8, -50, 220,
                     "Фторопласт Ф4",
                     List.of("Углеграфит", "Силицированные графиты", "Карбид кремния", "Карбид вольфрама"),
                     "Нержавеющие стали К, Е, И", "DIN 24960, EN 12756",
@@ -248,24 +248,24 @@ public class UplotneniyaRepository {
                     "Двойное уплотнение 351/Т.Н «тандем»: давление до 35 кгс/см², температура до 200 °C, вал 30–120 мм.")
     ));
 
-    // Для каждого исполнения показываем фото соответствующей конструктивной группы,
-    // а не одно общее изображение уплотнения.
+    // Для каждого исполнения показываем отдельное фото соответствующего изделия
+    // с исходного сайта, чтобы разные уплотнения не выглядели одинаково.
     private static List<Uplotnenie> primenitFotoOverridy(List<Uplotnenie> spisok) {
         Map<String, String> overridy = Map.ofEntries(
-                Map.entry("251-211-311", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("251-d", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("112-212-n", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("211r-l", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("212-n4", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("153-353-313", "/images/uplotneniya/ptfe.png"),
-                Map.entry("153-d", "/images/uplotneniya/ptfe.png"),
-                Map.entry("211c-361c", "/images/uplotneniya/rubber-bellows.png"),
-                Map.entry("264-365", "/images/uplotneniya/metal-bellows.png"),
-                Map.entry("338", "/images/uplotneniya/metal-bellows.png"),
-                Map.entry("338-n", "/images/uplotneniya/metal-bellows.png"),
-                Map.entry("351n-361n", "/images/uplotneniya/tandem-api.png"),
-                Map.entry("338-t-n", "/images/uplotneniya/tandem-api.png"),
-                Map.entry("351t-n", "/images/uplotneniya/tandem-api.png")
+                Map.entry("251-211-311", "/images/uplotneniya/models/251-211-311.webp"),
+                Map.entry("251-d", "/images/uplotneniya/models/251-d.webp"),
+                Map.entry("112-212-n", "/images/uplotneniya/models/112-212-n.webp"),
+                Map.entry("211r-l", "/images/uplotneniya/models/211r-l.webp"),
+                Map.entry("212-n4", "/images/uplotneniya/models/212-n4.webp"),
+                Map.entry("153-353-313", "/images/uplotneniya/models/153-353-313.webp"),
+                Map.entry("153-d", "/images/uplotneniya/models/153-d.webp"),
+                Map.entry("211c-361c", "/images/uplotneniya/models/211c-361c.webp"),
+                Map.entry("264-365", "/images/uplotneniya/models/264-365.webp"),
+                Map.entry("338", "/images/uplotneniya/models/338.webp"),
+                Map.entry("338-n", "/images/uplotneniya/models/338-n.webp"),
+                Map.entry("351n-361n", "/images/uplotneniya/models/351n-361n.webp"),
+                Map.entry("338-t-n", "/images/uplotneniya/models/338-t-n.webp"),
+                Map.entry("351t-n", "/images/uplotneniya/models/351t-n.webp")
         );
         spisok.forEach(u -> {
             String foto = overridy.get(u.getSlug());

@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import ru.promonasos.service.BlogService;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.SertifikatyService;
 import ru.promonasos.service.UplotneniyaService;
+import ru.promonasos.service.ZayavkaEmailService;
 
 import java.net.URI;
 
@@ -28,13 +30,16 @@ public class GlavnayaController {
     private final UplotneniyaService uplotneniyaService;
     private final BlogService blogService;
     private final SertifikatyService sertifikatyService;
+    private final ZayavkaEmailService zayavkaEmailService;
 
     public GlavnayaController(NasosyService nasosyService, UplotneniyaService uplotneniyaService,
-                               BlogService blogService, SertifikatyService sertifikatyService) {
+                               BlogService blogService, SertifikatyService sertifikatyService,
+                               ZayavkaEmailService zayavkaEmailService) {
         this.nasosyService = nasosyService;
         this.uplotneniyaService = uplotneniyaService;
         this.blogService = blogService;
         this.sertifikatyService = sertifikatyService;
+        this.zayavkaEmailService = zayavkaEmailService;
     }
 
     // Марки насосов
@@ -70,6 +75,32 @@ public class GlavnayaController {
         return "istochniki-izobrazheniy/istochniki-izobrazheniy";
     }
 
+    // условия использования информационного сайта
+    @GetMapping("/polzovatelskoe-soglashenie")
+    public String polzovatelskoeSoglashenie(Model model) {
+        model.addAttribute("zagolovok", "Пользовательское соглашение — ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Условия использования каталога насосов и торцовых уплотнений ТД «Промоборудование».");
+        model.addAttribute("canonical", "/polzovatelskoe-soglashenie");
+        return "polzovatelskoe-soglashenie/soglashenie";
+    }
+
+    @GetMapping("/politika-personalnyh-dannyh")
+    public String politikaPersonalnyhDannykh(Model model) {
+        model.addAttribute("zagolovok", "Политика обработки персональных данных — ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Политика обработки персональных данных ООО ТД «Промоборудование» при использовании сайта и отправке заявки.");
+        model.addAttribute("canonical", "/politika-personalnyh-dannyh");
+        return "personalnye-dannye/politika";
+    }
+
+    @GetMapping("/soglasie-na-obrabotku-personalnyh-dannyh")
+    public String soglasieNaObrabotkuPersonalnyhDannykh(Model model) {
+        model.addAttribute("zagolovok", "Согласие на обработку персональных данных — ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Согласие на обработку данных, отправляемых через форму заявки на сайте hermetica.su.");
+        model.addAttribute("canonical", "/soglasie-na-obrabotku-personalnyh-dannyh");
+        model.addAttribute("noindex", true);
+        return "personalnye-dannye/soglasie";
+    }
+
     // Сертификаты и свидетельства
     @GetMapping("/sertifikaty")
     public String sertifikaty(Model model) {
@@ -82,7 +113,7 @@ public class GlavnayaController {
         return "sertifikaty/sertifikaty";
     }
 
-    // приём заявки, пока только валидация и подтверждение
+    // Принимает заявку и отправляет её на корпоративную почту.
     @PostMapping("/zayavka")
     public String zayavka(@Valid Zayavka zayavka, BindingResult bindingResult,
                            HttpServletRequest request, RedirectAttributes redirectAttributes) {
@@ -108,12 +139,14 @@ public class GlavnayaController {
             return "redirect:" + vernutsya;
         }
 
-        // TODO: отправка на почту и в CRM. Пока фиксируем в лог, чтобы заявка
-        // не терялась бесследно — без этого при падении почты/CRM данные из
-        // формы нигде не остались бы, даже для ручной обработки.
-        log.info("Новая заявка: имя=\"{}\", контакт=\"{}\", организация=\"{}\", задача=\"{}\"",
-                zayavka.getImya(), zayavka.getKontakt(), zayavka.getOrganizatsiya(), zayavka.getZadacha());
-        redirectAttributes.addFlashAttribute("uspekh", "Заявка принята. Инженер ответит в течение одного рабочего дня.");
+        try {
+            zayavkaEmailService.otpravit(zayavka, request.getRequestURI());
+            redirectAttributes.addFlashAttribute("uspekh", "Заявка отправлена. Мы свяжемся с вами по указанным контактам.");
+        } catch (MailException e) {
+            // Не записываем имя, телефон, адрес почты или текст заявки в журнал приложения.
+            log.warn("Не удалось отправить заявку: ошибка почтового сервера ({})", e.getClass().getSimpleName());
+            redirectAttributes.addFlashAttribute("oshibka", "Не удалось отправить заявку. Позвоните нам по телефону +7 (495) 925-05-03 или напишите на info@hermetica.su.");
+        }
         return "redirect:" + vernutsya;
     }
 
@@ -148,6 +181,8 @@ public class GlavnayaController {
         dobavitUrl(sb, domen, "/blog", "0.7", "weekly");
         dobavitUrl(sb, domen, "/sertifikaty", "0.5", "yearly");
         dobavitUrl(sb, domen, "/kontakty", "0.6", "yearly");
+        dobavitUrl(sb, domen, "/polzovatelskoe-soglashenie", "0.3", "yearly");
+        dobavitUrl(sb, domen, "/politika-personalnyh-dannyh", "0.4", "yearly");
 
         nasosyService.getMarkiNasosov().forEach(marka -> {
             dobavitUrl(sb, domen, "/nasosy/" + marka.getSlug(), "0.9", "weekly");

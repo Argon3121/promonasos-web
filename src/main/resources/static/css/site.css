@@ -288,12 +288,14 @@ img, svg { max-width: 100%; height: auto; display: block; }
     transition: border-color .15s, box-shadow .15s, transform .15s;
 }
 .marka-card:hover { border-color: var(--slate-300); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.marka-card[data-card-link], .upl-card[data-card-link], .rezultat[data-card-link] { cursor: pointer; }
 /* Фото серии или типа уплотнения: сохраняем весь агрегат, в том числе
    высокие вертикальные и длинные горизонтальные исполнения. */
 .marka-card__image, .upl-card__image {
     display: block; width: calc(100% + 40px); margin: -20px -20px 16px;
     aspect-ratio: 16 / 10; object-fit: contain; background: #fff;
 }
+.marka-card__photo-link, .upl-card__photo-link { display: block; }
 .marka-card__head { display: flex; align-items: baseline; gap: 12px; text-decoration: none; margin-bottom: 8px; }
 .marka-card__code {
     flex: none; min-width: 56px; padding: 6px 10px; border-radius: var(--r-sm);
@@ -323,15 +325,18 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .tovar { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; align-items: start; padding-top: 24px; }
 .tovar__main h2 { margin-top: 32px; }
 .tovar__foto {
-    width: 100%; max-height: 460px; object-fit: cover;
-    border-radius: var(--r-lg); margin-bottom: 24px; background: var(--slate-100);
+    width: min(100%, 600px); max-width: 100%; height: auto;
+    aspect-ratio: 4 / 3; object-fit: contain; object-position: center;
+    border-radius: var(--r-lg); margin-bottom: 24px; background: #fff;
 }
-/* Фото марки — в собственных пропорциях, без обрезки: высокие вертикальные
-   агрегаты показываем в полный рост, длинные горизонтальные — во всю ширину.
-   Рамка обжимает картинку, поэтому у высокого насоса не остаётся широких
-   белых полей по бокам. */
+.tovar__foto--seal {
+    display: block; width: min(100%, 460px); max-width: 100%; height: auto;
+    max-height: none; aspect-ratio: 1 / 1; object-fit: contain; object-position: center;
+    background: #fff;
+}
+/* Общая рамка 4:3 для марок и типоразмеров; object-fit сохраняет весь агрегат. */
 .tovar__foto--maloe {
-    width: auto; max-width: 100%; max-height: 440px;
+    width: 100%; max-width: 600px; max-height: none; aspect-ratio: 4 / 3;
     margin-left: auto; margin-right: auto;
     object-fit: contain; background: #fff; border: 1px solid var(--slate-200);
 }
@@ -344,9 +349,31 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .marka-hero__foto { flex: 0 1 auto; max-width: 460px; margin: 4px 0 0; text-align: center; }
 .marka-hero__foto .tovar__foto { margin-bottom: 10px; }
 .marka-hero__foto .foto-podpis { margin: 0; }
+[data-image-zoom] { cursor: zoom-in; }
+[data-image-zoom]:focus-visible { outline: 3px solid var(--accent-600); outline-offset: 4px; }
+
+/* Увеличенное фото открывается в отдельном окне и целиком помещается в экран. */
+.photo-lightbox {
+    position: fixed; z-index: 10000; inset: 0; box-sizing: border-box;
+    display: flex; width: 100%; height: 100%; padding: 64px 20px 24px;
+    flex-direction: column; align-items: center; justify-content: center;
+    border: 0; background: rgba(5, 17, 28, .96); color: #fff;
+}
+.photo-lightbox[hidden] { display: none; }
+.photo-lightbox__image { display: block; width: min(92vw, 1100px); aspect-ratio: 4 / 3; max-height: calc(100vh - 112px); object-fit: contain; background: #fff; border-radius: 8px; }
+.photo-lightbox__image--square { width: min(92vw, 92vh); aspect-ratio: 1 / 1; }
+.photo-lightbox__caption { margin: 12px 0 0; color: #fff; text-align: center; font-size: .9375rem; }
+.photo-lightbox__close { position: absolute; top: 12px; right: 20px; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; font-size: 1.75rem; line-height: 1; cursor: pointer; }
+.photo-lightbox__close:hover { background: rgba(255,255,255,.22); }
 .tochka { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0 28px; }
 .tochka > div { flex: 1; min-width: 130px; display: flex; flex-direction: column-reverse; border: 1px solid var(--slate-200); border-radius: var(--r-md); padding: 14px 16px; }
 .tochka dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--slate-500); }
+.legal-document { max-width: 920px; }
+.legal-document .section { max-width: 78ch; }
+.legal-document .section p { margin-bottom: 12px; }
+.legal-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.legal-link:hover, .legal-link:focus-visible { color: var(--color-accent, #e46b24); }
+.cta__form .fine-print { margin: -8px 0 12px; font-size: .82rem; line-height: 1.45; }
 .tochka dd { margin: 0 0 4px; font-size: 1.625rem; font-weight: 800; line-height: 1; }
 .tochka dd i { font-style: normal; font-size: .875rem; font-weight: 600; color: var(--slate-700); }
 
@@ -602,6 +629,9 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
 }
 
 @media (max-width: 560px) {
+    .photo-lightbox { height: 100dvh; padding: 56px 12px 20px; }
+    .photo-lightbox__image { width: 96vw; max-height: calc(100dvh - 100px); }
+    .photo-lightbox__image--square { width: min(92vw, 92dvh); }
     .hero__stats { grid-template-columns: 1fr 1fr; }
     .sreda-card__params { grid-template-columns: 1fr; }
     .tochka > div { min-width: 100px; }

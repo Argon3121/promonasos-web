@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
-import ru.promonasos.model.GruppaNasosov;
 import ru.promonasos.model.MarkaNasosa;
 import ru.promonasos.model.ModelNasosa;
 import ru.promonasos.model.ZaprosPodboraNasosa;
@@ -94,11 +93,7 @@ public class NasosyController {
         model.addAttribute("podachaDo", modeli.stream().mapToDouble(ModelNasosa::getPodacha).max().orElse(0));
         model.addAttribute("naporOt", modeli.stream().mapToDouble(ModelNasosa::getNapor).min().orElse(0));
         model.addAttribute("naporDo", modeli.stream().mapToDouble(ModelNasosa::getNapor).max().orElse(0));
-        GruppaNasosov gruppa = nasosyService.getGruppy().stream()
-                .filter(g -> g.getSlug().equals(markaObj.getGruppaSlug())).findFirst().orElse(null);
-        model.addAttribute("gruppa", gruppa);
-        model.addAttribute("ogImage", markaObj.getIzobrazhenieOverride() != null
-                ? markaObj.getIzobrazhenieOverride() : (gruppa != null ? gruppa.getIzobrazhenie() : null));
+        model.addAttribute("ogImage", markaObj.getIzobrazhenieOverride());
         model.addAttribute("sosedniMarki", nasosyService.getMarkiPoGruppe(markaObj.getGruppaSlug()).stream()
                 .filter(m -> !m.getSlug().equals(marka)).toList());
         model.addAttribute("uplotneniya", uplotneniyaService.getUplotneniyaPoMarke(markaObj.getOboznachenie()));
@@ -131,9 +126,8 @@ public class NasosyController {
                 .filter(m -> !m.getSlug().equals(modelSlug)).limit(8).toList());
         model.addAttribute("uplotneniya", uplotneniyaService.getUplotneniyaPoMarke(markaObj.getOboznachenie()));
 
-        GruppaNasosov gruppa = nasosyService.getGruppyPoSlug().get(markaObj.getGruppaSlug());
-        model.addAttribute("ogImage", markaObj.getIzobrazhenieOverride() != null
-                ? markaObj.getIzobrazhenieOverride() : (gruppa != null ? gruppa.getIzobrazhenie() : null));
+        model.addAttribute("ogImage", modelObj.getIzobrazhenieOverride() != null
+                ? modelObj.getIzobrazhenieOverride() : markaObj.getIzobrazhenieOverride());
 
         model.addAttribute("zagolovok", modelObj.getSeoTitle());
         model.addAttribute("opisanie", modelObj.getSeoDescription());

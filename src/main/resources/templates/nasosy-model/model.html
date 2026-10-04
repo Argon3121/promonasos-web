@@ -45,18 +45,21 @@
 
     <div class="container">
         <div class="tovar">
-            <div class="tovar__main" th:with="gruppa=${gruppyPoSlug.get(marka.gruppaSlug)}">
+            <div class="tovar__main">
                 <img class="tovar__foto" th:if="${model.izobrazhenieOverride != null}"
+                     data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
                      th:src="@{${model.izobrazhenieOverride}}"
-                     th:alt="'Насос ' + ${model.oboznachenie}" loading="lazy"/>
+                     th:alt="'Насос ' + ${model.oboznachenie}"
+                     th:aria-label="'Увеличить фото насоса ' + ${model.oboznachenie}" loading="lazy"/>
                 <span class="foto-podpis" th:if="${model.izobrazhenieOverride != null}">Фото насоса <span th:text="${model.oboznachenie}"></span>.</span>
 
-                <img class="tovar__foto" th:if="${model.izobrazhenieOverride == null and gruppa != null}"
+                <img class="tovar__foto" th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null}"
+                     data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
                      th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
-                     th:src="@{${marka.izobrazhenieOverride != null ? marka.izobrazhenieOverride : gruppa.izobrazhenie}}"
-                     th:alt="'Насос ' + ${model.oboznachenie}" loading="lazy"/>
+                     th:src="@{${marka.izobrazhenieOverride}}"
+                     th:alt="'Насос ' + ${model.oboznachenie}"
+                     th:aria-label="'Увеличить фото насоса ' + ${marka.oboznachenie}" loading="lazy"/>
                 <span class="foto-podpis" th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')}">Фото насоса марки <span th:text="${marka.oboznachenie}"></span>, не конкретного типоразмера.</span>
-                <span class="foto-podpis" th:if="${model.izobrazhenieOverride == null and gruppa != null and not (marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/'))}">Фото представляет тип конструкции этой серии, не конкретный типоразмер. <a href="/istochniki-izobrazheniy">Источники фото</a></span>
 
                 <p class="eyebrow" th:text="${marka.rasshifrovka} + ' · серия ' + ${marka.oboznachenie}"></p>
                 <h1 th:text="'Насос ' + ${model.oboznachenie}"></h1>
@@ -106,7 +109,7 @@
                             <p th:text="${u.tip}"></p>
                             <dl class="upl-card__params">
                                 <div><dt>Вал</dt><dd th:text="${chisla.tekst(u.diametrValaOt)} + '–' + ${chisla.tekst(u.diametrValaDo)} + ' мм'"></dd></div>
-                                <div><dt>Давление</dt><dd th:text="'до ' + ${chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
+                                <div><dt>Давление</dt><dd th:text="${u.davlenieOpisanie != null ? u.davlenieOpisanie : 'до ' + chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
                             </dl>
                             <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Характеристики</a>
                         </article>

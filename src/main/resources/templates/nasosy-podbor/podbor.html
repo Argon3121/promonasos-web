@@ -76,7 +76,8 @@
 
             <div class="rezultaty" th:unless="${#lists.isEmpty(rezultaty)}">
                 <article class="rezultat" th:classappend="${r.verdikt == 'tochno'} ? 'rezultat--best' : ''"
-                         th:each="r, rSt : ${rezultaty}" th:if="${rSt.index < 24}">
+                         th:each="r, rSt : ${rezultaty}" th:if="${rSt.index < 24}"
+                         th:attr="data-card-link=@{'/nasosy/' + ${r.marka.slug} + '/' + ${r.model.slug}}">
                     <div class="rezultat__info">
                         <p class="verdikt verdikt--best" th:if="${r.verdikt == 'tochno'}">Ближе всего к запросу</p>
                         <p class="verdikt verdikt--good" th:if="${r.verdikt == 'podoydet'}">Подойдёт</p>
@@ -95,9 +96,13 @@
                             <b>Почему предложен:</b> <span th:text="${r.obosnovanie} + '.'"></span></p>
                     </div>
                     <div class="rezultat__buy">
-                        <img class="rezultat__foto" th:if="${gruppyPoSlug.get(r.marka.gruppaSlug) != null}"
-                             th:src="@{${r.marka.izobrazhenieOverride != null ? r.marka.izobrazhenieOverride : gruppyPoSlug.get(r.marka.gruppaSlug).izobrazhenie}}"
-                             th:alt="'Насос ' + ${r.marka.oboznachenie}" loading="lazy"/>
+                        <a th:if="${r.marka.izobrazhenieOverride != null}"
+                           th:href="@{'/nasosy/' + ${r.marka.slug} + '/' + ${r.model.slug}}"
+                           th:aria-label="'Открыть насос ' + ${r.model.oboznachenie}">
+                            <img class="rezultat__foto"
+                                 th:src="@{${r.marka.izobrazhenieOverride}}"
+                                 alt="" loading="lazy"/>
+                        </a>
                         <a class="btn btn--primary" href="#zayavka-forma">Узнать цену и срок</a>
                         <a class="link-arrow" th:href="@{'/nasosy/' + ${r.marka.slug} + '/' + ${r.model.slug}}">Характеристики</a>
                     </div>

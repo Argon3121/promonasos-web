@@ -86,9 +86,92 @@
         });
     }
 
+    // Увеличение фотографий насосов и уплотнений.
+    function initImageZoom() {
+        // Каталоги и результаты подбора не создают lightbox и не получают
+        // обработчики изображений: увеличение включено только на карточках позиций.
+        if (!document.querySelector('[data-image-zoom]')) { return; }
+
+        var dialog = document.createElement('div');
+        dialog.className = 'photo-lightbox';
+        dialog.setAttribute('role', 'dialog');
+        dialog.setAttribute('aria-modal', 'true');
+        dialog.setAttribute('aria-label', 'Просмотр фотографии');
+        dialog.hidden = true;
+
+        var close = document.createElement('button');
+        close.type = 'button';
+        close.className = 'photo-lightbox__close';
+        close.setAttribute('aria-label', 'Закрыть фото');
+        close.textContent = '×';
+
+        var image = document.createElement('img');
+        image.className = 'photo-lightbox__image';
+        var caption = document.createElement('p');
+        caption.className = 'photo-lightbox__caption';
+
+        dialog.appendChild(close);
+        dialog.appendChild(image);
+        dialog.appendChild(caption);
+        document.body.appendChild(dialog);
+
+        var lastTrigger = null;
+        function showPhoto(trigger) {
+            lastTrigger = trigger;
+            image.src = trigger.currentSrc || trigger.src;
+            image.alt = trigger.alt || '';
+            caption.textContent = trigger.alt || '';
+            image.classList.toggle('photo-lightbox__image--square', trigger.classList.contains('tovar__foto--seal'));
+            dialog.hidden = false;
+            close.focus();
+        }
+
+        function hidePhoto() {
+            dialog.hidden = true;
+            image.removeAttribute('src');
+            if (lastTrigger) { lastTrigger.focus(); }
+        }
+
+        close.addEventListener('click', hidePhoto);
+        dialog.addEventListener('click', function (event) {
+            if (event.target === dialog) { hidePhoto(); }
+        });
+        document.addEventListener('click', function (event) {
+            var trigger = event.target.closest('[data-image-zoom]');
+            if (trigger) {
+                showPhoto(trigger);
+                return;
+            }
+        });
+        document.addEventListener('keydown', function (event) {
+            if (!dialog.hidden && event.key === 'Escape') {
+                event.preventDefault();
+                hidePhoto();
+                return;
+            }
+            var trigger = event.target.closest && event.target.closest('[data-image-zoom]');
+            if (trigger && (event.key === 'Enter' || event.key === ' ')) {
+                event.preventDefault();
+                showPhoto(trigger);
+            }
+        });
+    }
+
+    // Листинговые карточки ведут на позицию, но фото в них не увеличиваются.
+    function initCardLinks() {
+        document.addEventListener('click', function (event) {
+            var card = event.target.closest('[data-card-link]');
+            if (card && !event.target.closest('a, button, input, select, textarea, summary, [role="button"]')) {
+                window.location.assign(card.getAttribute('data-card-link'));
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         initMenu();
         initForms();
         initYakorya();
+        initCardLinks();
+        initImageZoom();
     });
 })();

@@ -19,8 +19,7 @@ public class MarkaNasosa {
     private final List<String> preimushchestva;
     private final String seoTitle;
     private final String seoDescription;
-    // Не final: по умолчанию марка показывает общее фото группы (gruppa.izobrazhenie),
-    // это поле — точечное исключение для марок, у которых нашлось второе настоящее
+    // Фото самой марки; при отсутствии собственного файла изображение не показывается.
     private String izobrazhenieOverride;
     // КПД и буквенные исполнения проставляются постобработкой только там, где эти
     // данные есть на hermetica.su (см. NasosyRepository.primenitDannyeIspolneniy).
