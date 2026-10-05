@@ -36,8 +36,8 @@
                 </p>
 
                 <dl class="diapazon">
-                    <div><dt>Подача</dt><dd th:text="${chisla.tekst(podachaOt)} + '–' + ${chisla.tekst(podachaDo)} + ' м³/ч'"></dd></div>
-                    <div><dt>Напор</dt><dd th:text="${chisla.tekst(naporOt)} + '–' + ${chisla.tekst(naporDo)} + ' м'"></dd></div>
+                    <div th:if="${podachaDo > 0}"><dt>Подача</dt><dd th:text="${chisla.tekst(podachaOt)} + '–' + ${chisla.tekst(podachaDo)} + ' м³/ч'"></dd></div>
+                    <div th:if="${naporDo > 0}"><dt>Напор</dt><dd th:text="${chisla.tekst(naporOt)} + '–' + ${chisla.tekst(naporDo)} + ' м'"></dd></div>
                     <div th:if="${marka.kpd != null}"><dt>КПД</dt><dd th:text="${marka.kpd}"></dd></div>
                     <div><dt>Типоразмеров</dt><dd th:text="${#lists.size(modeli)}"></dd></div>
                 </dl>
@@ -67,7 +67,31 @@
             <h2 th:text="'Модельный ряд ' + ${marka.oboznachenie}"></h2>
             <p class="section-sub">Рабочая точка указана для номинального режима. Нажмите на типоразмер, чтобы открыть карточку.</p>
             <p class="section-sub">Наличие и срок поставки уточняются по конкретному запросу.</p>
-            <div class="table-wrap">
+            <div class="table-wrap" th:if="${not #lists.isEmpty(modeli) and not #maps.isEmpty(modeli[0].dopParametry)}">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Типоразмер</th>
+                        <th scope="col">Проточная часть</th>
+                        <th scope="col">Тип насоса</th>
+                        <th scope="col" class="num">Двигатель, В</th>
+                        <th scope="col" class="num">Вязкость, сПз</th>
+                        <th scope="col">Подробности</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="tp : ${modeli}">
+                        <th scope="row"><a th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${tp.slug}}" th:text="${tp.oboznachenie}"></a></th>
+                        <td th:text="${tp.dopParametry['Проточная часть']}"></td>
+                        <td th:text="${tp.dopParametry['Тип насоса']}"></td>
+                        <td class="num" th:text="${tp.dopParametry['Двигатель, В']}"></td>
+                        <td class="num" th:text="${tp.dopParametry['Допустимая вязкость, сПз']}"></td>
+                        <td class="num"><a class="link-arrow" th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${tp.slug}}">Характеристики</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-wrap" th:if="${#lists.isEmpty(modeli) or #maps.isEmpty(modeli[0].dopParametry)}">
                 <table class="data">
                     <thead>
                     <tr>
@@ -155,7 +179,7 @@
             <h2>Похожие марки</h2>
             <div class="marki">
                 <article class="marka-card" th:each="s : ${sosedniMarki}">
-                    <a class="marka-card__head" th:href="@{'/nasosy/' + ${s.slug}}">
+                    <a class="marka-card__head" th:classappend="${#strings.length(s.oboznachenie) > 4} ? 'marka-card__head--stack' : ''" th:href="@{'/nasosy/' + ${s.slug}}">
                         <span class="marka-card__code" th:text="${s.oboznachenie}"></span>
                         <span class="marka-card__name" th:text="${s.nazvanie}"></span>
                     </a>

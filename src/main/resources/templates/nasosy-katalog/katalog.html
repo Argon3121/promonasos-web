@@ -77,7 +77,7 @@
                              th:src="@{${marka.izobrazhenieOverride}}"
                              th:alt="'Насос марки ' + ${marka.oboznachenie}" loading="lazy" decoding="async"/>
                     </a>
-                    <a class="marka-card__head" th:href="@{'/nasosy/' + ${marka.slug}}">
+                    <a class="marka-card__head" th:classappend="${#strings.length(marka.oboznachenie) > 4} ? 'marka-card__head--stack' : ''" th:href="@{'/nasosy/' + ${marka.slug}}">
                         <span class="marka-card__code" th:text="${marka.oboznachenie}"></span>
                         <span class="marka-card__name" th:text="${marka.nazvanie}"></span>
                     </a>

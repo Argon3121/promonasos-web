@@ -52,19 +52,17 @@
                         <div class="mega__grid mega__grid--upl">
                             <div class="mega__gruppa">
                                 <b class="mega__gruppa-name">По средам</b>
-                                <ul class="mega__spisok mega__spisok--compact">
-                                    <li th:each="s : ${vseSredy}">
-                                        <a th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}" th:text="${s.nazvanie}"></a>
-                                    </li>
-                                </ul>
+                                <div class="mega__kody mega__kody--text">
+                                    <a class="mega__kod mega__kod--text" th:each="s : ${vseSredy}"
+                                       th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}" th:text="${s.nazvanie}"></a>
+                                </div>
                             </div>
                             <div class="mega__gruppa">
                                 <b class="mega__gruppa-name">По отраслям</b>
-                                <ul class="mega__spisok mega__spisok--compact">
-                                    <li th:each="o : ${vseOtrasliUplotneniy}">
-                                        <a th:href="@{'/tortsevye-uplotneniya/' + ${o.slug}}" th:text="${o.nazvanie}"></a>
-                                    </li>
-                                </ul>
+                                <div class="mega__kody mega__kody--text">
+                                    <a class="mega__kod mega__kod--text" th:each="o : ${vseOtrasliUplotneniy}"
+                                       th:href="@{'/tortsevye-uplotneniya/' + ${o.slug}}" th:text="${o.nazvanie}"></a>
+                                </div>
                             </div>
                             <div class="mega__gruppa">
                                 <b class="mega__gruppa-name">Изделия</b>

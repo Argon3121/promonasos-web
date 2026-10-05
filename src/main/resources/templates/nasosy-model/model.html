@@ -62,7 +62,7 @@
                 <p class="eyebrow" th:text="${marka.rasshifrovka} + ' · серия ' + ${marka.oboznachenie}"></p>
                 <h1 th:text="'Насос ' + ${model.oboznachenie}"></h1>
 
-                <dl class="tochka">
+                <dl class="tochka" th:if="${#maps.isEmpty(model.dopParametry)}">
                     <div><dt>Подача</dt><dd th:text="${model.podacha > 0 ? chisla.tekst(model.podacha) + ' м³/ч' : 'уточняется'}"></dd></div>
                     <div><dt>Напор</dt><dd th:text="${model.napor > 0 ? chisla.tekst(model.napor) + ' м' : 'уточняется'}"></dd></div>
                     <div><dt>Мощность</dt><dd th:text="${model.moshchnost > 0 ? chisla.tekst(model.moshchnost) + ' кВт' : 'уточняется'}"></dd></div>
@@ -76,18 +76,19 @@
                         <tr><th scope="row">Серия</th>
                             <td><a th:href="@{'/nasosy/' + ${marka.slug}}" th:text="${marka.nazvanie}"></a> — <span th:text="${marka.rasshifrovka}"></span></td>
                         </tr>
-                        <tr><th scope="row">Подача, м³/ч</th><td th:text="${model.podacha > 0 ? chisla.tekst(model.podacha) : 'уточняется'}"></td></tr>
-                        <tr><th scope="row">Напор, м</th><td th:text="${model.napor > 0 ? chisla.tekst(model.napor) : 'уточняется'}"></td></tr>
-                        <tr><th scope="row">Мощность двигателя, кВт</th><td th:text="${model.moshchnost > 0 ? chisla.tekst(model.moshchnost) : 'уточняется'}"></td></tr>
-                        <tr><th scope="row">Частота вращения, об/мин</th>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Подача, м³/ч</th><td th:text="${model.podacha > 0 ? chisla.tekst(model.podacha) : 'уточняется'}"></td></tr>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Напор, м</th><td th:text="${model.napor > 0 ? chisla.tekst(model.napor) : 'уточняется'}"></td></tr>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Мощность двигателя, кВт</th><td th:text="${model.moshchnost > 0 ? chisla.tekst(model.moshchnost) : 'уточняется'}"></td></tr>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Частота вращения, об/мин</th>
                             <td th:text="${model.oboroty > 0} ? ${model.oboroty} : 'уточняется'"></td></tr>
-                        <tr><th scope="row">Диаметр вала под уплотнение, мм</th>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Диаметр вала под уплотнение, мм</th>
                             <td th:text="${model.diametrVala > 0} ? ${chisla.tekst(model.diametrVala)} : 'уточняется'"></td></tr>
-                        <tr><th scope="row">Максимальная температура среды, °C</th><td th:text="${chisla.tekst(model.maxTemperatura)}"></td></tr>
-                        <tr><th scope="row">Материал проточной части</th><td th:text="${model.materialProtochnoyChasti}"></td></tr>
-                        <tr><th scope="row">Перекачиваемые среды</th>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Максимальная температура среды, °C</th><td th:text="${chisla.tekst(model.maxTemperatura)}"></td></tr>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Материал проточной части</th><td th:text="${model.materialProtochnoyChasti}"></td></tr>
+                        <tr th:each="p : ${model.dopParametry}"><th scope="row" th:text="${p.key}"></th><td th:text="${p.value}"></td></tr>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Перекачиваемые среды</th>
                             <td th:text="${#strings.listJoin(#lists.size(marka.primenenie) > 2 ? marka.primenenie.subList(0,2) : marka.primenenie, ', ')}"></td></tr>
-                        <tr><th scope="row">Габариты, мм</th>
+                        <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Габариты, мм</th>
                             <td th:text="${#strings.isEmpty(model.gabarity)} ? 'уточняется' : ${model.gabarity}"></td></tr>
                         </tbody>
                     </table>
@@ -129,7 +130,27 @@
 
         <section class="section" th:if="${not #lists.isEmpty(drugieModeli)}">
             <h2 th:text="'Другие типоразмеры серии ' + ${marka.oboznachenie}"></h2>
-            <div class="table-wrap">
+            <div class="table-wrap" th:if="${not #maps.isEmpty(model.dopParametry)}">
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th scope="col">Типоразмер</th>
+                        <th scope="col">Проточная часть</th>
+                        <th scope="col">Тип насоса</th>
+                        <th scope="col" class="num">Двигатель, В</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="d : ${drugieModeli}">
+                        <th scope="row"><a th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${d.slug}}" th:text="${d.oboznachenie}"></a></th>
+                        <td th:text="${d.dopParametry['Проточная часть']}"></td>
+                        <td th:text="${d.dopParametry['Тип насоса']}"></td>
+                        <td class="num" th:text="${d.dopParametry['Двигатель, В']}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-wrap" th:if="${#maps.isEmpty(model.dopParametry)}">
                 <table class="data">
                     <thead>
                     <tr>

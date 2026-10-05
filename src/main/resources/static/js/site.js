@@ -290,6 +290,10 @@
             });
 
             var currentTarget = null;
+            var scrollTimer = null;
+            // автопрокрутка к результатам включена только там, где они выводятся ниже (каталог уплотнений)
+            var autoScroll = catalog.hasAttribute('data-search-autoscroll');
+            var anchor = catalog.querySelector('[data-search-anchor]');
 
             function removeFoundNotes() {
                 Array.prototype.forEach.call(catalog.querySelectorAll('[data-search-found]'), function (node) {
@@ -385,6 +389,10 @@
                     group.hidden = !group.querySelector('[data-search-item]:not([hidden])');
                 });
                 if (chips) { chips.hidden = hasQuery; }
+                // блоки, которые при поиске уводят результаты вниз (выбор среды и т.п.), на время поиска прячем
+                Array.prototype.forEach.call(catalog.querySelectorAll('[data-search-hide]'), function (node) {
+                    node.hidden = hasQuery;
+                });
 
                 if (suggestBox) {
                     var similar = [];
@@ -404,9 +412,26 @@
                 } else if (visible === 0) {
                     status.textContent = 'Ничего не найдено. Проверьте обозначение или очистите запрос.';
                 } else {
-                    status.textContent = 'Найдено: ' + visible + (found.shownAs ? '. Запрос прочитан как «' + found.shownAs + '».' : '');
+                    status.textContent = 'Найдено: ' + visible + (found.shownAs ? '. Запрос прочитан как «' + found.shownAs + '».' : '') + '. Результаты показаны ниже.';
                 }
                 if (emptyBox) { emptyBox.hidden = !(hasQuery && visible === 0); }
+
+                // Прокрутка только после паузы в наборе: пока человек печатает, страница стоит на месте.
+                // Когда он закончил, подводим первый результат к верхней части экрана (под шапку сайта).
+                if (scrollTimer) { window.clearTimeout(scrollTimer); scrollTimer = null; }
+                if (autoScroll && hasQuery && visible > 0) {
+                    scrollTimer = window.setTimeout(function () {
+                        scrollTimer = null;
+                        var first = entries.filter(function (entry) { return !entry.el.hidden; })[0];
+                        if (!first) { return; }
+                        // цель прокрутки: заголовок списка («Все изделия»), чтобы он был виден над карточками
+                        var target = anchor || first.el;
+                        var shift = target.getBoundingClientRect().top - 150;
+                        if (Math.abs(shift) > 40) {
+                            window.scrollBy({ top: shift, behavior: 'smooth' });
+                        }
+                    }, 900);
+                }
 
                 if (visible === 1 && onlyEntry) {
                     currentTarget = onlyModels.length === 1 ? onlyModels[0].href : onlyEntry.href;

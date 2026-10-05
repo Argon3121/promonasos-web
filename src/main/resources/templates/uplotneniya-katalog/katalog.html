@@ -47,7 +47,7 @@
             </p>
         </div>
 
-        <section class="section">
+        <section class="section" data-search-hide>
             <h2>Выберите перекачиваемую среду</h2>
             <div class="sredy">
                 <a class="sreda-card" th:each="s : ${sredy}" th:href="@{'/tortsevye-uplotneniya/' + ${s.slug}}">
@@ -59,7 +59,7 @@
         </section>
 
         <section class="section" th:with="chisla=${T(ru.promonasos.util.Chisla)}">
-            <h2>Все изделия</h2>
+            <h2 data-search-anchor>Все изделия</h2>
             <p class="section-sub">Параметры приведены для справки. Перед применением сверьте их с паспортом выбранного изделия.</p>
             <div class="upl-list upl-list--catalog">
                 <article class="upl-card" data-search-item th:each="u : ${uplotneniya}"
