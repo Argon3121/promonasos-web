@@ -50,7 +50,7 @@
             <p class="podbor-note">
                 <b>Важно.</b> Подбор идёт по номинальной рабочей точке из каталога. Это направление для расчёта,
                 а не окончательное инженерное решение: КПД в рабочей точке, кавитационный запас и плотность среды
-                учитывает инженер. Пришлите параметры — проверим.
+                дополнительно проверяет специалист. Пришлите параметры — проверим.
             </p>
         </div>
 
@@ -71,7 +71,7 @@
                     Это нормально: часть задач закрывается двумя насосами параллельно, обточкой
                     рабочего колеса, частотным приводом или исполнением под заказ.
                 </p>
-                <a class="btn btn--primary btn--lg" href="#zayavka-forma">Отправить параметры инженеру</a>
+                <a class="btn btn--primary btn--lg" href="#zayavka-forma">Отправить параметры специалисту</a>
             </div>
 
             <div class="rezultaty" th:unless="${#lists.isEmpty(rezultaty)}">
@@ -101,7 +101,7 @@
                            th:aria-label="'Открыть насос ' + ${r.model.oboznachenie}">
                             <img class="rezultat__foto"
                                  th:src="@{${r.marka.izobrazhenieOverride}}"
-                                 alt="" loading="lazy"/>
+                                 th:alt="'Насос ' + ${r.model.oboznachenie}" loading="lazy"/>
                         </a>
                         <a class="btn btn--primary" href="#zayavka-forma">Узнать цену и срок</a>
                         <a class="link-arrow" th:href="@{'/nasosy/' + ${r.marka.slug} + '/' + ${r.model.slug}}">Характеристики</a>

@@ -64,6 +64,62 @@ public class NasosyService {
         return repository.vsegoModeley();
     }
 
+    // Индекс для поиска по каталогу: slug марки -> типоразмеры (обозначение и slug).
+    // Собирается вручную в JSON, чтобы не зависеть от версии Jackson; символ "<" экранируется,
+    // чтобы строку можно было безопасно положить внутрь <script type="application/json">.
+    public String poiskovyIndeksModeley() {
+        Map<String, List<ModelNasosa>> poMarkam = repository.getVseModeli().stream()
+                .collect(Collectors.groupingBy(ModelNasosa::getMarkaSlug));
+        StringBuilder sb = new StringBuilder("{");
+        boolean pervayaMarka = true;
+        for (MarkaNasosa marka : repository.getMarkiNasosov()) {
+            List<ModelNasosa> spisok = poMarkam.getOrDefault(marka.getSlug(), List.of());
+            if (spisok.isEmpty()) {
+                continue;
+            }
+            if (!pervayaMarka) {
+                sb.append(',');
+            }
+            pervayaMarka = false;
+            sb.append(jsonStroka(marka.getSlug())).append(":[");
+            for (int i = 0; i < spisok.size(); i++) {
+                ModelNasosa m = spisok.get(i);
+                if (i > 0) {
+                    sb.append(',');
+                }
+                sb.append('[').append(jsonStroka(m.getOboznachenie())).append(',')
+                        .append(jsonStroka(m.getSlug())).append(']');
+            }
+            sb.append(']');
+        }
+        return sb.append('}').toString();
+    }
+
+    private static String jsonStroka(String znachenie) {
+        StringBuilder sb = new StringBuilder("\"");
+        String s = znachenie == null ? "" : znachenie;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case '"' -> sb.append("\\\"");
+                case '\\' -> sb.append("\\\\");
+                case '<' -> sb.append("\\u003c");
+                case '>' -> sb.append("\\u003e");
+                case '&' -> sb.append("\\u0026");
+                case '\u2028' -> sb.append("\\u2028");
+                case '\u2029' -> sb.append("\\u2029");
+                default -> {
+                    if (c < 0x20) {
+                        sb.append(String.format("\\u%04x", (int) c));
+                    } else {
+                        sb.append(c);
+                    }
+                }
+            }
+        }
+        return sb.append('"').toString();
+    }
+
     // у насоса кривая Q-H, а в каталоге одна точка — поэтому это направление для расчёта, не готовый ответ
     public List<RezultatPodbora> podobratNasos(ZaprosPodboraNasosa zapros) {
         if (zapros == null) {

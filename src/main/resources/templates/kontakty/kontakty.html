@@ -15,7 +15,7 @@
     <div class="container">
         <div class="page-head">
             <h1>Контакты</h1>
-            <p>Отвечаем на заявки в течение одного рабочего дня. По срочным вопросам быстрее позвонить.</p>
+            <p>По вопросам оборудования можно отправить заявку или связаться с нами по телефону и электронной почте.</p>
         </div>
 
         <div class="two-col">
@@ -25,7 +25,6 @@
                     <div><dt>Телефон</dt><dd><a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a></dd></div>
                     <div><dt>Почта</dt><dd><a th:href="'mailto:' + ${sait.pochta}" th:text="${sait.pochta}"></a></dd></div>
                     <div><dt>Адрес</dt><dd th:text="${sait.adres}"></dd></div>
-                    <div><dt>График работы</dt><dd th:text="${sait.grafikRaboty}"></dd></div>
                 </dl>
 
                 <h2>Что прислать для быстрого ответа</h2>
@@ -50,13 +49,20 @@
                 Построить маршрут
             </a>
         </div>
-        <div class="karta">
-            <iframe src="https://yandex.ru/map-widget/v1/?ll=37.693218998267064%2C55.74213131599045&amp;z=14&amp;pt=37.693218998267064%2C55.74213131599045,pm2rdm"
-                    title="Карта: адрес компании" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="karta" data-yandex-map
+             data-map-src="https://yandex.ru/map-widget/v1/?ll=37.693218998267064%2C55.74213131599045&amp;z=14&amp;pt=37.693218998267064%2C55.74213131599045,pm2rdm">
+            <div class="karta__notice">
+                <p>Карта подключается через Яндекс. При её загрузке Яндекс может получать IP-адрес, идентификатор устройства и сведения о геолокации. Подробнее — в <a href="https://yandex.ru/legal/maps_api/ru/" target="_blank" rel="noopener">условиях Яндекс.Карт</a>.</p>
+                <label class="karta__agree">
+                    <input type="checkbox" data-yandex-map-consent/>
+                    <span>Разрешаю загрузить карту и передать сервису необходимые технические данные</span>
+                </label>
+                <button class="btn btn--secondary" type="button" data-yandex-map-load disabled>Загрузить карту</button>
+            </div>
         </div>
     </div>
 
-    <div th:replace="~{fragments/cta-block :: cta('Напишите, что нужно — ответим в течение рабочего дня.')}"></div>
+    <div th:replace="~{fragments/cta-block :: cta('Укажите марку оборудования и параметры задачи — уточним детали запроса.')}"></div>
 </div>
 </body>
 </html>

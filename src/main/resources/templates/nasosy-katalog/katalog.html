@@ -12,7 +12,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container" data-catalog-search>
         <div class="page-head">
             <h1>Промышленные насосы</h1>
             <p>
@@ -24,6 +24,30 @@
                 <a class="btn btn--outline" href="/tortsevye-uplotneniya">Торцовые уплотнения</a>
             </div>
         </div>
+
+        <div class="catalog-search" data-catalog-search-controls hidden>
+            <label class="field__label" for="nasosy-poisk">Найти марку или типоразмер насоса</label>
+            <div class="catalog-search__row">
+                <input class="input" id="nasosy-poisk" type="search" data-catalog-search-input
+                       aria-describedby="nasosy-poisk-status" autocomplete="off" spellcheck="false"
+                       placeholder="Например: К, АХ, К 20/30 или химический"/>
+                <button class="catalog-search__clear" type="button" data-catalog-search-clear hidden
+                        aria-label="Очистить поиск">×</button>
+            </div>
+            <p class="catalog-search__status" id="nasosy-poisk-status" data-catalog-search-status aria-live="polite"></p>
+            <p class="catalog-search__suggest" data-catalog-search-suggest hidden></p>
+        </div>
+
+        <div class="catalog-search__empty" data-catalog-search-empty hidden>
+            <p><b>По вашему запросу ничего не найдено.</b></p>
+            <p>Проверьте обозначение или опишите задачу: подберём насос по подаче и напору либо найдём аналог.</p>
+            <p class="page-head__actions">
+                <a class="btn btn--primary btn--sm" href="/nasosy/podbor">Подбор по подаче и напору</a>
+                <a class="btn btn--outline btn--sm" href="#zayavka-forma">Отправить запрос</a>
+            </p>
+        </div>
+
+        <script type="application/json" data-search-index th:utext="${poiskovyIndeks}"></script>
 
         <!-- Быстрый переход по категориям — при 45 марках пролистывать до нужной группы вручную долго. -->
         <ul class="chips">
@@ -38,20 +62,20 @@
             Thymeleaf), поэтому markiGruppy из th:with внутри th:if ещё не
             существует — условие всегда ложно. Обращаемся к карте напрямую.
         -->
-        <section class="gruppa" th:each="gruppa : ${vseGruppy}"
+        <section class="gruppa" data-search-group th:each="gruppa : ${vseGruppy}"
                   th:if="${markiPoGruppam.get(gruppa.slug) != null and not #lists.isEmpty(markiPoGruppam.get(gruppa.slug))}"
                   th:id="${gruppa.slug}">
             <h2 class="gruppa__name" th:text="${gruppa.nazvanie}"></h2>
             <p class="gruppa__desc" th:text="${gruppa.opisanie}"></p>
             <div class="marki">
-                <article class="marka-card" th:each="marka : ${markiPoGruppam.get(gruppa.slug)}"
-                         th:attr="data-card-link=@{'/nasosy/' + ${marka.slug}}">
+                <article class="marka-card" data-search-item th:each="marka : ${markiPoGruppam.get(gruppa.slug)}"
+                         th:attr="data-card-link=@{'/nasosy/' + ${marka.slug}}, data-search-slug=${marka.slug}, data-search-code=${marka.oboznachenie}, data-search-text=${marka.oboznachenie + ' ' + marka.nazvanie + ' ' + marka.rasshifrovka + ' ' + marka.kratkoeOpisanie}">
                     <a class="marka-card__photo-link" th:href="@{'/nasosy/' + ${marka.slug}}"
                        th:aria-label="'Открыть насос ' + ${marka.oboznachenie}">
                         <img class="marka-card__image"
                              th:if="${marka.izobrazhenieOverride != null}"
                              th:src="@{${marka.izobrazhenieOverride}}"
-                             alt="" loading="lazy"/>
+                             th:alt="'Насос марки ' + ${marka.oboznachenie}" loading="lazy" decoding="async"/>
                     </a>
                     <a class="marka-card__head" th:href="@{'/nasosy/' + ${marka.slug}}">
                         <span class="marka-card__code" th:text="${marka.oboznachenie}"></span>
@@ -66,11 +90,12 @@
             </div>
         </section>
 
-        <section class="section">
+        <section class="section" data-search-group>
             <h2 class="gruppa__name">Сопутствующее оборудование</h2>
             <p class="gruppa__desc">Идёт в комплекте с насосными установками.</p>
             <div class="marki">
-                <article class="marka-card">
+                <article class="marka-card" data-search-item data-card-link="/emkosti-ep" data-search-code="ЕП"
+                         data-search-text="ЕП Подземные ёмкости ЕП дренажные ёмкость подземная слив нефтепродуктов конденсат">
                     <img class="marka-card__image" src="/images/emkost-ep.jpg" alt="Подземная ёмкость ЕП" loading="lazy"/>
                     <a class="marka-card__head" href="/emkosti-ep">
                         <span class="marka-card__code">ЕП</span>

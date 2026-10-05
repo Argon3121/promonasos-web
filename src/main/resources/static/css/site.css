@@ -253,6 +253,11 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .karta-head h2 { margin-bottom: 0; }
 .karta { margin-top: 16px; border: 1px solid var(--slate-200); border-radius: var(--r-lg); overflow: hidden; }
 .karta iframe { display: block; width: 100%; aspect-ratio: 16 / 7; border: 0; }
+.karta__notice { padding: 20px; background: var(--slate-50); }
+.karta__notice p { max-width: 75ch; }
+.karta__agree { display: flex; align-items: flex-start; gap: 10px; margin: 16px 0; }
+.karta__agree input { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 3px; accent-color: var(--accent-600); }
+.karta__notice button:disabled { opacity: .55; cursor: not-allowed; }
 .panel h3 { margin-top: 20px; }
 .panel h3:first-child { margin-top: 0; }
 
@@ -313,6 +318,9 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Таблицы характеристик ---------- */
 .table-wrap { overflow-x: auto; border: 1px solid var(--slate-200); border-radius: var(--r-lg); -webkit-overflow-scrolling: touch; max-width: 100%; }
+.catalog-search { max-width: 520px; margin: 18px 0 24px; }
+.catalog-search .field__label { display: block; margin-bottom: 6px; font-weight: 600; }
+.catalog-search__status { min-height: 1.5em; margin: 6px 0 0; color: var(--slate-700); font-size: .875rem; }
 table.data { width: 100%; border-collapse: collapse; font-size: .9375rem; background: #fff; min-width: 640px; }
 table.data th, table.data td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--slate-200); }
 table.data thead th { background: var(--slate-50); font-weight: 700; color: var(--graphite); white-space: nowrap; }
@@ -329,6 +337,12 @@ table.data tbody th[scope="row"] { font-weight: 700; }
     aspect-ratio: 4 / 3; object-fit: contain; object-position: center;
     border-radius: var(--r-lg); margin-bottom: 24px; background: #fff;
 }
+.tovar__foto-button {
+    display: block; width: min(100%, 600px); max-width: 100%; margin: 0 0 24px; padding: 0;
+    border: 0; background: transparent; text-align: left; cursor: zoom-in;
+}
+.tovar__foto-button .tovar__foto { display: block; margin: 0; }
+.tovar__foto-button:focus-visible { outline: 3px solid var(--accent-600); outline-offset: 4px; border-radius: var(--r-lg); }
 .tovar__foto--seal {
     display: block; width: min(100%, 460px); max-width: 100%; height: auto;
     max-height: none; aspect-ratio: 1 / 1; object-fit: contain; object-position: center;
@@ -413,6 +427,16 @@ table.data tbody th[scope="row"] { font-weight: 700; }
 .upl-card__params dt { color: var(--slate-700); }
 .upl-card__params dd { margin: 0; font-weight: 600; text-align: right; }
 .upl-card__nasosy { font-size: .875rem; color: var(--slate-700); }
+.upl-list--catalog .upl-card { display: flex; flex-direction: column; }
+.upl-list--catalog .upl-card[hidden] { display: none; }
+.upl-card__heading { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; color: inherit; text-decoration: none; }
+.upl-card__heading:hover { color: inherit; }
+.upl-card__code {
+    display: inline-flex; padding: 6px 10px; border-radius: var(--r-sm);
+    background: var(--navy-800); color: #fff; font-weight: 800; font-size: 1rem;
+}
+.upl-card__secondary { font-size: .8125rem !important; color: var(--slate-500) !important; margin-top: 0; }
+.upl-list--catalog .link-arrow { margin-top: auto; padding-top: 10px; }
 
 /* ---------- Подбор ---------- */
 .podbor-wrap {
@@ -638,3 +662,46 @@ a.chip:hover, .chip.is-active { background: var(--navy-800); color: #fff; border
     .tochka > div { min-width: 100px; }
     .diapazon { gap: 20px; }
 }
+
+/* ---------- Исправления: поиск, меню уплотнений, фото на странице марки ---------- */
+
+/* Атрибут hidden должен скрывать элемент всегда: раньше display:flex у карточек
+   перебивал его, и поиск по каталогу ничего не прятал. */
+[hidden] { display: none !important; }
+
+/* Поиск по каталогам */
+.catalog-search { max-width: 640px; }
+.catalog-search__row { position: relative; }
+.catalog-search__row .input { padding-right: 48px; }
+.catalog-search__clear {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%;
+    background: transparent; color: var(--slate-500); font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+.catalog-search__clear:hover { background: var(--slate-100); color: var(--ink); }
+.catalog-search__suggest { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 8px 0 0; font-size: .875rem; color: var(--slate-700); }
+.catalog-search__chip {
+    padding: 4px 10px; border: 1px solid var(--slate-200); border-radius: var(--r-sm);
+    background: #fff; color: var(--ink); font-size: .8125rem; font-weight: 700; cursor: pointer;
+}
+.catalog-search__chip:hover { background: var(--navy-100); color: var(--navy-800); }
+.catalog-search__empty {
+    max-width: 640px; margin: 8px 0 32px; padding: 20px;
+    border: 1px dashed var(--slate-300); border-radius: var(--r-lg); background: var(--slate-50);
+}
+.catalog-search__empty p { margin: 0 0 10px; }
+.catalog-search__empty p:last-child { margin-bottom: 0; }
+.marka-card__found { margin: 10px 0 0; font-size: .875rem; color: var(--slate-700); }
+.marka-card__found a { font-weight: 700; }
+
+/* Меню «Торцовые уплотнения»: несколько колонок, как у насосов */
+.nav .container { position: relative; }
+.nav__item--wide { position: static; }
+.mega--upl { left: 20px; width: min(920px, calc(100% - 40px)); max-width: none; }
+.mega__grid--upl { grid-template-columns: minmax(190px, 1fr) minmax(220px, 1.1fr) minmax(240px, 1.4fr); }
+.mega__spisok--compact { margin: 0; }
+.mega__spisok--compact a { padding: 6px 8px; font-size: .875rem; }
+
+/* Фото на странице марки насоса: кнопка открывает увеличенное фото */
+.marka-hero__foto .tovar__foto-button { margin: 0 auto 10px; }
+.marka-hero__foto .tovar__foto-button .tovar__foto { margin: 0; }

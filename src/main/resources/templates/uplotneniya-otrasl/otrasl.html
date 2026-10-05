@@ -2,13 +2,12 @@
 <html lang="ru" th:replace="~{layout :: oformlenie(~{::#soderzhimoe})}">
 <body>
 <div id="soderzhimoe" th:with="chisla=${T(ru.promonasos.util.Chisla)}">
-
     <nav class="crumbs" aria-label="Хлебные крошки">
         <div class="container">
             <ol>
                 <li><a href="/">Главная</a></li>
                 <li><a href="/tortsevye-uplotneniya">Торцовые уплотнения</a></li>
-                <li aria-current="page" th:text="${sreda.nazvanie}"></li>
+                <li aria-current="page" th:text="${otrasl.nazvanie}"></li>
             </ol>
         </div>
     </nav>
@@ -20,22 +19,21 @@
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Главная", "item": "[[${sait.domen}]]/" },
         { "@type": "ListItem", "position": 2, "name": "Торцовые уплотнения", "item": "[[${sait.domen}]]/tortsevye-uplotneniya" },
-        { "@type": "ListItem", "position": 3, "name": "[[${sreda.nazvanie}]]", "item": "[[${sait.domen}]]/tortsevye-uplotneniya/[[${sreda.slug}]]" }
+        { "@type": "ListItem", "position": 3, "name": "[[${otrasl.nazvanie}]]", "item": "[[${sait.domen}]]/tortsevye-uplotneniya/[[${otrasl.slug}]]" }
       ]
     }
     </script>
 
     <div class="container">
         <div class="page-head">
-            <p class="eyebrow" th:text="${industryPage} ? 'Каталог по отрасли' : 'Подбор по среде'"></p>
-            <h1 th:text="'Торцовые уплотнения: ' + ${sreda.nazvanie}"></h1>
-            <p th:text="${sreda.opisanie}"></p>
-
+            <p class="eyebrow">Каталог по отрасли</p>
+            <h1 th:text="'Торцовые уплотнения: ' + ${otrasl.nazvanie}"></h1>
+            <p th:text="${otrasl.seoDescription}"></p>
         </div>
 
         <section class="section">
-            <h2>Изделия каталога</h2>
-            <p class="section-sub">Параметры и область применения нужно сверить с паспортом конкретного исполнения. Категория не является допуском к эксплуатации.</p>
+            <h2>Модели из каталога производителя</h2>
+            <p class="section-sub">Перечень отражает опубликованную отраслевую группировку. Он не заменяет проверку совместимости по паспорту, рабочей среде и параметрам агрегата.</p>
             <div class="upl-list upl-list--wide">
                 <article class="upl-card" th:each="u : ${uplotneniya}"
                          th:attr="data-card-link=@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">
@@ -43,7 +41,7 @@
                        th:aria-label="'Открыть уплотнение ' + ${u.oboznachenie}">
                         <img class="upl-card__image"
                              th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
-                             th:alt="'Торцовое уплотнение ' + ${u.oboznachenie}" loading="lazy"/>
+                             th:alt="'Торцовое уплотнение ' + ${u.oboznachenie}" loading="lazy" decoding="async"/>
                     </a>
                     <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}"><h3 th:text="${u.nazvanie}"></h3></a>
                     <p class="upl-card__tip" th:text="${u.tip}"></p>
@@ -52,37 +50,23 @@
                         <div><dt>Диаметр вала</dt><dd th:text="${chisla.tekst(u.diametrValaOt)} + '–' + ${chisla.tekst(u.diametrValaDo)} + ' мм'"></dd></div>
                         <div><dt>Давление</dt><dd th:text="${u.davlenieOpisanie != null ? u.davlenieOpisanie : 'до ' + chisla.tekst(u.davlenieDo)} + ' кгс/см²'"></dd></div>
                         <div><dt>Температура</dt><dd th:text="${u.temperaturaOpisanie != null ? u.temperaturaOpisanie : chisla.tekst(u.temperaturaOt) + '…' + chisla.tekst(u.temperaturaDo)} + ' °C'"></dd></div>
-                        <div><dt>Вторичное уплотнение</dt><dd th:text="${u.vtorichnoeUplotnenie}"></dd></div>
-                        <div><dt>Пары трения</dt><dd th:text="${#strings.listJoin(u.paryTreniya, ', ')}"></dd></div>
-                        <div><dt>Стандарты</dt><dd th:text="${u.standarty}"></dd></div>
                     </dl>
                     <p class="upl-card__nasosy" th:if="${not #lists.isEmpty(u.primenyaetsyaNaNasosakh)}"
-                       th:text="'Применяется на насосах: ' + ${#strings.listJoin(u.primenyaetsyaNaNasosakh, ', ')}"></p>
-                    <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Подробные характеристики</a>
+                       th:text="'Насосы из перечня производителя: ' + ${#strings.listJoin(u.primenyaetsyaNaNasosakh, ', ')}"></p>
+                    <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Открыть характеристики</a>
                 </article>
             </div>
         </section>
 
         <section class="section">
-            <div class="panel">
-                <h2>Проверка условий эксплуатации</h2>
-                <p>Для проверки приложите паспорт или фото маркировки, укажите состав и концентрацию жидкости, температуру, давление и диаметр вала.</p>
-                <a class="btn btn--secondary" th:href="@{/tortsevye-uplotneniya/podbor}">Перейти к подбору</a>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2 th:text="${industryPage} ? 'Отраслевые категории' : 'Другие среды'"></h2>
-            <ul class="chips" th:if="${industryPage != true}">
-                <li th:each="d : ${drugieSredy}"><a class="chip" th:href="@{'/tortsevye-uplotneniya/' + ${d.slug}}" th:text="${d.nazvanie}"></a></li>
-            </ul>
-            <ul class="chips" th:if="${industryPage == true}">
+            <h2>Другие отрасли</h2>
+            <ul class="chips">
                 <li th:each="o : ${vseOtrasliUplotneniy}"><a class="chip" th:href="@{'/tortsevye-uplotneniya/' + ${o.slug}}" th:text="${o.nazvanie}"></a></li>
             </ul>
         </section>
     </div>
 
-    <div th:replace="~{fragments/cta-block :: cta('Укажите среду и рабочие параметры — сверим исполнение с документацией.')}"></div>
+    <div th:replace="~{fragments/cta-block :: cta('Укажите модель насоса и рабочие условия — проверим исполнение по документации.')}" ></div>
 </div>
 </body>
 </html>

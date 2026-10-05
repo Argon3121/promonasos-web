@@ -2,6 +2,7 @@ package ru.promonasos.service;
 
 import org.springframework.stereotype.Service;
 import ru.promonasos.model.SredaUplotneniya;
+import ru.promonasos.model.OtraslUplotneniy;
 import ru.promonasos.model.Uplotnenie;
 import ru.promonasos.model.ZaprosPodboraUplotneniya;
 import ru.promonasos.repository.UplotneniyaRepository;
@@ -24,6 +25,18 @@ public class UplotneniyaService {
 
     public SredaUplotneniya getSredu(String slug) {
         return repository.getSredu(slug);
+    }
+
+    public List<OtraslUplotneniy> getOtrasli() {
+        return repository.getOtrasli();
+    }
+
+    public OtraslUplotneniy getOtrasl(String slug) {
+        return repository.getOtrasl(slug);
+    }
+
+    public List<Uplotnenie> getUplotneniyaPoOtrasli(String slug) {
+        return repository.getUplotneniyaPoOtrasli(slug);
     }
 
     public List<Uplotnenie> getUplotneniya() {

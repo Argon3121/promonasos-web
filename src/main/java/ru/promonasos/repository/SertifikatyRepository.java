@@ -32,9 +32,6 @@ public class SertifikatyRepository {
             diler("Официальный дилер — Альфа", "alfa-dealer"),
             diler("Официальный представитель — Пинский ОМЗ", "pinskiy-omz"),
             diler("Сертификат дилера — Свердмаш", "sverdmash"),
-            new Sertifikat("Опыт поставок 2020–2025", "Опыт поставок", KAT_DILER,
-                    "/images/sertifikaty/opyt-postavok.jpg", "/documents/sertifikaty/opyt-postavok.pdf"),
-
             // --- Декларации и сертификаты соответствия ТР ТС ---
             sootvetstvie("Декларация соответствия — насосы ЦНС (Пинский ОМЗ)", "deklaratsiya-tsns-pinsk"),
             sootvetstvie("Декларация ТР ТС 010 — насосы Х, ХМ, АХ и другие (Альфа)", "deklaratsiya-alfa-2021"),
@@ -56,7 +53,7 @@ public class SertifikatyRepository {
     );
 
     private static Sertifikat diler(String nazvanie, String slug) {
-        return new Sertifikat(nazvanie, "Дилер", KAT_DILER,
+        return new Sertifikat(nazvanie, "Партнёрство", KAT_DILER,
                 "/images/sertifikaty/" + slug + ".jpg", "/documents/sertifikaty/" + slug + ".pdf");
     }
 

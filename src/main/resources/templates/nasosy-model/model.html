@@ -21,13 +21,7 @@
       "name": "Насос [[${model.oboznachenie}]]",
       "description": "[[${model.seoDescription}]]",
       "sku": "[[${model.oboznachenie}]]",
-      "brand": { "@type": "Brand", "name": "ТД «Промоборудование»" },
-      "additionalProperty": [
-        { "@type": "PropertyValue", "name": "Подача", "value": "[[${chisla.tekst(model.podacha)}]] м³/ч" },
-        { "@type": "PropertyValue", "name": "Напор", "value": "[[${chisla.tekst(model.napor)}]] м" },
-        { "@type": "PropertyValue", "name": "Мощность", "value": "[[${chisla.tekst(model.moshchnost)}]] кВт" },
-        { "@type": "PropertyValue", "name": "Материал проточной части", "value": "[[${model.materialProtochnoyChasti}]]" }
-      ]
+      "url": "[[${sait.domen}]]/nasosy/[[${marka.slug}]]/[[${model.slug}]]"
     }
     </script>
     <script type="application/ld+json" th:inline="text">
@@ -46,28 +40,32 @@
     <div class="container">
         <div class="tovar">
             <div class="tovar__main">
-                <img class="tovar__foto" th:if="${model.izobrazhenieOverride != null}"
-                     data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
-                     th:src="@{${model.izobrazhenieOverride}}"
-                     th:alt="'Насос ' + ${model.oboznachenie}"
-                     th:aria-label="'Увеличить фото насоса ' + ${model.oboznachenie}" loading="lazy"/>
+                <button class="tovar__foto-button" type="button" th:if="${model.izobrazhenieOverride != null}"
+                        data-image-zoom aria-haspopup="dialog" aria-expanded="false"
+                        th:aria-label="'Увеличить фото насоса ' + ${model.oboznachenie}">
+                    <img class="tovar__foto" th:src="@{${model.izobrazhenieOverride}}"
+                         th:alt="'Насос ' + ${model.oboznachenie}" loading="eager" fetchpriority="high" decoding="async"/>
+                </button>
                 <span class="foto-podpis" th:if="${model.izobrazhenieOverride != null}">Фото насоса <span th:text="${model.oboznachenie}"></span>.</span>
 
-                <img class="tovar__foto" th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null}"
-                     data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
-                     th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
-                     th:src="@{${marka.izobrazhenieOverride}}"
-                     th:alt="'Насос ' + ${model.oboznachenie}"
-                     th:aria-label="'Увеличить фото насоса ' + ${marka.oboznachenie}" loading="lazy"/>
+                <button class="tovar__foto-button" type="button"
+                        th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null}"
+                        data-image-zoom aria-haspopup="dialog" aria-expanded="false"
+                        th:aria-label="'Увеличить фото насоса ' + ${marka.oboznachenie}">
+                    <img class="tovar__foto"
+                         th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
+                         th:src="@{${marka.izobrazhenieOverride}}"
+                         th:alt="'Насос марки ' + ${marka.oboznachenie}" loading="eager" fetchpriority="high" decoding="async"/>
+                </button>
                 <span class="foto-podpis" th:if="${model.izobrazhenieOverride == null and marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')}">Фото насоса марки <span th:text="${marka.oboznachenie}"></span>, не конкретного типоразмера.</span>
 
                 <p class="eyebrow" th:text="${marka.rasshifrovka} + ' · серия ' + ${marka.oboznachenie}"></p>
                 <h1 th:text="'Насос ' + ${model.oboznachenie}"></h1>
 
                 <dl class="tochka">
-                    <div><dt>Подача</dt><dd th:text="${chisla.tekst(model.podacha)} + ' м³/ч'"></dd></div>
-                    <div><dt>Напор</dt><dd th:text="${chisla.tekst(model.napor)} + ' м'"></dd></div>
-                    <div><dt>Мощность</dt><dd th:text="${chisla.tekst(model.moshchnost)} + ' кВт'"></dd></div>
+                    <div><dt>Подача</dt><dd th:text="${model.podacha > 0 ? chisla.tekst(model.podacha) + ' м³/ч' : 'уточняется'}"></dd></div>
+                    <div><dt>Напор</dt><dd th:text="${model.napor > 0 ? chisla.tekst(model.napor) + ' м' : 'уточняется'}"></dd></div>
+                    <div><dt>Мощность</dt><dd th:text="${model.moshchnost > 0 ? chisla.tekst(model.moshchnost) + ' кВт' : 'уточняется'}"></dd></div>
                 </dl>
 
                 <h2>Технические характеристики</h2>
@@ -78,9 +76,9 @@
                         <tr><th scope="row">Серия</th>
                             <td><a th:href="@{'/nasosy/' + ${marka.slug}}" th:text="${marka.nazvanie}"></a> — <span th:text="${marka.rasshifrovka}"></span></td>
                         </tr>
-                        <tr><th scope="row">Подача, м³/ч</th><td th:text="${chisla.tekst(model.podacha)}"></td></tr>
-                        <tr><th scope="row">Напор, м</th><td th:text="${chisla.tekst(model.napor)}"></td></tr>
-                        <tr><th scope="row">Мощность двигателя, кВт</th><td th:text="${chisla.tekst(model.moshchnost)}"></td></tr>
+                        <tr><th scope="row">Подача, м³/ч</th><td th:text="${model.podacha > 0 ? chisla.tekst(model.podacha) : 'уточняется'}"></td></tr>
+                        <tr><th scope="row">Напор, м</th><td th:text="${model.napor > 0 ? chisla.tekst(model.napor) : 'уточняется'}"></td></tr>
+                        <tr><th scope="row">Мощность двигателя, кВт</th><td th:text="${model.moshchnost > 0 ? chisla.tekst(model.moshchnost) : 'уточняется'}"></td></tr>
                         <tr><th scope="row">Частота вращения, об/мин</th>
                             <td th:text="${model.oboroty > 0} ? ${model.oboroty} : 'уточняется'"></td></tr>
                         <tr><th scope="row">Диаметр вала под уплотнение, мм</th>
@@ -121,9 +119,7 @@
                 <p class="tovar__price">Цена по запросу</p>
                 <p class="tovar__price-note">Зависит от исполнения, комплектации двигателя и объёма партии</p>
                 <ul class="tovar__meta">
-                    <li><span>Наличие</span><b th:text="${model.nalichie}"></b></li>
-                    <li><span>Срок изготовления</span><b>уточняется</b></li>
-                    <li><span>Ответ на запрос</span><b>1 рабочий день</b></li>
+                    <li><span>Наличие и срок поставки</span><b>уточняются</b></li>
                 </ul>
                 <a class="btn btn--primary btn--block btn--lg" href="#zayavka-forma">Узнать цену и срок</a>
                 <a class="btn btn--outline btn--block"

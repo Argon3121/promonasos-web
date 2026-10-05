@@ -31,6 +31,9 @@
                 <p class="eyebrow" th:text="${marka.rasshifrovka + (gruppa != null ? ' · ' + gruppa.nazvanie : '')}"></p>
                 <h1 th:text="${marka.nazvanie}"></h1>
                 <p th:text="${marka.kratkoeOpisanie}"></p>
+                <p class="podbor-note" th:if="${marka.slug == 'onv'}">
+                    На исходной странице производителя в описании серии и таблице типоразмеров приведены разные пределы температуры и вязкости. До выбора уточните значения для конкретного насоса по его паспорту и материалу статора.
+                </p>
 
                 <dl class="diapazon">
                     <div><dt>Подача</dt><dd th:text="${chisla.tekst(podachaOt)} + '–' + ${chisla.tekst(podachaDo)} + ' м³/ч'"></dd></div>
@@ -46,12 +49,15 @@
             </div>
 
             <figure class="marka-hero__foto" th:if="${marka.izobrazhenieOverride != null}">
-                <img class="tovar__foto"
-                     data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
-                     th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
-                     th:src="@{${marka.izobrazhenieOverride}}"
-                     th:alt="'Насос ' + ${marka.oboznachenie}"
-                     th:aria-label="'Увеличить фото насоса ' + ${marka.oboznachenie}" loading="lazy"/>
+                <button class="tovar__foto-button" type="button"
+                        data-image-zoom aria-haspopup="dialog" aria-expanded="false"
+                        th:aria-label="'Увеличить фото насоса ' + ${marka.oboznachenie}">
+                    <img class="tovar__foto"
+                         th:classappend="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')} ? 'tovar__foto--maloe' : ''"
+                         th:src="@{${marka.izobrazhenieOverride}}"
+                         th:alt="'Насос ' + ${marka.oboznachenie}"
+                         loading="eager" fetchpriority="high" decoding="async"/>
+                </button>
                 <figcaption class="foto-podpis" th:if="${marka.izobrazhenieOverride != null and #strings.startsWith(marka.izobrazhenieOverride, '/images/marki/')}">Фото насоса марки <span th:text="${marka.oboznachenie}"></span>.</figcaption>
             </figure>
         </div>
@@ -60,6 +66,7 @@
         <section class="section" id="modelnyy-ryad">
             <h2 th:text="'Модельный ряд ' + ${marka.oboznachenie}"></h2>
             <p class="section-sub">Рабочая точка указана для номинального режима. Нажмите на типоразмер, чтобы открыть карточку.</p>
+            <p class="section-sub">Наличие и срок поставки уточняются по конкретному запросу.</p>
             <div class="table-wrap">
                 <table class="data">
                     <thead>
@@ -69,20 +76,16 @@
                         <th scope="col" class="num">Напор, м</th>
                         <th scope="col" class="num">Мощность, кВт</th>
                         <th scope="col" class="num">Обороты, об/мин</th>
-                        <th scope="col">Наличие</th>
-                        <th scope="col"></th>
+                        <th scope="col">Подробности</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="tp : ${modeli}">
                         <th scope="row"><a th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${tp.slug}}" th:text="${tp.oboznachenie}"></a></th>
-                        <td class="num" th:text="${chisla.tekst(tp.podacha)}"></td>
-                        <td class="num" th:text="${chisla.tekst(tp.napor)}"></td>
-                        <td class="num" th:text="${chisla.tekst(tp.moshchnost)}"></td>
+                        <td class="num" th:text="${tp.podacha > 0 ? chisla.tekst(tp.podacha) : 'уточняется'}"></td>
+                        <td class="num" th:text="${tp.napor > 0 ? chisla.tekst(tp.napor) : 'уточняется'}"></td>
+                        <td class="num" th:text="${tp.moshchnost > 0 ? chisla.tekst(tp.moshchnost) : 'уточняется'}"></td>
                         <td class="num" th:text="${tp.oboroty > 0} ? ${tp.oboroty} : '—'"></td>
-                        <td>
-                            <span class="badge" th:classappend="${tp.nalichie == 'на складе'} ? 'badge--ok' : 'badge--info'" th:text="${tp.nalichie}"></span>
-                        </td>
                         <td class="num"><a class="link-arrow" th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${tp.slug}}">Характеристики</a></td>
                     </tr>
                     </tbody>

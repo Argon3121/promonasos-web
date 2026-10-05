@@ -35,7 +35,7 @@ public class BlogController {
         model.addAttribute("tekushchayaRubrika", rubrika);
 
         model.addAttribute("zagolovok", "База знаний: подбор насосов и торцовых уплотнений | ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Статьи инженеров о подборе насосов по рабочей точке, выборе торцовых уплотнений, парах трения, причинах отказов и импортозамещении.");
+        model.addAttribute("opisanie", "Статьи о подборе насосов по рабочей точке, торцовых уплотнениях, парах трения и возможных заменах импортных изделий.");
         model.addAttribute("canonical", "/blog");
         model.addAttribute("noindex", rubrika != null && !rubrika.isEmpty());
         return "blog-spisok/spisok";

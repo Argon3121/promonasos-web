@@ -49,9 +49,10 @@ public class NasosyController {
     public String katalog(Model model) {
         model.addAttribute("marki", nasosyService.getMarkiNasosov());
         model.addAttribute("vsegoModeley", nasosyService.vsegoModeley());
+        model.addAttribute("poiskovyIndeks", nasosyService.poiskovyIndeksModeley());
 
         model.addAttribute("zagolovok", "Промышленные насосы — каталог марок и моделей | ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Каталог промышленных насосов: К, КМ, Д, ЦНС, Х, АХ, СМ, Ф, ТК, ВК, ПЭ, СЭ. Технические характеристики, модельные ряды, подбор по подаче и напору. Москва, с 2001 года.");
+        model.addAttribute("opisanie", "Каталог промышленных насосов и типоразмеров. Подбор по подаче и напору, технические данные и запрос цены. Москва.");
         model.addAttribute("canonical", "/nasosy");
         return "nasosy-katalog/katalog";
     }

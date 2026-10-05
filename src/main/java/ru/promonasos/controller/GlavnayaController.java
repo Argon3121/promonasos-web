@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.promonasos.config.SaitSvoystva;
 import ru.promonasos.model.Zayavka;
 import ru.promonasos.service.BlogService;
 import ru.promonasos.service.NasosyService;
@@ -31,15 +32,17 @@ public class GlavnayaController {
     private final BlogService blogService;
     private final SertifikatyService sertifikatyService;
     private final ZayavkaEmailService zayavkaEmailService;
+    private final SaitSvoystva sait;
 
     public GlavnayaController(NasosyService nasosyService, UplotneniyaService uplotneniyaService,
                                BlogService blogService, SertifikatyService sertifikatyService,
-                               ZayavkaEmailService zayavkaEmailService) {
+                               ZayavkaEmailService zayavkaEmailService, SaitSvoystva sait) {
         this.nasosyService = nasosyService;
         this.uplotneniyaService = uplotneniyaService;
         this.blogService = blogService;
         this.sertifikatyService = sertifikatyService;
         this.zayavkaEmailService = zayavkaEmailService;
+        this.sait = sait;
     }
 
     // Марки насосов
@@ -47,11 +50,12 @@ public class GlavnayaController {
     public String glavnaya(Model model) {
         model.addAttribute("marki", nasosyService.getMarkiNasosov());
         model.addAttribute("sredy", uplotneniyaService.getSredyUplotneniy());
+        model.addAttribute("otrasliUplotneniy", uplotneniyaService.getOtrasli());
         model.addAttribute("stati", blogService.getStati().stream().limit(3).toList());
         model.addAttribute("vsegoModeley", nasosyService.vsegoModeley());
 
         model.addAttribute("zagolovok", "Промышленные насосы и торцовые уплотнения — ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Поставка промышленных насосов К, КМ, Д, ЦНС, Х, АХ, СМ, Ф, ТК, ВК и производство торцовых уплотнений с 2001 года. Подбор по рабочей точке, импортозамещение уплотнений. Москва.");
+        model.addAttribute("opisanie", "Поставка промышленных насосов и производство торцовых уплотнений. Каталог типоразмеров и предварительный подбор по рабочим параметрам. Москва.");
         model.addAttribute("canonical", "/");
         return "glavnaya/glavnaya";
     }
@@ -97,8 +101,8 @@ public class GlavnayaController {
         model.addAttribute("dilerskie", sertifikatyService.getDilerskie());
         model.addAttribute("sootvetstviya", sertifikatyService.getSootvetstviya());
 
-        model.addAttribute("zagolovok", "Свидетельства официального дилера — ТД «Промоборудование»");
-        model.addAttribute("opisanie", "Лицензии, разрешения и сертификаты официального дилера ТД «Промоборудование» на поставку промышленных насосов ведущих производителей.");
+        model.addAttribute("zagolovok", "Документы о продукции и партнёрстве — ТД «Промоборудование»");
+        model.addAttribute("opisanie", "Опубликованные документы о продукции и партнёрстве. Срок и область действия указаны в самих файлах.");
         model.addAttribute("canonical", "/sertifikaty");
         return "sertifikaty/sertifikaty";
     }
@@ -140,8 +144,8 @@ public class GlavnayaController {
     // отдаём кодом, а не файлом — домен не хардкодить в двух местах
     @GetMapping(value = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE + ";charset=UTF-8")
     @ResponseBody
-    public String robots(HttpServletRequest request) {
-        String domen = request.getScheme() + "://" + request.getHeader("Host");
+    public String robots() {
+        String domen = sait.domen().replaceAll("/+$", "");
         StringBuilder sb = new StringBuilder();
         sb.append("User-agent: *\n");
         sb.append("Disallow: /zayavka\n");
@@ -154,8 +158,8 @@ public class GlavnayaController {
     // собираем из каталога — новая марка попадёт сюда сама
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE + ";charset=UTF-8")
     @ResponseBody
-    public String sitemap(HttpServletRequest request) {
-        String domen = request.getScheme() + "://" + request.getHeader("Host");
+    public String sitemap() {
+        String domen = sait.domen().replaceAll("/+$", "");
         StringBuilder sb = new StringBuilder();
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         sb.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
@@ -179,6 +183,9 @@ public class GlavnayaController {
 
         uplotneniyaService.getSredyUplotneniy().forEach(sreda ->
                 dobavitUrl(sb, domen, "/tortsevye-uplotneniya/" + sreda.getSlug(), "0.8", "monthly"));
+
+        uplotneniyaService.getOtrasli().forEach(otrasl ->
+                dobavitUrl(sb, domen, "/tortsevye-uplotneniya/" + otrasl.slug(), "0.8", "monthly"));
 
         uplotneniyaService.getUplotneniya().forEach(izdelie ->
                 dobavitUrl(sb, domen, "/tortsevye-uplotneniya/izdelie/" + izdelie.getSlug(), "0.7", "monthly"));

@@ -10,8 +10,6 @@ public record SaitSvoystva(
         String telefon,
         String telefonSsylka,
         String pochta,
-        String adres,
-        String grafikRaboty,
-        String godOsnovaniya
+        String adres
 ) {
 }

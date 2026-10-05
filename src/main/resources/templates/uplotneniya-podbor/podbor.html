@@ -17,8 +17,8 @@
         <div class="page-head">
             <h1>Подбор торцового уплотнения</h1>
             <p>
-                Четыре параметра определяют выбор: среда, диаметр вала, рабочее давление и температура.
-                Покажем изделия, которые перекрывают все ваши условия одновременно.
+                Укажите среду, диаметр вала, давление и температуру. Фильтр сравнивает эти значения
+                со справочными данными каталога; окончательная совместимость требует проверки по паспорту.
             </p>
         </div>
 
@@ -54,13 +54,17 @@
 
         <section class="section" aria-live="polite">
             <h2 th:text="${not estZapros
-                    ? 'Все исполнения из наличия'
+                    ? 'Все исполнения каталога'
                     : (#lists.size(rezultaty) > 0
-                        ? ('Подходит ' + #lists.size(rezultaty) + ' ' + T(ru.promonasos.util.Chisla).sklonenie(#lists.size(rezultaty), 'исполнение', 'исполнения', 'исполнений'))
-                        : 'Под эти условия ничего не подходит')}"></h2>
+                        ? ('Совпало по справочным параметрам: ' + #lists.size(rezultaty) + ' ' + T(ru.promonasos.util.Chisla).sklonenie(#lists.size(rezultaty), 'исполнение', 'исполнения', 'исполнений'))
+                        : 'Совпадений по справочным параметрам нет')}"></h2>
+
+            <div class="podbor-note" th:if="${estZapros}">
+                Это предварительное сравнение параметров каталога, а не инженерное заключение. Сверьте точное исполнение по паспорту изделия и условиям работы.
+            </div>
 
             <div class="noanswer" th:if="${#lists.isEmpty(rezultaty)}">
-                <h3>Каталожного исполнения под такие условия нет</h3>
+                <h3>Совпадений по опубликованным значениям нет</h3>
                 <p>
                     Это как раз тот случай, ради которого у нас есть собственное производство:
                     разрабатываем конструкцию под конкретные среду, давление, температуру и вал.
@@ -88,7 +92,7 @@
                            th:aria-label="'Открыть уплотнение ' + ${u.oboznachenie}">
                             <img class="rezultat__foto rezultat__foto--contain"
                                  th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
-                                 alt="" loading="lazy"/>
+                                 th:alt="'Торцовое уплотнение ' + ${u.oboznachenie}" loading="lazy"/>
                         </a>
                         <a class="btn btn--primary" href="#zayavka-forma">Запросить</a>
                         <a class="link-arrow" th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">Характеристики</a>
@@ -98,7 +102,7 @@
         </section>
     </div>
 
-    <div th:replace="~{fragments/cta-block :: cta('Если параметров под рукой нет — пришлите марку насоса и фото узла, определим сами.')}"></div>
+    <div th:replace="~{fragments/cta-block :: cta('Если параметров под рукой нет — пришлите марку насоса и фото узла для уточнения.')}"></div>
 </div>
 </body>
 </html>

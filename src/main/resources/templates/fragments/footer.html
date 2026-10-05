@@ -29,7 +29,7 @@
                 <h4>Компания</h4>
                 <ul>
                     <li><a href="/blog">База знаний</a></li>
-                    <li><a href="/sertifikaty">Свидетельства дилера</a></li>
+                    <li><a href="/sertifikaty">Документы</a></li>
                     <li><a href="/kontakty">Контакты</a></li>
                 </ul>
             </div>
@@ -38,12 +38,11 @@
                 <p class="footer__phone"><a th:href="'tel:' + ${sait.telefonSsylka}" th:text="${sait.telefon}"></a></p>
                 <p><a th:href="'mailto:' + ${sait.pochta}" th:text="${sait.pochta}"></a></p>
                 <p class="footer__addr" th:text="${sait.adres}"></p>
-                <p th:text="${sait.grafikRaboty}"></p>
                 <a class="btn btn--outline-light btn--sm" href="#zayavka-forma">Запросить подбор</a>
             </div>
         </div>
         <div class="footer__legal">
-            <p>ООО ТД «Промоборудование». Поставка промышленных насосов и производство торцовых уплотнений с 2001 года.</p>
+            <p>ООО ТД «Промоборудование». Поставка промышленных насосов и производство торцовых уплотнений.</p>
             <p>Информация на сайте не является публичной офертой. Технические характеристики уточняйте у менеджера.</p>
             <p><a href="/polzovatelskoe-soglashenie">Пользовательское соглашение</a> · <a href="/politika-personalnyh-dannyh">Политика обработки персональных данных</a></p>
         </div>

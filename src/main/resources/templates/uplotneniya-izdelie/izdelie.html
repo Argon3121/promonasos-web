@@ -22,7 +22,7 @@
       "name": "[[${izdelie.nazvanie}]]",
       "description": "[[${izdelie.opisanie}]]",
       "sku": "[[${izdelie.oboznachenie}]]",
-      "brand": { "@type": "Brand", "name": "ТД «Промоборудование»" },
+      "url": "[[${sait.domen}]]/tortsevye-uplotneniya/izdelie/[[${izdelie.slug}]]",
       "additionalProperty": [
         { "@type": "PropertyValue", "name": "Тип", "value": "[[${izdelie.tip}]]" },
         { "@type": "PropertyValue", "name": "Диаметр вала", "value": "[[${chisla.tekst(izdelie.diametrValaOt)}]]–[[${chisla.tekst(izdelie.diametrValaDo)}]] мм" },
@@ -48,10 +48,10 @@
     <div class="container">
         <div class="tovar">
             <div class="tovar__main">
-                <img class="tovar__foto tovar__foto--seal" data-image-zoom role="button" tabindex="0" aria-haspopup="dialog"
+                <img class="tovar__foto tovar__foto--seal" data-image-zoom role="button" tabindex="0" aria-haspopup="dialog" aria-expanded="false"
                      th:src="@{${izdelie.izobrazhenieOverride != null ? izdelie.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
-                     th:alt="'Торцовое уплотнение ' + ${izdelie.oboznachenie}"
-                     th:aria-label="'Увеличить фото уплотнения ' + ${izdelie.oboznachenie}" loading="lazy"/>
+                     th:alt="${izdelie.izobrazhenieOverride != null ? 'Торцовое уплотнение ' + izdelie.oboznachenie : 'Иллюстрация конструкции торцового уплотнения'}"
+                     th:aria-label="'Увеличить фото уплотнения ' + ${izdelie.oboznachenie}" loading="eager" fetchpriority="high" decoding="async"/>
                 <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride != null}">Фото уплотнения <span th:text="${izdelie.oboznachenie}"></span>.</span>
                 <span class="foto-podpis" th:if="${izdelie.izobrazhenieOverride == null}">Фото представляет тип конструкции (торцовое уплотнение), не конкретное изделие.</span>
 
@@ -80,9 +80,7 @@
 
                 <div th:if="${not #lists.isEmpty(izdelie.primenyaetsyaNaNasosakh)}">
                     <h2>Применяется на насосах</h2>
-                    <ul class="chips">
-                        <li th:each="m : ${marki}"><a class="chip" th:href="@{'/nasosy/' + ${m.slug}}" th:text="'Насосы ' + ${m.oboznachenie}"></a></li>
-                    </ul>
+                    <p th:text="'Для агрегатов: ' + ${#strings.listJoin(izdelie.primenyaetsyaNaNasosakh, ', ')}"></p>
                 </div>
 
                 <div th:if="${not #lists.isEmpty(sredy)}">
@@ -95,11 +93,7 @@
 
             <aside class="tovar__buy">
                 <p class="tovar__price">Цена по запросу</p>
-                <p class="tovar__price-note">Зависит от материала пары трения и объёма партии</p>
-                <ul class="tovar__meta">
-                    <li><span>Наличие</span><b>под заказ</b></li>
-                    <li><span>Ответ на запрос</span><b>1 рабочий день</b></li>
-                </ul>
+                <p class="tovar__price-note">Исполнение, наличие и срок поставки уточняются по запросу.</p>
                 <a class="btn btn--primary btn--block btn--lg" href="#zayavka-forma">Запросить это уплотнение</a>
             </aside>
         </div>
@@ -113,7 +107,7 @@
                        th:aria-label="'Открыть уплотнение ' + ${u.oboznachenie}">
                         <img class="upl-card__image"
                              th:src="@{${u.izobrazhenieOverride != null ? u.izobrazhenieOverride : '/images/uplotnenie.jpg'}}"
-                             alt="" loading="lazy"/>
+                             th:alt="'Торцовое уплотнение ' + ${u.oboznachenie}" loading="lazy"/>
                     </a>
                     <a th:href="@{'/tortsevye-uplotneniya/izdelie/' + ${u.slug}}">
                         <h3 th:text="${u.oboznachenie}"></h3>

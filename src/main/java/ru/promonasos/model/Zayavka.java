@@ -2,6 +2,7 @@ package ru.promonasos.model;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -9,12 +10,17 @@ import lombok.RequiredArgsConstructor;
 public class Zayavka {
 
     @NotBlank(message = "Укажите, как к вам обращаться")
+    @Size(max = 120, message = "Имя должно быть короче 120 символов")
     private String imya;
 
     @NotBlank(message = "Нужен телефон или почта для ответа")
+    @Size(max = 254, message = "Контакт должен быть короче 254 символов")
     private String kontakt;
 
+    @Size(max = 200, message = "Название организации должно быть короче 200 символов")
     private String organizatsiya;
+
+    @Size(max = 3000, message = "Описание запроса должно быть короче 3000 символов")
     private String zadacha;
 
     @AssertTrue(message = "Без согласия мы не можем принять заявку")

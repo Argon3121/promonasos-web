@@ -7,6 +7,8 @@ import ru.promonasos.config.SaitSvoystva;
 import ru.promonasos.model.GruppaNasosov;
 import ru.promonasos.model.MarkaNasosa;
 import ru.promonasos.model.SredaUplotneniya;
+import ru.promonasos.model.OtraslUplotneniy;
+import ru.promonasos.model.Uplotnenie;
 import ru.promonasos.service.NasosyService;
 import ru.promonasos.service.UplotneniyaService;
 
@@ -57,6 +59,17 @@ public class ObshieDannye {
     @ModelAttribute("vseSredy")
     public List<SredaUplotneniya> vseSredy() {
         return uplotneniyaService.getSredyUplotneniy();
+    }
+
+    @ModelAttribute("vseOtrasliUplotneniy")
+    public List<OtraslUplotneniy> vseOtrasliUplotneniy() {
+        return uplotneniyaService.getOtrasli();
+    }
+
+    // все изделия — для меню «Торцовые уплотнения»
+    @ModelAttribute("vseUplotneniya")
+    public List<Uplotnenie> vseUplotneniya() {
+        return uplotneniyaService.getUplotneniya();
     }
 
     // текущий путь — подсветить пункт меню
