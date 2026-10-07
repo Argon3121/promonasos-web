@@ -27,6 +27,9 @@ public class ModelNasosa {
     // параметры в виде «название → значение» для моделей, у которых на оригинальном сайте нет подачи/напора/мощности (например BT)
     private Map<String, String> dopParametry = Map.of();
 
+    // дополнительные строки к обычной таблице характеристик (например, давление у насосов ПТ)
+    private Map<String, String> dopStroki = Map.of();
+
 
     public String getOboznachenie() { return oboznachenie; }
     public String getSlug() { return slug; }
@@ -42,6 +45,8 @@ public class ModelNasosa {
     public String getGabarity() { return gabarity; }
     public String getSeoTitle() { return seoTitle; }
     public String getSeoDescription() { return seoDescription; }
+    public Map<String, String> getDopStroki() { return dopStroki; }
+    public void setDopStroki(Map<String, String> dopStroki) { this.dopStroki = dopStroki; }
     public Map<String, String> getDopParametry() { return dopParametry; }
     public void setDopParametry(Map<String, String> dopParametry) { this.dopParametry = dopParametry; }
     public String getIzobrazhenieOverride() { return izobrazhenieOverride; }

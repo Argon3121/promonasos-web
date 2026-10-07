@@ -90,6 +90,7 @@
                             <td th:text="${#strings.listJoin(#lists.size(marka.primenenie) > 2 ? marka.primenenie.subList(0,2) : marka.primenenie, ', ')}"></td></tr>
                         <tr th:if="${#maps.isEmpty(model.dopParametry)}"><th scope="row">Габариты, мм</th>
                             <td th:text="${#strings.isEmpty(model.gabarity)} ? 'уточняется' : ${model.gabarity}"></td></tr>
+                        <tr th:each="p : ${model.dopStroki}"><th scope="row" th:text="${p.key}"></th><td th:text="${p.value}"></td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -135,17 +136,13 @@
                     <thead>
                     <tr>
                         <th scope="col">Типоразмер</th>
-                        <th scope="col">Проточная часть</th>
-                        <th scope="col">Тип насоса</th>
-                        <th scope="col" class="num">Двигатель, В</th>
+                        <th scope="col" th:each="k : ${model.dopParametry.keySet()}" th:unless="${k == 'Перекачиваемые среды'}" th:text="${k}"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="d : ${drugieModeli}">
                         <th scope="row"><a th:href="@{'/nasosy/' + ${marka.slug} + '/' + ${d.slug}}" th:text="${d.oboznachenie}"></a></th>
-                        <td th:text="${d.dopParametry['Проточная часть']}"></td>
-                        <td th:text="${d.dopParametry['Тип насоса']}"></td>
-                        <td class="num" th:text="${d.dopParametry['Двигатель, В']}"></td>
+                        <td th:each="k : ${model.dopParametry.keySet()}" th:unless="${k == 'Перекачиваемые среды'}" th:text="${d.dopParametry[k]}"></td>
                     </tr>
                     </tbody>
                 </table>
